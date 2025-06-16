@@ -53,6 +53,22 @@ def _extract_next_data(html_text: str) -> dict | None:
         return None
 
 
+def gql(query: str, variables: dict | None = None, headers: dict | None = None):
+    """Helper to POST a GraphQL query and return JSON."""
+    payload = {"query": query}
+    if variables:
+        payload["variables"] = variables
+    h = {"Content-Type": "application/json"}
+    if headers:
+        h.update(headers)
+    r = requests.post("https://www.d2place.com/graphql", headers=h, json=payload, timeout=15)
+    r.raise_for_status()
+    data = r.json()
+    if "errors" in data:
+        raise RuntimeError(data["errors"])
+    return data.get("data", {})
+
+
 class D2PlaceScraper:
     def __init__(self):
         self.base_url = "https://www.d2place.com"
@@ -589,61 +605,71 @@ class D2PlaceScraper:
             return None
 
     def scrape_dining(self):
-        url = f"{self.base_url}/shops/DINING"
-        blob = next_blob(url, self.headers)
-        shops = blob.get("props", {}).get("pageProps", {}).get("shops", [])
-        for shop in shops:
-            item = {
-                "name":     shop.get("name"),
-                "location": shop.get("location"),
-                "detail_url": f"{self.base_url}/shops/{shop['slug']}",
-                **{k: shop.get("meta", {}).get(k, "") for k in
-                ("tel", "openingHours", "facebook", "instagram", "website")}
-            }
+        cats = gql("{findManyShopCategory(where:{categoryType:{equals:DINING}}){id}}")
+        for c in cats.get("findManyShopCategory", []):
+            shops = gql(
+                """
+                query($cid:Int!){
+                    findManyShop(where:{shopCategoryId:{equals:$cid}}, take:1000){
+                        nameEn nameTc addressEn addressTc phoneNumber
+                        displayOpeningHoursEn displayOpeningHoursTc
+                        facebookUrl instagramUrl websiteUrl passcode
+                    }
+                }
+                """,
+                {"cid": c["id"]},
+                headers=self.headers,
+            ).get("findManyShop", [])
 
-            # if hours or socials still blank → fetch the shop page once
-            if not any(item[k] for k in ("openingHours", "facebook", "instagram", "website")):
-                sub = next_blob(item["detail_url"], self.headers)
-                meta = (sub.get("props", {}).get("pageProps", {})
-                            .get("meta", {}))
-                for k,v in meta.items():
-                    if v and not item.get(k):
-                        item[k] = v
+            for shop in shops:
+                item = {
+                    "name": shop.get("nameEn") or shop.get("nameTc", ""),
+                    "location": shop.get("addressEn") or shop.get("addressTc", ""),
+                    "detail_url": f"{self.base_url}/shops/{shop['passcode']}",
+                    "phone": shop.get("phoneNumber", ""),
+                    "opening_hours": shop.get("displayOpeningHoursEn") or shop.get("displayOpeningHoursTc", ""),
+                    "facebook": shop.get("facebookUrl", ""),
+                    "instagram": shop.get("instagramUrl", ""),
+                    "website": shop.get("websiteUrl", ""),
+                }
+                self.data["dining"].append(item)
 
-            # rename keys to your existing schema
-            item["opening_hours"] = item.pop("openingHours", "")
-            item["phone"]         = item.pop("tel", "")
-            self.data["dining"].append(item)
-
-        logger.info("Dining scraped → %d entries (no clicks!)", len(self.data["dining"]))
+        logger.info("Dining scraped via GraphQL → %d entries", len(self.data["dining"]))
 
 
     def scrape_shopping(self):
-        """Scrape the SHOP category without relying on Selenium clicks."""
-        url = f"{self.base_url}/shops/SHOP"
-        blob = next_blob(url, self.headers)
-        shops = blob.get("props", {}).get("pageProps", {}).get("shops", [])
+        rrwhfw-codex/fix-web-scraper-issue-with-clicking-cards
+        cats = gql("{findManyShopCategory(where:{categoryType:{equals:SHOP}}){id}}")
+        for c in cats.get("findManyShopCategory", []):
+            shops = gql(
+                """
+                query($cid:Int!){
+                    findManyShop(where:{shopCategoryId:{equals:$cid}}, take:1000){
+                        nameEn nameTc addressEn addressTc phoneNumber
+                        displayOpeningHoursEn displayOpeningHoursTc
+                        facebookUrl instagramUrl websiteUrl passcode
+                    }
+                }
+                """,
+                {"cid": c["id"]},
+                headers=self.headers,
+            ).get("findManyShop", [])
 
-        for shop in shops:
-            item = {
-                "name":     shop.get("name"),
-                "location": shop.get("location"),
-                "detail_url": f"{self.base_url}/shops/{shop['slug']}",
-                **{k: shop.get("meta", {}).get(k, "") for k in ("tel", "openingHours", "facebook", "instagram", "website")}
-            }
+            for shop in shops:
+                item = {
+                    "name": shop.get("nameEn") or shop.get("nameTc", ""),
+                    "location": shop.get("addressEn") or shop.get("addressTc", ""),
+                    "detail_url": f"{self.base_url}/shops/{shop['passcode']}",
+                    "phone": shop.get("phoneNumber", ""),
+                    "opening_hours": shop.get("displayOpeningHoursEn") or shop.get("displayOpeningHoursTc", ""),
+                    "facebook": shop.get("facebookUrl", ""),
+                    "instagram": shop.get("instagramUrl", ""),
+                    "website": shop.get("websiteUrl", ""),
+                }
+                self.data["shopping"].append(item)
 
-            if not any(item[k] for k in ("openingHours", "facebook", "instagram", "website")):
-                sub = next_blob(item["detail_url"], self.headers)
-                meta = (sub.get("props", {}).get("pageProps", {}).get("meta", {}))
-                for k, v in meta.items():
-                    if v and not item.get(k):
-                        item[k] = v
+        logger.info("Shopping scraped via GraphQL → %d entries", len(self.data["shopping"]))
 
-            item["opening_hours"] = item.pop("openingHours", "")
-            item["phone"] = item.pop("tel", "")
-            self.data["shopping"].append(item)
-
-        logger.info("Shopping scraped → %d entries (no clicks!)", len(self.data["shopping"]))
 
     def scrape_events(self):
         url = f"{self.base_url}/events/ALL"
@@ -669,30 +695,38 @@ class D2PlaceScraper:
         logger.info("Events scraped → %d entries", len(self.data["events"]))
 
     def scrape_play(self):
-        url = f"{self.base_url}/shops/PLAY"
-        blob = next_blob(url, self.headers)
-        shops = blob.get("props", {}).get("pageProps", {}).get("shops", [])
+        rrwhfw-codex/fix-web-scraper-issue-with-clicking-cards
+        cats = gql("{findManyShopCategory(where:{categoryType:{equals:PLAY}}){id}}")
+        for c in cats.get("findManyShopCategory", []):
+            shops = gql(
+                """
+                query($cid:Int!){
+                    findManyShop(where:{shopCategoryId:{equals:$cid}}, take:1000){
+                        nameEn nameTc addressEn addressTc phoneNumber
+                        displayOpeningHoursEn displayOpeningHoursTc
+                        facebookUrl instagramUrl websiteUrl passcode
+                    }
+                }
+                """,
+                {"cid": c["id"]},
+                headers=self.headers,
+            ).get("findManyShop", [])
 
-        for shop in shops:
-            item = {
-                "name":     shop.get("name"),
-                "location": shop.get("location"),
-                "detail_url": f"{self.base_url}/shops/{shop['slug']}",
-                **{k: shop.get("meta", {}).get(k, "") for k in ("tel", "openingHours", "facebook", "instagram", "website")}
-            }
+            for shop in shops:
+                item = {
+                    "name": shop.get("nameEn") or shop.get("nameTc", ""),
+                    "location": shop.get("addressEn") or shop.get("addressTc", ""),
+                    "detail_url": f"{self.base_url}/shops/{shop['passcode']}",
+                    "phone": shop.get("phoneNumber", ""),
+                    "opening_hours": shop.get("displayOpeningHoursEn") or shop.get("displayOpeningHoursTc", ""),
+                    "facebook": shop.get("facebookUrl", ""),
+                    "instagram": shop.get("instagramUrl", ""),
+                    "website": shop.get("websiteUrl", ""),
+                }
+                self.data["play"].append(item)
 
-            if not any(item[k] for k in ("openingHours", "facebook", "instagram", "website")):
-                sub = next_blob(item["detail_url"], self.headers)
-                meta = (sub.get("props", {}).get("pageProps", {}).get("meta", {}))
-                for k, v in meta.items():
-                    if v and not item.get(k):
-                        item[k] = v
+        logger.info("Play scraped via GraphQL → %d entries", len(self.data["play"]))
 
-            item["opening_hours"] = item.pop("openingHours", "")
-            item["phone"] = item.pop("tel", "")
-            self.data["play"].append(item)
-
-        logger.info("Play scraped → %d entries (no clicks!)", len(self.data["play"]))
 
     # ================== Facebook Page ==================
     def scrape_facebook_page(self, shop, fb_url):
