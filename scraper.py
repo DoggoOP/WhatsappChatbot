@@ -619,24 +619,39 @@ class D2PlaceScraper:
 
 
     def scrape_shopping(self):
+        """Scrape the SHOP category without relying on Selenium clicks."""
         url = f"{self.base_url}/shops/SHOP"
-        self.load_page(url, wait_selector="div.shop_shopListContainer__H9001")
-        card_elems = self.driver.find_elements(
-            By.CSS_SELECTOR, "div.shop_shopBlockContainer__ALRJK.cursor-pointer"
+        blob = next_blob(url, self.headers)
+        shops = blob.get("props", {}).get("pageProps", {}).get("shops", [])
+
+        for shop in shops:
+            item = {
+                "name": shop.get("name"),
+                "location": shop.get("location"),
+                "detail_url": f"{self.base_url}/shops/{shop['slug']}",
+                **{k: shop.get("meta", {}).get(k, "") for k in (
+                    "tel",
+                    "openingHours",
+                    "facebook",
+                    "instagram",
+                    "website",
+                )},
+            }
+
+            if not any(item[k] for k in ("openingHours", "facebook", "instagram", "website")):
+                sub = next_blob(item["detail_url"], self.headers)
+                meta = sub.get("props", {}).get("pageProps", {}).get("meta", {})
+                for k, v in meta.items():
+                    if v and not item.get(k):
+                        item[k] = v
+
+            item["opening_hours"] = item.pop("openingHours", "")
+            item["phone"] = item.pop("tel", "")
+            self.data["shopping"].append(item)
+
+        logger.info(
+            "Shopping scraped → %d entries (no clicks!)", len(self.data["shopping"])
         )
-
-        for card in card_elems:
-            try:
-                item = self._card_to_item(card)
-                if item["detail_url"]:
-                    item |= self._harvest_detail(item["detail_url"])
-                    for k in ("phone", "opening_hours", "facebook", "instagram", "website"):
-                        item.setdefault(k, "")
-                self.data["shopping"].append(item)
-            except Exception as e:
-                logger.error(f"[SHOPPING] card parse failed: {e}")
-
-        logger.info("Shopping scraped → %d entries", len(self.data["shopping"]))
 
     def scrape_events(self):
         url = f"{self.base_url}/events/ALL"
