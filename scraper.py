@@ -619,6 +619,7 @@ class D2PlaceScraper:
 
 
     def scrape_shopping(self):
+        """Scrape the SHOP category without relying on Selenium clicks."""
         url = f"{self.base_url}/shops/SHOP"
         blob = next_blob(url, self.headers)
         shops = blob.get("props", {}).get("pageProps", {}).get("shops", [])
