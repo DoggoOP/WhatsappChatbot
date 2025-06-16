@@ -1,0 +1,11 @@
+Flask
+requests
+openai
+beautifulsoup4
+pytesseract
+Pillow
+python-dotenv
+requests-html
+selenium
+apscheduler
+backoff
