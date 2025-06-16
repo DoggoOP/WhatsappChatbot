@@ -3,6 +3,7 @@ import json
 import time
 import logging
 import requests
+from datetime import datetime
 from dotenv import load_dotenv
 
 from serpapi import GoogleSearch
@@ -669,29 +670,37 @@ class D2PlaceScraper:
 
         logger.info("Shopping scraped via GraphQL → %d entries", len(self.data["shopping"]))
 
-
     def scrape_events(self):
-        url = f"{self.base_url}/events/ALL"
-        self.load_page(url, wait_selector="div.event_eventListContainer__WCXZm")
-        card_elems = self.driver.find_elements(
-            By.CSS_SELECTOR, "div.common_shopContainer__OJfK6.cursor-pointer"
-        )
+        events = gql(
+            """
+            query($take:Int!){
+                findManyEventPublic(take:$take){
+                    nameEn nameTc venueEn venueTc alias
+                    eventStartDate eventEndDate
+                }
+            }
+            """,
+            {"take": 1000},
+            headers=self.headers,
+        ).get("findManyEventPublic", [])
 
-        for card in card_elems:
+        for ev in events:
             try:
-                title = card.find_element(
-                     By.CSS_SELECTOR, "p.text-gold-primary.break-words"
-                 ).text.strip()
-                detail_spans = card.find_elements(
-                     By.CSS_SELECTOR, "div.common_shopDescriptionContainer__gVqQN.space-y-2 span"
-                )
-                date = detail_spans[0].text.strip() if detail_spans else ""
-                venue = detail_spans[1].text.strip() if len(detail_spans) > 1 else ""
-                self.data["events"].append({"title": title, "date": date, "venue": venue})
-            except Exception as e:
-                logger.error(f"[EVENTS] card parse failed: {e}")
+                start = datetime.fromisoformat(ev["eventStartDate"].replace("Z", "+00:00")).date()
+                end = datetime.fromisoformat(ev["eventEndDate"].replace("Z", "+00:00")).date()
+                date_str = f"{start} - {end}"
+            except Exception:
+                date_str = ""
 
-        logger.info("Events scraped → %d entries", len(self.data["events"]))
+            item = {
+                "title": ev.get("nameEn") or ev.get("nameTc", ""),
+                "date": date_str,
+                "venue": ev.get("venueEn") or ev.get("venueTc", ""),
+                "detail_url": f"{self.base_url}/events/{ev['alias']}",
+            }
+            self.data["events"].append(item)
+
+        logger.info("Events scraped via GraphQL → %d entries", len(self.data["events"]))
 
     def scrape_play(self):
         cats = gql("{findManyShopCategory(where:{categoryType:{equals:PLAY}}){id}}")
@@ -724,7 +733,6 @@ class D2PlaceScraper:
                 self.data["play"].append(item)
 
         logger.info("Play scraped via GraphQL → %d entries", len(self.data["play"]))
-
 
     # ================== Facebook Page ==================
     def scrape_facebook_page(self, shop, fb_url):
