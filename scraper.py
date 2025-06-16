@@ -3,6 +3,7 @@ import json
 import time
 import logging
 import requests
+from datetime import datetime
 from dotenv import load_dotenv
 
 from serpapi import GoogleSearch
@@ -645,24 +646,33 @@ class D2PlaceScraper:
                 """
                 query($cid:Int!){
                     findManyShop(where:{shopCategoryId:{equals:$cid}}, take:1000){
-                        nameEn nameTc addressEn addressTc phoneNumber
-                        displayOpeningHoursEn displayOpeningHoursTc
-                        facebookUrl instagramUrl websiteUrl passcode
-                    }
+        events = gql(
+            """
+            query($take:Int!){
+                findManyEventPublic(take:$take){
+                    nameEn nameTc venueEn venueTc alias
+                    eventStartDate eventEndDate
                 }
-                """,
-                {"cid": c["id"]},
-                headers=self.headers,
-            ).get("findManyShop", [])
+            }
+            """,
+            {"take": 1000},
+            headers=self.headers,
+        ).get("findManyEventPublic", [])
+        for ev in events:
+                start = datetime.fromisoformat(ev["eventStartDate"].replace("Z", "+00:00")).date()
+                end = datetime.fromisoformat(ev["eventEndDate"].replace("Z", "+00:00")).date()
+                date_str = f"{start} - {end}"
+            except Exception:
+                date_str = ""
 
-            for shop in shops:
-                item = {
-                    "name": shop.get("nameEn") or shop.get("nameTc", ""),
-                    "location": shop.get("addressEn") or shop.get("addressTc", ""),
-                    "detail_url": f"{self.base_url}/shops/{shop['passcode']}",
-                    "phone": shop.get("phoneNumber", ""),
-                    "opening_hours": shop.get("displayOpeningHoursEn") or shop.get("displayOpeningHoursTc", ""),
-                    "facebook": shop.get("facebookUrl", ""),
+            item = {
+                "title": ev.get("nameEn") or ev.get("nameTc", ""),
+                "date": date_str,
+                "venue": ev.get("venueEn") or ev.get("venueTc", ""),
+                "detail_url": f"{self.base_url}/events/{ev['alias']}",
+            }
+            self.data["events"].append(item)
+        logger.info("Events scraped via GraphQL → %d entries", len(self.data["events"]))
                     "instagram": shop.get("instagramUrl", ""),
                     "website": shop.get("websiteUrl", ""),
                 }
