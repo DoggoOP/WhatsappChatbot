@@ -638,6 +638,7 @@ class D2PlaceScraper:
 
 
     def scrape_shopping(self):
+        rrwhfw-codex/fix-web-scraper-issue-with-clicking-cards
         cats = gql("{findManyShopCategory(where:{categoryType:{equals:SHOP}}){id}}")
         for c in cats.get("findManyShopCategory", []):
             shops = gql(
@@ -669,6 +670,7 @@ class D2PlaceScraper:
 
         logger.info("Shopping scraped via GraphQL → %d entries", len(self.data["shopping"]))
 
+
     def scrape_events(self):
         url = f"{self.base_url}/events/ALL"
         self.load_page(url, wait_selector="div.event_eventListContainer__WCXZm")
@@ -693,6 +695,7 @@ class D2PlaceScraper:
         logger.info("Events scraped → %d entries", len(self.data["events"]))
 
     def scrape_play(self):
+        rrwhfw-codex/fix-web-scraper-issue-with-clicking-cards
         cats = gql("{findManyShopCategory(where:{categoryType:{equals:PLAY}}){id}}")
         for c in cats.get("findManyShopCategory", []):
             shops = gql(
@@ -723,6 +726,7 @@ class D2PlaceScraper:
                 self.data["play"].append(item)
 
         logger.info("Play scraped via GraphQL → %d entries", len(self.data["play"]))
+
 
     # ================== Facebook Page ==================
     def scrape_facebook_page(self, shop, fb_url):
