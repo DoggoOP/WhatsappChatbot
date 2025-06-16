@@ -638,7 +638,6 @@ class D2PlaceScraper:
 
 
     def scrape_shopping(self):
-        rrwhfw-codex/fix-web-scraper-issue-with-clicking-cards
         cats = gql("{findManyShopCategory(where:{categoryType:{equals:SHOP}}){id}}")
         for c in cats.get("findManyShopCategory", []):
             shops = gql(
@@ -695,7 +694,6 @@ class D2PlaceScraper:
         logger.info("Events scraped → %d entries", len(self.data["events"]))
 
     def scrape_play(self):
-        rrwhfw-codex/fix-web-scraper-issue-with-clicking-cards
         cats = gql("{findManyShopCategory(where:{categoryType:{equals:PLAY}}){id}}")
         for c in cats.get("findManyShopCategory", []):
             shops = gql(
