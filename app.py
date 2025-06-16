@@ -32,7 +32,7 @@ class WhatsAppLogHandler(logging.Handler):
         try:
             log_entry = self.format(record)
             # Only send to WhatsApp if LOG_RECIPIENT is set and not empty
-            if LOG_RECIPIENT:
+            if LOG_RECIPIENT and "send_whatsapp_message" in globals():
                 send_whatsapp_message(LOG_RECIPIENT, f"[LOG] {log_entry}")
         except Exception as e:
             # Fallback to file logging if WhatsApp fails
