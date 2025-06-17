@@ -341,8 +341,27 @@ def is_smalltalk(text: str) -> bool:
     return t in greetings or t in farewells or t in thanks
 
 
+def apply_intent_heuristics(text: str) -> str:
+    """Map casual phrases to specific D2 Place intents."""
+    lowered = text.lower()
+    patterns = [
+        (r"kill time|time killer|pass the time", "play or shopping options at D2 Place"),
+        (r"things? to do|what to do|bored", "play or shopping options at D2 Place"),
+    ]
+    for pat, intent in patterns:
+        if re.search(pat, lowered):
+            return intent
+    return text
+
+
+
 def paraphrase_for_intent(user_text: str) -> str:
     """Return a short rewritten form of the user's request."""
+    # First map common casual phrases before hitting the LLM
+    mapped = apply_intent_heuristics(user_text)
+    if mapped != user_text:
+        return mapped
+
     system_prompt = (
         "Rewrite the user's question about D2 Place so that it explicitly states the information being requested. "
         "Keep it very short. If the request is already clear or is just small talk, return it unchanged."
@@ -358,8 +377,9 @@ def paraphrase_for_intent(user_text: str) -> str:
     }
     result = call_qwen_api(payload)
     if not result or result.lower().startswith("sorry"):
-        return user_text
-    return result
+        result = user_text
+    # Apply heuristics again in case the LLM output still contains vague phrasing
+    return apply_intent_heuristics(result)
 
 def should_call_web_search(query: str, scraped: str) -> bool:
     """Decide whether to call SerpAPI for this query."""
