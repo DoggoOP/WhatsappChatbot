@@ -6,6 +6,7 @@ import requests
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
 from rapidfuzz import fuzz  # Added for fuzzy matching
+import re
 import subprocess
 from tempfile import NamedTemporaryFile
 import tempfile
@@ -92,7 +93,7 @@ def perform_web_search(query):
         "api_key": SERP_API_KEY
     }
     try:
-        resp = requests.get(search_url, params=params)
+        resp = requests.get(search_url, params=params, timeout=10)
         resp.raise_for_status()
         results = resp.json()
         summary_lines = []
@@ -283,6 +284,50 @@ def retrieve_relevant_data(query):
 
     return "\n\n".join(summary_parts)
 
+def extract_meal_query(text: str) -> str | None:
+    """Return 'breakfast', 'lunch' or 'dinner' if text looks like a meal query."""
+    lowered = text.lower()
+    if any(k in lowered for k in ["dinner", "晚餐", "晚飯"]):
+        return "dinner"
+    if any(k in lowered for k in ["lunch", "午餐", "午飯"]):
+        return "lunch"
+    if any(k in lowered for k in ["breakfast", "早餐"]):
+        return "breakfast"
+    return None
+
+def restaurants_open_for(meal: str) -> str:
+    """Return a formatted list of restaurants open during the given meal."""
+    meal_hours = {
+        "breakfast": (7, 11),
+        "lunch": (11, 15),
+        "dinner": (17, 22),
+    }
+    start_h, end_h = meal_hours.get(meal, (None, None))
+    if start_h is None:
+        return ""
+
+    results = []
+    for r in CACHED_DATA.get("dining", []):
+        hours = r.get("opening_hours", "")
+        for part in hours.split(";"):
+            m = re.search(r"(\d{1,2}):(\d{2}).*(\d{1,2}):(\d{2})", part)
+            if not m:
+                continue
+            sh = int(m.group(1))
+            eh = int(m.group(3))
+            if sh <= start_h and eh >= end_h:
+                results.append(f"- {r['name']} ({hours})")
+                break
+
+    if not results:
+        return ""
+    header = {
+        "breakfast": "🍳 Breakfast options:",
+        "lunch": "🍽 Lunch options:",
+        "dinner": "🍴 Dinner options:",
+    }[meal]
+    return header + "\n" + "\n".join(results[:5])
+
 #########################
 # 2. Qwen Handlers
 #########################
@@ -297,7 +342,7 @@ def call_qwen_api(payload):
     }
     url = f"{BASE_URL}/chat/completions"
     try:
-        resp = requests.post(url, headers=headers, json=payload)
+        resp = requests.post(url, headers=headers, json=payload, timeout=20)
         resp.raise_for_status()
         result = resp.json()
         content = result['choices'][0]['message']['content']
@@ -321,6 +366,11 @@ def handle_text_query(user_text):
         """
     )
 
+    meal = extract_meal_query(user_text)
+    if meal:
+        reply = restaurants_open_for(meal)
+        if reply:
+            return reply
 
     # 1) Always pull from cache / fuzzy logic
     scraped_data = query_json_llm(user_text, CACHED_DATA)
@@ -466,7 +516,7 @@ def transcode_to_mp3(raw_bytes: bytes, in_format: str) -> bytes:
             logger.error(f"Error cleaning up temporary files: {str(e)}")
 
 def transcribe_audio(audio_bytes: bytes, content_type: str) -> str:
-    """Transcribe audio bytes to text using Qwen2-Audio-Instruct."""
+    """Transcribe audio bytes to text using Qwen's transcription API."""
     logger.info(
         "Starting audio transcription. Content type: %s, Audio size: %d bytes",
         content_type,
@@ -494,32 +544,25 @@ def transcribe_audio(audio_bytes: bytes, content_type: str) -> str:
             logger.exception(f"Failed to ffmpeg‐transcode OGG→MP3: {str(e)}")
             return ""
 
-    transcribe_prompt = (
-        "You are Qwen2-Audio-Instruct. "
-        "Your only job is to transcribe the incoming audio to text without extra commentary."
-    )
-
-    payload = {
-        "model": "qwen2-audio-instruct",
-        "messages": [
-            {"role": "system", "content": transcribe_prompt},
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "input_audio",
-                        "audio": {
-                            "data": base64.b64encode(audio_bytes).decode("utf-8"),
-                            "format": "mp3",
-                        },
-                    }
-                ],
-            },
-        ],
-    }
+    url = f"{BASE_URL}/audio/transcriptions"
+    headers = {"Authorization": f"Bearer {QWEN_API_KEY}"}
+    files = {"file": ("voice.mp3", audio_bytes, "audio/mpeg")}
+    data = {"model": "qwen2-audio-instruct"}
 
     try:
-        transcript = call_qwen_api(payload)
+        logger.info("Sending request to Qwen transcription API...")
+        resp = requests.post(url, headers=headers, files=files, data=data, timeout=30)
+        logger.info("Qwen transcription status: %s", resp.status_code)
+
+        if resp.status_code != 200:
+            logger.error("❌ transcribe_audio got %s: %s", resp.status_code, resp.text)
+            with open("debug_failed_audio.mp3", "wb") as f:
+                f.write(audio_bytes)
+            logger.info("Saved failed audio to debug_failed_audio.mp3")
+            return ""
+
+        resp_json = resp.json()
+        transcript = resp_json.get("text", "")
         logger.info("Transcription result: %s", transcript)
         return transcript
     except Exception as e:
@@ -670,13 +713,13 @@ def download_media_file(media_id):
     # 1) get media URL
     info_url = f"https://graph.facebook.com/v16.0/{media_id}"
     headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}"}
-    info_resp = requests.get(info_url, headers=headers)
+    info_resp = requests.get(info_url, headers=headers, timeout=10)
     info_resp.raise_for_status()
     media_url = info_resp.json().get("url")
     mime = info_resp.json().get("mime_type", "")
 
     # 2) download raw media
-    file_resp = requests.get(media_url, headers=headers)
+    file_resp = requests.get(media_url, headers=headers, timeout=10)
     file_resp.raise_for_status()
     raw_bytes = file_resp.content
 
