@@ -6,6 +6,7 @@ import requests
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
 from rapidfuzz import fuzz  # Added for fuzzy matching
+import re
 import subprocess
 from tempfile import NamedTemporaryFile
 import tempfile
@@ -57,6 +58,7 @@ app = Flask(__name__)
 _scraped_data_cache = None
 _processed_messages = {}  # Store processed message IDs
 _CLEANUP_INTERVAL = timedelta(hours=1)  # Clean up old messages every hour
+_executor = ThreadPoolExecutor(max_workers=5)
 
 try:
     with open("d2place_data.json", "r", encoding="utf-8") as f:
@@ -91,7 +93,7 @@ def perform_web_search(query):
         "api_key": SERP_API_KEY
     }
     try:
-        resp = requests.get(search_url, params=params)
+        resp = requests.get(search_url, params=params, timeout=10)
         resp.raise_for_status()
         results = resp.json()
         summary_lines = []
@@ -178,7 +180,6 @@ def query_json_llm(user_query: str, json_data: dict) -> str:
         "max_tokens": 300
     }
     return call_qwen_api(payload)
-
 
 
 def retrieve_relevant_data(query):
@@ -283,6 +284,73 @@ def retrieve_relevant_data(query):
 
     return "\n\n".join(summary_parts)
 
+def extract_meal_query(text: str) -> str | None:
+    """Return 'breakfast', 'lunch' or 'dinner' if text looks like a meal query."""
+    lowered = text.lower()
+    if any(k in lowered for k in ["dinner", "晚餐", "晚飯"]):
+        return "dinner"
+    if any(k in lowered for k in ["lunch", "午餐", "午飯"]):
+        return "lunch"
+    if any(k in lowered for k in ["breakfast", "早餐"]):
+        return "breakfast"
+    return None
+
+def restaurants_open_for(meal: str) -> str:
+    """Return a formatted list of restaurants open during the given meal."""
+    meal_hours = {
+        "breakfast": (7, 11),
+        "lunch": (11, 15),
+        "dinner": (17, 22),
+    }
+    start_h, end_h = meal_hours.get(meal, (None, None))
+    if start_h is None:
+        return ""
+
+    results = []
+    for r in CACHED_DATA.get("dining", []):
+        hours = r.get("opening_hours", "")
+        for part in hours.split(";"):
+            m = re.search(r"(\d{1,2}):(\d{2}).*(\d{1,2}):(\d{2})", part)
+            if not m:
+                continue
+            sh = int(m.group(1))
+            eh = int(m.group(3))
+            if sh <= start_h and eh >= end_h:
+                results.append(f"- {r['name']} ({hours})")
+                break
+
+    if not results:
+        return ""
+    header = {
+        "breakfast": "🍳 Breakfast options:",
+        "lunch": "🍽 Lunch options:",
+        "dinner": "🍴 Dinner options:",
+    }[meal]
+    return header + "\n" + "\n".join(results[:5])
+
+
+def is_smalltalk(text: str) -> bool:
+    """Return True if the text looks like a greeting or other small talk."""
+    t = text.strip().lower()
+    greetings = {
+        "hi", "hello", "hey", "你好", "您好", "嗨",
+        "good morning", "good afternoon", "good evening", "早安", "早上好",
+    }
+    farewells = {"bye", "goodbye", "再見", "bye bye"}
+    thanks = {"thanks", "thank you", "謝謝", "多謝"}
+    return t in greetings or t in farewells or t in thanks
+
+
+def should_call_web_search(query: str, scraped: str) -> bool:
+    """Decide whether to call SerpAPI for this query."""
+    if is_smalltalk(query):
+        return False
+
+    cleaned = scraped.strip().lower()
+    if not cleaned or cleaned == "unknown" or cleaned.startswith("i'm sorry") or cleaned.startswith("sorry"):
+        return True
+    return False
+
 #########################
 # 2. Qwen Handlers
 #########################
@@ -297,7 +365,7 @@ def call_qwen_api(payload):
     }
     url = f"{BASE_URL}/chat/completions"
     try:
-        resp = requests.post(url, headers=headers, json=payload)
+        resp = requests.post(url, headers=headers, json=payload, timeout=20)
         resp.raise_for_status()
         result = resp.json()
         content = result['choices'][0]['message']['content']
@@ -321,12 +389,21 @@ def handle_text_query(user_text):
         """
     )
 
+
+    meal = extract_meal_query(user_text)
+    if meal:
+        reply = restaurants_open_for(meal)
+        if reply:
+            return reply
+
+    if is_smalltalk(user_text):
+        return "Hello! How can I assist you with information about D2 Place?"
+
     # 1) Always pull from cache / fuzzy logic
     scraped_data = query_json_llm(user_text, CACHED_DATA)
 
     # 2) Only call SerpAPI if scraped_data is empty or a "general fallback"
-    nd = scraped_data.strip().lower()
-    if not nd or nd == "unknown" or nd.startswith("i'm sorry") or nd.startswith("sorry"):
+    if should_call_web_search(user_text, scraped_data):
         web_results = perform_web_search(user_text)
     else:
         web_results = ""
@@ -388,13 +465,20 @@ def convert_ogg_to_mp3(ogg_bytes: bytes) -> bytes:
 
     mp3_path = in_path.replace(".ogg", ".mp3")
     # run ffmpeg to convert
-    subprocess.run([
-        "ffmpeg", "-y",
-        "-i", in_path,
-        "-ac", "1",           # mono
-        "-ar", "16000",       # 16kHz sample rate
-        mp3_path
-    ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    try:
+        subprocess.run([
+            "ffmpeg", "-y",
+            "-i", in_path,
+            "-ac", "1",           # mono
+            "-ar", "16000",       # 16kHz sample rate
+            mp3_path
+        ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except FileNotFoundError:
+        logger.error("ffmpeg not found while converting audio")
+        raise
+    except subprocess.CalledProcessError as e:
+        logger.error("ffmpeg conversion failed: %s", e)
+        raise
 
     # read back mp3 bytes
     with open(mp3_path, "rb") as mp3_f:
@@ -420,15 +504,19 @@ def transcode_to_mp3(raw_bytes: bytes, in_format: str) -> bytes:
         
         # Run ffmpeg conversion
         logger.info(f"Running ffmpeg conversion from {input_path} to {output_path}")
-        result = subprocess.run([
-            "ffmpeg", "-y",
-            "-i", input_path,
-            "-ac", "1",           # mono
-            "-ar", "16000",       # 16kHz sample rate
-            "-acodec", "libmp3lame",  # use MP3 codec
-            output_path
-        ], capture_output=True, text=True)
-        
+        try:
+            result = subprocess.run([
+                "ffmpeg", "-y",
+                "-i", input_path,
+                "-ac", "1",
+                "-ar", "16000",
+                "-acodec", "libmp3lame",
+                output_path
+            ], capture_output=True, text=True)
+        except FileNotFoundError:
+            logger.error("ffmpeg not found while transcoding audio")
+            raise
+
         if result.returncode != 0:
             logger.error(f"ffmpeg conversion failed: {result.stderr}")
             raise Exception(f"ffmpeg conversion failed: {result.stderr}")
@@ -454,10 +542,12 @@ def transcode_to_mp3(raw_bytes: bytes, in_format: str) -> bytes:
             logger.error(f"Error cleaning up temporary files: {str(e)}")
 
 def transcribe_audio(audio_bytes: bytes, content_type: str) -> str:
-    """
-    Uses Qwen's Whisper endpoint to transcribe audio to text.
-    """
-    logger.info(f"Starting audio transcription. Content type: {content_type}, Audio size: {len(audio_bytes)} bytes")
+    """Transcribe audio bytes to text using Qwen's transcription API."""
+    logger.info(
+        "Starting audio transcription. Content type: %s, Audio size: %d bytes",
+        content_type,
+        len(audio_bytes),
+    )
     
     # Save incoming audio for debugging
     try:
@@ -481,70 +571,57 @@ def transcribe_audio(audio_bytes: bytes, content_type: str) -> str:
             return ""
 
     url = f"{BASE_URL}/audio/transcriptions"
-    headers = {
-        "Authorization": f"Bearer {QWEN_API_KEY}"
-    }
-    files = {
-        "file": ("voice.mp3", audio_bytes, "audio/mpeg")
-    }
-    data = {
-        "model": "qwen-audio-whisper-1"
-    }
+    headers = {"Authorization": f"Bearer {QWEN_API_KEY}"}
+    files = {"file": ("voice.mp3", audio_bytes, "audio/mpeg")}
+    data = {"model": "qwen2-audio-instruct"}
+
     try:
-        logger.info("Sending request to Qwen Whisper API...")
+        logger.info("Sending request to Qwen transcription API...")
         resp = requests.post(url, headers=headers, files=files, data=data, timeout=30)
-        logger.info(f"Qwen Whisper API response status: {resp.status_code}")
-        logger.info(f"Qwen Whisper API response: {resp.text}")
-        
+        logger.info("Qwen transcription status: %s", resp.status_code)
+
+        if resp.status_code == 404:
+            logger.warning("Transcription endpoint returned 404, falling back to chat completions")
+            prompt_payload = {
+                "model": "qwen2-audio-instruct",
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "input_audio",
+                                "audio": {"data": base64.b64encode(audio_bytes).decode("utf-8"), "format": "mp3"},
+                            }
+                        ],
+                    }
+                ],
+            }
+            return call_qwen_api(prompt_payload)
+
         if resp.status_code != 200:
-            logger.error(f"❌ transcribe_audio got {resp.status_code}: {resp.text}")
-            # Save failed audio for debugging
+            logger.error("❌ transcribe_audio got %s: %s", resp.status_code, resp.text)
             with open("debug_failed_audio.mp3", "wb") as f:
                 f.write(audio_bytes)
             logger.info("Saved failed audio to debug_failed_audio.mp3")
             return ""
+
         resp_json = resp.json()
         transcript = resp_json.get("text", "")
-        logger.info(f"Transcription result: {transcript}")
+        logger.info("Transcription result: %s", transcript)
         return transcript
     except Exception as e:
-        logger.exception(f"🔥 Exception in transcribe_audio: {str(e)}")
-        # Save failed audio for debugging
+        logger.exception("🔥 Exception in transcribe_audio: %s", e)
         try:
             with open("debug_failed_audio.mp3", "wb") as f:
                 f.write(audio_bytes)
             logger.info("Saved failed audio to debug_failed_audio.mp3 (exception)")
         except Exception as e2:
-            logger.error(f"Failed to save failed audio: {e2}")
+            logger.error("Failed to save failed audio: %s", e2)
         return ""
 
 def handle_audio_query(audio_bytes, caption=""):
-    """
-    ORIGINAL:
-        Called Qwen2-Audio-Instruct with raw audio bytes in a single shot.
-
-    UPDATED:
-        1) Transcribe via Qwen2-Audio-Instruct in *transcription mode*.
-        2) Then feed that transcript into handle_text_query().
-    """
-    # --- Step 1: ask Qwen to transcribe only ---
-    transcribe_prompt = (
-        "You are Qwen2-Audio-Instruct. "
-        "Your only job is to *transcribe* the incoming audio to text, without any extra commentary."
-    )
-    transcribe_payload = {
-        "model": "qwen2-audio-instruct",
-        "messages": [
-            {"role": "system", "content": transcribe_prompt},
-            {"role": "user", "content": [
-                {"type": "input_audio", "audio": {
-                    "data": base64.b64encode(audio_bytes).decode('utf-8'),
-                    "format": "mp3"
-                }}
-            ]}
-        ]
-    }
-    transcript = call_qwen_api(transcribe_payload)
+    """Transcribe the audio then pass the transcript to ``handle_text_query``."""
+    transcript = transcribe_audio(audio_bytes, "audio/mpeg")
     logger.info("Audio transcribed to: %s", transcript)
 
     if not transcript or transcript.lower().startswith("sorry"):
@@ -602,14 +679,8 @@ def cleanup_old_messages():
 def webhook():
     data = request.get_json()
     
-    # Check if this is a duplicate message
-    msg_id = data.get('entry', [{}])[0].get('changes', [{}])[0].get('value', {}).get('messages', [{}])[0].get('id')
-    if msg_id:
-        if msg_id in _processed_messages:
-            logger.info(f"Duplicate message {msg_id} received, ignoring")
-            return jsonify(status="duplicate"), 200
-        _processed_messages[msg_id] = datetime.now()
-        cleanup_old_messages()
+    # 1) WhatsApp sometimes sends 'statuses' updates or duplicates;
+    #    we only want real user messages under data['entry'][…]['changes'][…]['value']['messages']
 
     # 1) WhatsApp sometimes sends 'statuses' updates or duplicates;
     #    we only want real user messages under data['entry'][…]['changes'][…]['value']['messages']
@@ -625,35 +696,42 @@ def webhook():
     if not messages:
         return jsonify(status="no_messages"), 200
 
-    msg       = messages[0]
-    from_user = msg.get('from', '')
-    msg_type  = msg.get('type', '')
+    for m in messages:
+        _executor.submit(process_message, m)
 
-    # 2) Ignore any messages coming from our own business number or the log‐forward recipient
-    BOT_NUMBER = PHONE_NUMBER_ID        # your "from" WhatsApp number
-    LOG_NUMBER = LOG_RECIPIENT          # where you send logs
+    return jsonify(status="processing", count=len(messages)), 200
+
+def process_message(msg):
+    """Handle a single WhatsApp message in a background thread."""
+    msg_id = msg.get('id')
+    if msg_id:
+        if msg_id in _processed_messages:
+            logger.info("Duplicate message %s ignored", msg_id)
+            return
+        _processed_messages[msg_id] = datetime.now()
+        cleanup_old_messages()
+    from_user = msg.get('from', '')
+    msg_type = msg.get('type', '')
+
+    BOT_NUMBER = PHONE_NUMBER_ID  # your "from" WhatsApp number
+    LOG_NUMBER = LOG_RECIPIENT    # where you send logs
     if from_user in (BOT_NUMBER, LOG_NUMBER):
-        return jsonify(status="ignored_own_message"), 200
+        return
 
     try:
-        # 1) Forward the raw inbound to your monitor
         if msg_type == 'text':
             inbound_text = msg['text']['body']
         elif msg_type == 'image':
             inbound_text = f"<image id:{msg['image']['id']}> caption:{msg['image'].get('caption','')}"
         elif msg_type == 'audio':
             media_id = msg['audio']['id']
-            mime     = msg['audio'].get('mime_type', 'audio/unknown')
+            mime = msg['audio'].get('mime_type', 'audio/unknown')
             inbound_text = f"<audio id:{media_id} mime:{mime}>"
         else:
             inbound_text = f"<{msg_type}>"
 
-        # send inbound copy
-        send_whatsapp_message(LOG_RECIPIENT,
-            f"📥 From {from_user} ({msg_type}): {inbound_text}"
-        )
+        send_whatsapp_message(LOG_RECIPIENT, f"📥 From {from_user} ({msg_type}): {inbound_text}")
 
-        # 2) Generate and send the bot's reply
         if msg_type == 'text':
             bot_reply = handle_text_query(inbound_text)
         elif msg_type == 'audio':
@@ -666,19 +744,11 @@ def webhook():
         else:
             bot_reply = "Sorry, I only handle text and audio messages for now."
 
-        # 3) Forward the outbound copy
-        send_whatsapp_message(LOG_RECIPIENT,
-            f"📤 To   {from_user}: {bot_reply}"
-        )
-
-        # 4) Finally send it to the real user
+        send_whatsapp_message(LOG_RECIPIENT, f"📤 To   {from_user}: {bot_reply}")
         send_whatsapp_message(from_user, bot_reply)
-
-        return jsonify(status="ok"), 200
 
     except Exception as e:
         logger.error(f"Error processing webhook: {e}")
-        return jsonify(status="error", error=str(e)), 500
 
 def download_media_file(media_id):
     """
@@ -687,13 +757,13 @@ def download_media_file(media_id):
     # 1) get media URL
     info_url = f"https://graph.facebook.com/v16.0/{media_id}"
     headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}"}
-    info_resp = requests.get(info_url, headers=headers)
+    info_resp = requests.get(info_url, headers=headers, timeout=10)
     info_resp.raise_for_status()
     media_url = info_resp.json().get("url")
     mime = info_resp.json().get("mime_type", "")
 
     # 2) download raw media
-    file_resp = requests.get(media_url, headers=headers)
+    file_resp = requests.get(media_url, headers=headers, timeout=10)
     file_resp.raise_for_status()
     raw_bytes = file_resp.content
 
@@ -725,7 +795,8 @@ def send_whatsapp_message(recipient, message_text):
         "text": {"body": message_text}
     }
     try:
-        resp = requests.post(url, headers=headers, json=data)
+        resp = requests.post(url, headers=headers, json=data, timeout=15)
+        resp.raise_for_status()
         logger.info("WhatsApp send response: %s", resp.text)
     except Exception as e:
         logger.error("Error sending WhatsApp message: %s", e)
