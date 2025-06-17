@@ -5,7 +5,6 @@ import logging
 import requests
 from datetime import datetime
 from dotenv import load_dotenv
-
 from serpapi import GoogleSearch
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
