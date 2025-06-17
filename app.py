@@ -388,13 +388,20 @@ def convert_ogg_to_mp3(ogg_bytes: bytes) -> bytes:
 
     mp3_path = in_path.replace(".ogg", ".mp3")
     # run ffmpeg to convert
-    subprocess.run([
-        "ffmpeg", "-y",
-        "-i", in_path,
-        "-ac", "1",           # mono
-        "-ar", "16000",       # 16kHz sample rate
-        mp3_path
-    ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    try:
+        subprocess.run([
+            "ffmpeg", "-y",
+            "-i", in_path,
+            "-ac", "1",           # mono
+            "-ar", "16000",       # 16kHz sample rate
+            mp3_path
+        ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except FileNotFoundError:
+        logger.error("ffmpeg not found while converting audio")
+        raise
+    except subprocess.CalledProcessError as e:
+        logger.error("ffmpeg conversion failed: %s", e)
+        raise
 
     # read back mp3 bytes
     with open(mp3_path, "rb") as mp3_f:
@@ -420,15 +427,19 @@ def transcode_to_mp3(raw_bytes: bytes, in_format: str) -> bytes:
         
         # Run ffmpeg conversion
         logger.info(f"Running ffmpeg conversion from {input_path} to {output_path}")
-        result = subprocess.run([
-            "ffmpeg", "-y",
-            "-i", input_path,
-            "-ac", "1",           # mono
-            "-ar", "16000",       # 16kHz sample rate
-            "-acodec", "libmp3lame",  # use MP3 codec
-            output_path
-        ], capture_output=True, text=True)
-        
+        try:
+            result = subprocess.run([
+                "ffmpeg", "-y",
+                "-i", input_path,
+                "-ac", "1",
+                "-ar", "16000",
+                "-acodec", "libmp3lame",
+                output_path
+            ], capture_output=True, text=True)
+        except FileNotFoundError:
+            logger.error("ffmpeg not found while transcoding audio")
+            raise
+
         if result.returncode != 0:
             logger.error(f"ffmpeg conversion failed: {result.stderr}")
             raise Exception(f"ffmpeg conversion failed: {result.stderr}")
@@ -625,35 +636,34 @@ def webhook():
     if not messages:
         return jsonify(status="no_messages"), 200
 
-    msg       = messages[0]
-    from_user = msg.get('from', '')
-    msg_type  = msg.get('type', '')
+    # Process in background to avoid WhatsApp retries
+    Thread(target=process_message, args=(messages[0],), daemon=True).start()
+    return jsonify(status="processing"), 200
 
-    # 2) Ignore any messages coming from our own business number or the log‐forward recipient
-    BOT_NUMBER = PHONE_NUMBER_ID        # your "from" WhatsApp number
-    LOG_NUMBER = LOG_RECIPIENT          # where you send logs
+def process_message(msg):
+    """Handle a single WhatsApp message in a background thread."""
+    from_user = msg.get('from', '')
+    msg_type = msg.get('type', '')
+
+    BOT_NUMBER = PHONE_NUMBER_ID  # your "from" WhatsApp number
+    LOG_NUMBER = LOG_RECIPIENT    # where you send logs
     if from_user in (BOT_NUMBER, LOG_NUMBER):
-        return jsonify(status="ignored_own_message"), 200
+        return
 
     try:
-        # 1) Forward the raw inbound to your monitor
         if msg_type == 'text':
             inbound_text = msg['text']['body']
         elif msg_type == 'image':
             inbound_text = f"<image id:{msg['image']['id']}> caption:{msg['image'].get('caption','')}"
         elif msg_type == 'audio':
             media_id = msg['audio']['id']
-            mime     = msg['audio'].get('mime_type', 'audio/unknown')
+            mime = msg['audio'].get('mime_type', 'audio/unknown')
             inbound_text = f"<audio id:{media_id} mime:{mime}>"
         else:
             inbound_text = f"<{msg_type}>"
 
-        # send inbound copy
-        send_whatsapp_message(LOG_RECIPIENT,
-            f"📥 From {from_user} ({msg_type}): {inbound_text}"
-        )
+        send_whatsapp_message(LOG_RECIPIENT, f"📥 From {from_user} ({msg_type}): {inbound_text}")
 
-        # 2) Generate and send the bot's reply
         if msg_type == 'text':
             bot_reply = handle_text_query(inbound_text)
         elif msg_type == 'audio':
@@ -666,19 +676,11 @@ def webhook():
         else:
             bot_reply = "Sorry, I only handle text and audio messages for now."
 
-        # 3) Forward the outbound copy
-        send_whatsapp_message(LOG_RECIPIENT,
-            f"📤 To   {from_user}: {bot_reply}"
-        )
-
-        # 4) Finally send it to the real user
+        send_whatsapp_message(LOG_RECIPIENT, f"📤 To   {from_user}: {bot_reply}")
         send_whatsapp_message(from_user, bot_reply)
-
-        return jsonify(status="ok"), 200
 
     except Exception as e:
         logger.error(f"Error processing webhook: {e}")
-        return jsonify(status="error", error=str(e)), 500
 
 def download_media_file(media_id):
     """
