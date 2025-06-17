@@ -679,7 +679,6 @@ class D2PlaceScraper:
             except Exception as e:
                 logger.error(f"[PLAY] card parse failed: {e}")
 
-        logger.info("Play scraped → %d entries", len(self.data["play"]))
 
     # ================== Facebook Page ==================
     def scrape_facebook_page(self, shop, fb_url):
