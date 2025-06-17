@@ -134,38 +134,6 @@ def query_json_llm(user_query: str, json_data: dict) -> str:
         ```
     —no apologies, no extra text.
 
-    **Few-shot examples**  
-    ```json
-    JSON:
-    {"mall_info":{
-    "location":"9 Cheung Yee Street, Lai Chi Kok, Kowloon, Hong Kong"
-    }}
-    Q: Where is D2 Place ONE?
-    A: 9 Cheung Yee Street, Lai Chi Kok, Kowloon, Hong Kong
-
-    Q: Where is D2 Place?
-    A: 9 Cheung Yee Street, Lai Chi Kok, Kowloon, Hong Kong; 15 Cheung Shun Street, Lai Chi Kok, Kowloon, Hong Kong
-
-    JSON:
-    {"dining":[
-    {"name":"La Trattoria","opening_hours":"11:00–22:00"},
-    {"name":"Sushi House","opening_hours":"12:00–15:00; 18:00–22:00"}
-    ]}
-    Q: 午餐
-    A: La Trattoria (11:00–15:00), Sushi House (12:00–15:00)
-
-    Q: 晚餐
-    A: La Trattoria (18:00–22:00), Sushi House (18:00–22:00)
-
-    JSON:
-    {"shopping":[{"name":"Book World"},{"name":"Gadget Zone"}]}
-    Q: 购物
-    A: Book World; Gadget Zone
-
-    JSON:
-    {"play":[{"name":"Game Station"},{"name":"VR Arena"}]}
-    Q: 玩
-    A: Game Station; VR Arena
     """
     # Serialize your full D2 Place JSON (or sub-sections you want)  
     json_text = json.dumps(json_data, ensure_ascii=False)
@@ -340,7 +308,6 @@ def is_smalltalk(text: str) -> bool:
     thanks = {"thanks", "thank you", "謝謝", "多謝"}
     return t in greetings or t in farewells or t in thanks
 
-
 def apply_intent_heuristics(text: str) -> str:
     """Map casual phrases to specific D2 Place intents."""
     lowered = text.lower()
@@ -380,6 +347,7 @@ def paraphrase_for_intent(user_text: str) -> str:
         result = user_text
     # Apply heuristics again in case the LLM output still contains vague phrasing
     return apply_intent_heuristics(result)
+
 
 def should_call_web_search(query: str, scraped: str) -> bool:
     """Decide whether to call SerpAPI for this query."""
