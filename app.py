@@ -366,7 +366,6 @@ def handle_text_query(user_text):
         """
     )
 
-
     meal = extract_meal_query(user_text)
     if meal:
         reply = restaurants_open_for(meal)
