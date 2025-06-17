@@ -352,8 +352,7 @@ def should_call_web_search(query: str, scraped: str) -> bool:
         return True
     return False
 
-=======
->>>>>>> main
+
 #########################
 # 2. Qwen Handlers
 #########################
@@ -392,22 +391,17 @@ def handle_text_query(user_text):
         """
     )
 
-<<<<<<< zxyomz-codex/fix-chatbot-message-delivery-and-audio-transcription-issues
-
-=======
->>>>>>> main
     meal = extract_meal_query(user_text)
     if meal:
         reply = restaurants_open_for(meal)
         if reply:
             return reply
 
-<<<<<<< zxyomz-codex/fix-chatbot-message-delivery-and-audio-transcription-issues
+
     if is_smalltalk(user_text):
         return "Hello! How can I assist you with information about D2 Place?"
 
-=======
->>>>>>> main
+
     # 1) Always pull from cache / fuzzy logic
     scraped_data = query_json_llm(user_text, CACHED_DATA)
 
@@ -588,8 +582,6 @@ def transcribe_audio(audio_bytes: bytes, content_type: str) -> str:
         logger.info("Sending request to Qwen transcription API...")
         resp = requests.post(url, headers=headers, files=files, data=data, timeout=30)
         logger.info("Qwen transcription status: %s", resp.status_code)
-
-<<<<<<< zxyomz-codex/fix-chatbot-message-delivery-and-audio-transcription-issues
         if resp.status_code == 404:
             logger.warning("Transcription endpoint returned 404, falling back to chat completions")
             prompt_payload = {
@@ -608,8 +600,6 @@ def transcribe_audio(audio_bytes: bytes, content_type: str) -> str:
             }
             return call_qwen_api(prompt_payload)
 
-=======
->>>>>>> main
         if resp.status_code != 200:
             logger.error("❌ transcribe_audio got %s: %s", resp.status_code, resp.text)
             with open("debug_failed_audio.mp3", "wb") as f:
