@@ -57,6 +57,7 @@ app = Flask(__name__)
 _scraped_data_cache = None
 _processed_messages = {}  # Store processed message IDs
 _CLEANUP_INTERVAL = timedelta(hours=1)  # Clean up old messages every hour
+_executor = ThreadPoolExecutor(max_workers=5)
 
 try:
     with open("d2place_data.json", "r", encoding="utf-8") as f:
@@ -178,7 +179,6 @@ def query_json_llm(user_query: str, json_data: dict) -> str:
         "max_tokens": 300
     }
     return call_qwen_api(payload)
-
 
 
 def retrieve_relevant_data(query):
@@ -320,6 +320,7 @@ def handle_text_query(user_text):
         Respond in the same language as the user.
         """
     )
+
 
     # 1) Always pull from cache / fuzzy logic
     scraped_data = query_json_llm(user_text, CACHED_DATA)
@@ -465,10 +466,12 @@ def transcode_to_mp3(raw_bytes: bytes, in_format: str) -> bytes:
             logger.error(f"Error cleaning up temporary files: {str(e)}")
 
 def transcribe_audio(audio_bytes: bytes, content_type: str) -> str:
-    """
-    Uses Qwen's Whisper endpoint to transcribe audio to text.
-    """
-    logger.info(f"Starting audio transcription. Content type: {content_type}, Audio size: {len(audio_bytes)} bytes")
+    """Transcribe audio bytes to text using Qwen2-Audio-Instruct."""
+    logger.info(
+        "Starting audio transcription. Content type: %s, Audio size: %d bytes",
+        content_type,
+        len(audio_bytes),
+    )
     
     # Save incoming audio for debugging
     try:
@@ -491,71 +494,47 @@ def transcribe_audio(audio_bytes: bytes, content_type: str) -> str:
             logger.exception(f"Failed to ffmpeg‐transcode OGG→MP3: {str(e)}")
             return ""
 
-    url = f"{BASE_URL}/audio/transcriptions"
-    headers = {
-        "Authorization": f"Bearer {QWEN_API_KEY}"
+    transcribe_prompt = (
+        "You are Qwen2-Audio-Instruct. "
+        "Your only job is to transcribe the incoming audio to text without extra commentary."
+    )
+
+    payload = {
+        "model": "qwen2-audio-instruct",
+        "messages": [
+            {"role": "system", "content": transcribe_prompt},
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "input_audio",
+                        "audio": {
+                            "data": base64.b64encode(audio_bytes).decode("utf-8"),
+                            "format": "mp3",
+                        },
+                    }
+                ],
+            },
+        ],
     }
-    files = {
-        "file": ("voice.mp3", audio_bytes, "audio/mpeg")
-    }
-    data = {
-        "model": "qwen-audio-whisper-1"
-    }
+
     try:
-        logger.info("Sending request to Qwen Whisper API...")
-        resp = requests.post(url, headers=headers, files=files, data=data, timeout=30)
-        logger.info(f"Qwen Whisper API response status: {resp.status_code}")
-        logger.info(f"Qwen Whisper API response: {resp.text}")
-        
-        if resp.status_code != 200:
-            logger.error(f"❌ transcribe_audio got {resp.status_code}: {resp.text}")
-            # Save failed audio for debugging
-            with open("debug_failed_audio.mp3", "wb") as f:
-                f.write(audio_bytes)
-            logger.info("Saved failed audio to debug_failed_audio.mp3")
-            return ""
-        resp_json = resp.json()
-        transcript = resp_json.get("text", "")
-        logger.info(f"Transcription result: {transcript}")
+        transcript = call_qwen_api(payload)
+        logger.info("Transcription result: %s", transcript)
         return transcript
     except Exception as e:
-        logger.exception(f"🔥 Exception in transcribe_audio: {str(e)}")
-        # Save failed audio for debugging
+        logger.exception("🔥 Exception in transcribe_audio: %s", e)
         try:
             with open("debug_failed_audio.mp3", "wb") as f:
                 f.write(audio_bytes)
             logger.info("Saved failed audio to debug_failed_audio.mp3 (exception)")
         except Exception as e2:
-            logger.error(f"Failed to save failed audio: {e2}")
+            logger.error("Failed to save failed audio: %s", e2)
         return ""
 
 def handle_audio_query(audio_bytes, caption=""):
-    """
-    ORIGINAL:
-        Called Qwen2-Audio-Instruct with raw audio bytes in a single shot.
-
-    UPDATED:
-        1) Transcribe via Qwen2-Audio-Instruct in *transcription mode*.
-        2) Then feed that transcript into handle_text_query().
-    """
-    # --- Step 1: ask Qwen to transcribe only ---
-    transcribe_prompt = (
-        "You are Qwen2-Audio-Instruct. "
-        "Your only job is to *transcribe* the incoming audio to text, without any extra commentary."
-    )
-    transcribe_payload = {
-        "model": "qwen2-audio-instruct",
-        "messages": [
-            {"role": "system", "content": transcribe_prompt},
-            {"role": "user", "content": [
-                {"type": "input_audio", "audio": {
-                    "data": base64.b64encode(audio_bytes).decode('utf-8'),
-                    "format": "mp3"
-                }}
-            ]}
-        ]
-    }
-    transcript = call_qwen_api(transcribe_payload)
+    """Transcribe the audio then pass the transcript to ``handle_text_query``."""
+    transcript = transcribe_audio(audio_bytes, "audio/mpeg")
     logger.info("Audio transcribed to: %s", transcript)
 
     if not transcript or transcript.lower().startswith("sorry"):
@@ -613,14 +592,8 @@ def cleanup_old_messages():
 def webhook():
     data = request.get_json()
     
-    # Check if this is a duplicate message
-    msg_id = data.get('entry', [{}])[0].get('changes', [{}])[0].get('value', {}).get('messages', [{}])[0].get('id')
-    if msg_id:
-        if msg_id in _processed_messages:
-            logger.info(f"Duplicate message {msg_id} received, ignoring")
-            return jsonify(status="duplicate"), 200
-        _processed_messages[msg_id] = datetime.now()
-        cleanup_old_messages()
+    # 1) WhatsApp sometimes sends 'statuses' updates or duplicates;
+    #    we only want real user messages under data['entry'][…]['changes'][…]['value']['messages']
 
     # 1) WhatsApp sometimes sends 'statuses' updates or duplicates;
     #    we only want real user messages under data['entry'][…]['changes'][…]['value']['messages']
@@ -636,12 +609,20 @@ def webhook():
     if not messages:
         return jsonify(status="no_messages"), 200
 
-    # Process in background to avoid WhatsApp retries
-    Thread(target=process_message, args=(messages[0],), daemon=True).start()
-    return jsonify(status="processing"), 200
+    for m in messages:
+        _executor.submit(process_message, m)
+
+    return jsonify(status="processing", count=len(messages)), 200
 
 def process_message(msg):
     """Handle a single WhatsApp message in a background thread."""
+    msg_id = msg.get('id')
+    if msg_id:
+        if msg_id in _processed_messages:
+            logger.info("Duplicate message %s ignored", msg_id)
+            return
+        _processed_messages[msg_id] = datetime.now()
+        cleanup_old_messages()
     from_user = msg.get('from', '')
     msg_type = msg.get('type', '')
 
@@ -727,7 +708,8 @@ def send_whatsapp_message(recipient, message_text):
         "text": {"body": message_text}
     }
     try:
-        resp = requests.post(url, headers=headers, json=data)
+        resp = requests.post(url, headers=headers, json=data, timeout=15)
+        resp.raise_for_status()
         logger.info("WhatsApp send response: %s", resp.text)
     except Exception as e:
         logger.error("Error sending WhatsApp message: %s", e)
