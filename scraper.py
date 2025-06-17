@@ -3,6 +3,7 @@ import json
 import time
 import logging
 import requests
+from datetime import datetime
 from dotenv import load_dotenv
 
 from serpapi import GoogleSearch
@@ -51,6 +52,22 @@ def _extract_next_data(html_text: str) -> dict | None:
         return json.loads(html.unescape(m.group(1).strip()))
     except json.JSONDecodeError:
         return None
+
+
+def gql(query: str, variables: dict | None = None, headers: dict | None = None):
+    """Helper to POST a GraphQL query and return JSON."""
+    payload = {"query": query}
+    if variables:
+        payload["variables"] = variables
+    h = {"Content-Type": "application/json"}
+    if headers:
+        h.update(headers)
+    r = requests.post("https://www.d2place.com/graphql", headers=h, json=payload, timeout=15)
+    r.raise_for_status()
+    data = r.json()
+    if "errors" in data:
+        raise RuntimeError(data["errors"])
+    return data.get("data", {})
 
 
 class D2PlaceScraper:
@@ -589,96 +606,135 @@ class D2PlaceScraper:
             return None
 
     def scrape_dining(self):
-        url = f"{self.base_url}/shops/DINING"
-        blob = next_blob(url, self.headers)
-        shops = blob.get("props", {}).get("pageProps", {}).get("shops", [])
-        for shop in shops:
-            item = {
-                "name":     shop.get("name"),
-                "location": shop.get("location"),
-                "detail_url": f"{self.base_url}/shops/{shop['slug']}",
-                **{k: shop.get("meta", {}).get(k, "") for k in
-                ("tel", "openingHours", "facebook", "instagram", "website")}
-            }
+        cats = gql("{findManyShopCategory(where:{categoryType:{equals:DINING}}){id}}")
+        for c in cats.get("findManyShopCategory", []):
+            shops = gql(
+                """
+                query($cid:Int!){
+                    findManyShop(where:{shopCategoryId:{equals:$cid}}, take:1000){
+                        nameEn nameTc addressEn addressTc phoneNumber
+                        displayOpeningHoursEn displayOpeningHoursTc
+                        facebookUrl instagramUrl websiteUrl passcode
+                    }
+                }
+                """,
+                {"cid": c["id"]},
+                headers=self.headers,
+            ).get("findManyShop", [])
 
-            # if hours or socials still blank → fetch the shop page once
-            if not any(item[k] for k in ("openingHours", "facebook", "instagram", "website")):
-                sub = next_blob(item["detail_url"], self.headers)
-                meta = (sub.get("props", {}).get("pageProps", {})
-                            .get("meta", {}))
-                for k,v in meta.items():
-                    if v and not item.get(k):
-                        item[k] = v
+            for shop in shops:
+                item = {
+                    "name": shop.get("nameEn") or shop.get("nameTc", ""),
+                    "location": shop.get("addressEn") or shop.get("addressTc", ""),
+                    "detail_url": f"{self.base_url}/shops/{shop['passcode']}",
+                    "phone": shop.get("phoneNumber", ""),
+                    "opening_hours": shop.get("displayOpeningHoursEn") or shop.get("displayOpeningHoursTc", ""),
+                    "facebook": shop.get("facebookUrl", ""),
+                    "instagram": shop.get("instagramUrl", ""),
+                    "website": shop.get("websiteUrl", ""),
+                }
+                self.data["dining"].append(item)
 
-            # rename keys to your existing schema
-            item["opening_hours"] = item.pop("openingHours", "")
-            item["phone"]         = item.pop("tel", "")
-            self.data["dining"].append(item)
-
-        logger.info("Dining scraped → %d entries (no clicks!)", len(self.data["dining"]))
+        logger.info("Dining scraped via GraphQL → %d entries", len(self.data["dining"]))
 
 
     def scrape_shopping(self):
-        url = f"{self.base_url}/shops/SHOP"
-        self.load_page(url, wait_selector="div.shop_shopListContainer__H9001")
-        card_elems = self.driver.find_elements(
-            By.CSS_SELECTOR, "div.shop_shopBlockContainer__ALRJK.cursor-pointer"
-        )
+        cats = gql("{findManyShopCategory(where:{categoryType:{equals:SHOP}}){id}}")
+        for c in cats.get("findManyShopCategory", []):
+            shops = gql(
+                """
+                query($cid:Int!){
+                    findManyShop(where:{shopCategoryId:{equals:$cid}}, take:1000){
+                        nameEn nameTc addressEn addressTc phoneNumber
+                        displayOpeningHoursEn displayOpeningHoursTc
+                        facebookUrl instagramUrl websiteUrl passcode
+                    }
+                }
+                """,
+                {"cid": c["id"]},
+                headers=self.headers,
+            ).get("findManyShop", [])
 
-        for card in card_elems:
-            try:
-                item = self._card_to_item(card)
-                if item["detail_url"]:
-                    item |= self._harvest_detail(item["detail_url"])
-                    for k in ("phone", "opening_hours", "facebook", "instagram", "website"):
-                        item.setdefault(k, "")
+            for shop in shops:
+                item = {
+                    "name": shop.get("nameEn") or shop.get("nameTc", ""),
+                    "location": shop.get("addressEn") or shop.get("addressTc", ""),
+                    "detail_url": f"{self.base_url}/shops/{shop['passcode']}",
+                    "phone": shop.get("phoneNumber", ""),
+                    "opening_hours": shop.get("displayOpeningHoursEn") or shop.get("displayOpeningHoursTc", ""),
+                    "facebook": shop.get("facebookUrl", ""),
+                    "instagram": shop.get("instagramUrl", ""),
+                    "website": shop.get("websiteUrl", ""),
+                }
                 self.data["shopping"].append(item)
-            except Exception as e:
-                logger.error(f"[SHOPPING] card parse failed: {e}")
 
-        logger.info("Shopping scraped → %d entries", len(self.data["shopping"]))
+        logger.info("Shopping scraped via GraphQL → %d entries", len(self.data["shopping"]))
 
     def scrape_events(self):
-        url = f"{self.base_url}/events/ALL"
-        self.load_page(url, wait_selector="div.event_eventListContainer__WCXZm")
-        card_elems = self.driver.find_elements(
-            By.CSS_SELECTOR, "div.common_shopContainer__OJfK6.cursor-pointer"
-        )
+        events = gql(
+            """
+            query($take:Int!){
+                findManyEventPublic(take:$take){
+                    nameEn nameTc venueEn venueTc alias
+                    displayOpeningHoursEn displayOpeningHoursTc
+                    eventStartDate eventEndDate
+                }
+            }
+            """,
+            {"take": 1000},
+            headers=self.headers,
+        ).get("findManyEventPublic", [])
 
-        for card in card_elems:
+        for ev in events:
             try:
-                title = card.find_element(
-                     By.CSS_SELECTOR, "p.text-gold-primary.break-words"
-                 ).text.strip()
-                detail_spans = card.find_elements(
-                     By.CSS_SELECTOR, "div.common_shopDescriptionContainer__gVqQN.space-y-2 span"
-                )
-                date = detail_spans[0].text.strip() if detail_spans else ""
-                venue = detail_spans[1].text.strip() if len(detail_spans) > 1 else ""
-                self.data["events"].append({"title": title, "date": date, "venue": venue})
-            except Exception as e:
-                logger.error(f"[EVENTS] card parse failed: {e}")
+                start = datetime.fromisoformat(ev["eventStartDate"].replace("Z", "+00:00")).date()
+                end = datetime.fromisoformat(ev["eventEndDate"].replace("Z", "+00:00")).date()
+                date_str = f"{start} - {end}"
+            except Exception:
+                date_str = ""
 
-        logger.info("Events scraped → %d entries", len(self.data["events"]))
+            item = {
+                "title": ev.get("nameEn") or ev.get("nameTc", ""),
+                "date": date_str,
+                "opening_hours": ev.get("displayOpeningHoursEn") or ev.get("displayOpeningHoursTc", ""),
+                "venue": ev.get("venueEn") or ev.get("venueTc", ""),
+                "detail_url": f"{self.base_url}/events/{ev['alias']}",
+            }
+            self.data["events"].append(item)
+
+        logger.info("Events scraped via GraphQL → %d entries", len(self.data["events"]))
 
     def scrape_play(self):
-        url = f"{self.base_url}/shops/PLAY"
-        self.load_page(url, wait_selector="div.shop_shopListContainer__H9001")
-        card_elems = self.driver.find_elements(
-            By.CSS_SELECTOR, "div.shop_shopBlockContainer__ALRJK.cursor-pointer"
-        )
+        cats = gql("{findManyShopCategory(where:{categoryType:{equals:PLAY}}){id}}")
+        for c in cats.get("findManyShopCategory", []):
+            shops = gql(
+                """
+                query($cid:Int!){
+                    findManyShop(where:{shopCategoryId:{equals:$cid}}, take:1000){
+                        nameEn nameTc addressEn addressTc phoneNumber
+                        displayOpeningHoursEn displayOpeningHoursTc
+                        facebookUrl instagramUrl websiteUrl passcode
+                    }
+                }
+                """,
+                {"cid": c["id"]},
+                headers=self.headers,
+            ).get("findManyShop", [])
 
-        for card in card_elems:
-            try:
-                item = self._card_to_item(card)
-                if item["detail_url"]:
-                    item |= self._harvest_detail(item["detail_url"])
-                    for k in ("phone", "opening_hours", "facebook", "instagram", "website"):
-                        item.setdefault(k, "")
+            for shop in shops:
+                item = {
+                    "name": shop.get("nameEn") or shop.get("nameTc", ""),
+                    "location": shop.get("addressEn") or shop.get("addressTc", ""),
+                    "detail_url": f"{self.base_url}/shops/{shop['passcode']}",
+                    "phone": shop.get("phoneNumber", ""),
+                    "opening_hours": shop.get("displayOpeningHoursEn") or shop.get("displayOpeningHoursTc", ""),
+                    "facebook": shop.get("facebookUrl", ""),
+                    "instagram": shop.get("instagramUrl", ""),
+                    "website": shop.get("websiteUrl", ""),
+                }
                 self.data["play"].append(item)
-            except Exception as e:
-                logger.error(f"[PLAY] card parse failed: {e}")
 
+        logger.info("Play scraped via GraphQL → %d entries", len(self.data["play"]))
 
     # ================== Facebook Page ==================
     def scrape_facebook_page(self, shop, fb_url):
