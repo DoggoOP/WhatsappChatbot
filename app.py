@@ -328,7 +328,6 @@ def restaurants_open_for(meal: str) -> str:
     }[meal]
     return header + "\n" + "\n".join(results[:5])
 
-<<<<<<< zxyomz-codex/fix-chatbot-message-delivery-and-audio-transcription-issues
 
 def is_smalltalk(text: str) -> bool:
     """Return True if the text looks like a greeting or other small talk."""
@@ -341,6 +340,46 @@ def is_smalltalk(text: str) -> bool:
     thanks = {"thanks", "thank you", "謝謝", "多謝"}
     return t in greetings or t in farewells or t in thanks
 
+
+def apply_intent_heuristics(text: str) -> str:
+    """Map casual phrases to specific D2 Place intents."""
+    lowered = text.lower()
+    patterns = [
+        (r"kill time|time killer|pass the time", "play or shopping options at D2 Place"),
+        (r"things? to do|what to do|bored", "play or shopping options at D2 Place"),
+    ]
+    for pat, intent in patterns:
+        if re.search(pat, lowered):
+            return intent
+    return text
+
+
+
+def paraphrase_for_intent(user_text: str) -> str:
+    """Return a short rewritten form of the user's request."""
+    # First map common casual phrases before hitting the LLM
+    mapped = apply_intent_heuristics(user_text)
+    if mapped != user_text:
+        return mapped
+
+    system_prompt = (
+        "Rewrite the user's question about D2 Place so that it explicitly states the information being requested. "
+        "Keep it very short. If the request is already clear or is just small talk, return it unchanged."
+    )
+    payload = {
+        "model": "qwen-turbo",
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_text},
+        ],
+        "temperature": 0.3,
+        "max_tokens": 20,
+    }
+    result = call_qwen_api(payload)
+    if not result or result.lower().startswith("sorry"):
+        result = user_text
+    # Apply heuristics again in case the LLM output still contains vague phrasing
+    return apply_intent_heuristics(result)
 
 def should_call_web_search(query: str, scraped: str) -> bool:
     """Decide whether to call SerpAPI for this query."""
@@ -402,18 +441,19 @@ def handle_text_query(user_text):
         return "Hello! How can I assist you with information about D2 Place?"
 
 
-    # 1) Always pull from cache / fuzzy logic
-    scraped_data = query_json_llm(user_text, CACHED_DATA)
+    # 1) Always rewrite the query for better understanding
+    user_intent = paraphrase_for_intent(user_text)
+    scraped_data = query_json_llm(user_intent, CACHED_DATA)
 
     # 2) Only call SerpAPI if scraped_data is empty or a "general fallback"
-    if should_call_web_search(user_text, scraped_data):
-        web_results = perform_web_search(user_text)
+    if should_call_web_search(user_intent, scraped_data):
+        web_results = perform_web_search(user_intent)
     else:
         web_results = ""
 
     full_prompt = (
         f"{system_prompt}\n\n"
-        f"User Query: {user_text}\n\n"
+        f"Rewritten Query: {user_intent}\n\n"
         f"Scraped Data:\n{scraped_data}\n\n"
         f"Web Search Results:\n{web_results}\n\n"
     )
