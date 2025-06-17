@@ -328,6 +328,32 @@ def restaurants_open_for(meal: str) -> str:
     }[meal]
     return header + "\n" + "\n".join(results[:5])
 
+<<<<<<< zxyomz-codex/fix-chatbot-message-delivery-and-audio-transcription-issues
+
+def is_smalltalk(text: str) -> bool:
+    """Return True if the text looks like a greeting or other small talk."""
+    t = text.strip().lower()
+    greetings = {
+        "hi", "hello", "hey", "你好", "您好", "嗨",
+        "good morning", "good afternoon", "good evening", "早安", "早上好",
+    }
+    farewells = {"bye", "goodbye", "再見", "bye bye"}
+    thanks = {"thanks", "thank you", "謝謝", "多謝"}
+    return t in greetings or t in farewells or t in thanks
+
+
+def should_call_web_search(query: str, scraped: str) -> bool:
+    """Decide whether to call SerpAPI for this query."""
+    if is_smalltalk(query):
+        return False
+
+    cleaned = scraped.strip().lower()
+    if not cleaned or cleaned == "unknown" or cleaned.startswith("i'm sorry") or cleaned.startswith("sorry"):
+        return True
+    return False
+
+=======
+>>>>>>> main
 #########################
 # 2. Qwen Handlers
 #########################
@@ -366,18 +392,27 @@ def handle_text_query(user_text):
         """
     )
 
+<<<<<<< zxyomz-codex/fix-chatbot-message-delivery-and-audio-transcription-issues
+
+=======
+>>>>>>> main
     meal = extract_meal_query(user_text)
     if meal:
         reply = restaurants_open_for(meal)
         if reply:
             return reply
 
+<<<<<<< zxyomz-codex/fix-chatbot-message-delivery-and-audio-transcription-issues
+    if is_smalltalk(user_text):
+        return "Hello! How can I assist you with information about D2 Place?"
+
+=======
+>>>>>>> main
     # 1) Always pull from cache / fuzzy logic
     scraped_data = query_json_llm(user_text, CACHED_DATA)
 
     # 2) Only call SerpAPI if scraped_data is empty or a "general fallback"
-    nd = scraped_data.strip().lower()
-    if not nd or nd == "unknown" or nd.startswith("i'm sorry") or nd.startswith("sorry"):
+    if should_call_web_search(user_text, scraped_data):
         web_results = perform_web_search(user_text)
     else:
         web_results = ""
@@ -554,6 +589,27 @@ def transcribe_audio(audio_bytes: bytes, content_type: str) -> str:
         resp = requests.post(url, headers=headers, files=files, data=data, timeout=30)
         logger.info("Qwen transcription status: %s", resp.status_code)
 
+<<<<<<< zxyomz-codex/fix-chatbot-message-delivery-and-audio-transcription-issues
+        if resp.status_code == 404:
+            logger.warning("Transcription endpoint returned 404, falling back to chat completions")
+            prompt_payload = {
+                "model": "qwen2-audio-instruct",
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "input_audio",
+                                "audio": {"data": base64.b64encode(audio_bytes).decode("utf-8"), "format": "mp3"},
+                            }
+                        ],
+                    }
+                ],
+            }
+            return call_qwen_api(prompt_payload)
+
+=======
+>>>>>>> main
         if resp.status_code != 200:
             logger.error("❌ transcribe_audio got %s: %s", resp.status_code, resp.text)
             with open("debug_failed_audio.mp3", "wb") as f:
