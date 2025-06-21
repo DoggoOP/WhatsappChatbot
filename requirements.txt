@@ -9,3 +9,4 @@ requests-html
 selenium
 apscheduler
 backoff
+serpapi

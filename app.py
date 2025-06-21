@@ -147,38 +147,6 @@ def query_json_llm(user_query: str, json_data: dict) -> str:
         ```
     —no apologies, no extra text.
 
-    **Few-shot examples**  
-    ```json
-    JSON:
-    {"mall_info":{
-    "location":"9 Cheung Yee Street, Lai Chi Kok, Kowloon, Hong Kong"
-    }}
-    Q: Where is D2 Place ONE?
-    A: 9 Cheung Yee Street, Lai Chi Kok, Kowloon, Hong Kong
-
-    Q: Where is D2 Place?
-    A: 9 Cheung Yee Street, Lai Chi Kok, Kowloon, Hong Kong; 15 Cheung Shun Street, Lai Chi Kok, Kowloon, Hong Kong
-
-    JSON:
-    {"dining":[
-    {"name":"La Trattoria","opening_hours":"11:00–22:00"},
-    {"name":"Sushi House","opening_hours":"12:00–15:00; 18:00–22:00"}
-    ]}
-    Q: 午餐
-    A: La Trattoria (11:00–15:00), Sushi House (12:00–15:00)
-
-    Q: 晚餐
-    A: La Trattoria (18:00–22:00), Sushi House (18:00–22:00)
-
-    JSON:
-    {"shopping":[{"name":"Book World"},{"name":"Gadget Zone"}]}
-    Q: 购物
-    A: Book World; Gadget Zone
-
-    JSON:
-    {"play":[{"name":"Game Station"},{"name":"VR Arena"}]}
-    Q: 玩
-    A: Game Station; VR Arena
     """
     # Serialize your full D2 Place JSON (or sub-sections you want)  
     json_text = json.dumps(json_data, ensure_ascii=False)
@@ -415,7 +383,6 @@ def apply_intent_heuristics(text: str) -> str:
     return text
 
 
-
 def paraphrase_for_intent(user_text: str) -> str:
     """Return a short rewritten form of the user's request."""
     translated = translate_to_english(user_text)
@@ -432,6 +399,7 @@ def paraphrase_for_intent(user_text: str) -> str:
         "messages": [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": translated},
+
         ],
         "temperature": 0.3,
         "max_tokens": 20,
@@ -441,6 +409,7 @@ def paraphrase_for_intent(user_text: str) -> str:
         result = translated
     # Apply heuristics again in case the LLM output still contains vague phrasing
     return apply_intent_heuristics(result)
+
 
 def should_call_web_search(query: str, scraped: str) -> bool:
     """Decide whether to call SerpAPI for this query."""
@@ -503,8 +472,6 @@ def handle_text_query(user_text):
 
     # Rewrite the query into a clear intent statement
     user_intent = paraphrase_for_intent(user_text)
-    if "promotion" in user_intent.lower():
-        return "I don't have any current promotion details for D2 Place. Please check their official website or social media pages."
 
     # Try extracting an exact answer from the JSON directly
     direct = query_json_llm(user_intent, CACHED_DATA)
@@ -525,6 +492,7 @@ def handle_text_query(user_text):
         f"Intent: {user_intent}\n\n"
         f"SCRAPED DATA:\n{scraped_data}\n\n"
         f"WEB SEARCH:\n{web_results}\n"
+
     )
     payload = {
         "messages": [
