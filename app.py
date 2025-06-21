@@ -26,6 +26,16 @@ WHATSAPP_TOKEN = os.environ.get('WHATSAPP_TOKEN')
 PHONE_NUMBER_ID = os.environ.get('PHONE_NUMBER_ID')
 LOG_RECIPIENT = os.environ.get('LOG_RECIPIENT')
 BASE_URL = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
+# Use a fixed model so the chatbot always calls the same Qwen version
+QWEN_MODEL = "qwen-plus"
+
+# Small-talk phrases used to mimic Festival Walk style responses
+GREETINGS = {
+    "hi", "hello", "hey", "你好", "您好", "嗨",
+    "good morning", "good afternoon", "good evening", "早安", "早上好",
+}
+FAREWELLS = {"bye", "goodbye", "再見", "bye bye"}
+THANKS = {"thanks", "thank you", "謝謝", "多謝"}
 
 # Custom WhatsApp log handler
 class WhatsAppLogHandler(logging.Handler):
@@ -67,6 +77,9 @@ try:
 except Exception as e:
     logger.error("Failed to load d2place_data.json into cache: %s", e)
     CACHED_DATA = {}
+
+# Pre-serialize the full JSON once for LLM context
+FULL_JSON_TEXT = json.dumps(CACHED_DATA, ensure_ascii=False)
 
 
 def async_worker(fn):
@@ -150,6 +163,31 @@ def query_json_llm(user_query: str, json_data: dict) -> str:
     return call_qwen_api(payload)
 
 
+def format_venue_details(venue: dict) -> str:
+    """Return a formatted multi-line bullet with venue details."""
+    parts = []
+    loc = venue.get("location")
+    if loc:
+        parts.append(f"Location: {loc}")
+    rating = venue.get("google_review_data", {}).get("rating")
+    reviews = venue.get("google_review_data", {}).get("reviews_count")
+    if rating:
+        r_part = f"Rating: {rating}/5"
+        if reviews:
+            r_part += f" ({reviews} reviews)"
+        parts.append(r_part)
+    cuisine = venue.get("extra_google_info", {}).get("kg_type")
+    if cuisine:
+        parts.append(f"Cuisine: {cuisine}")
+    hours = venue.get("opening_hours")
+    if hours:
+        parts.append(f"Hours: {hours}")
+    if not parts:
+        return f"- {venue.get('name','Unknown')}"
+    joined = "\n  ".join(parts)
+    return f"- {venue.get('name','Unknown')}\n  {joined}"
+
+
 def retrieve_relevant_data(query):
     """
     Load the scraped D2 Place data from d2place_data.json and return
@@ -206,9 +244,8 @@ def retrieve_relevant_data(query):
     if matched_dining:
         s = "🍴 Dining options:\n"
         for r in matched_dining[:5]:
-            hours = r.get("opening_hours", "Hours not available")
-            s += f"- {r['name']} (at {r['location']})\n  Hours: {hours}\n"
-        summary_parts.append(s)
+            s += format_venue_details(r) + "\n"
+        summary_parts.append(s.strip())
 
     # Shopping
     matched_shops = []
@@ -218,9 +255,8 @@ def retrieve_relevant_data(query):
     if matched_shops:
         s = "🛍️ Shops:\n"
         for r in matched_shops[:5]:
-            hours = r.get("opening_hours", "Hours not available")
-            s += f"- {r['name']} (at {r['location']})\n  Hours: {hours}\n"
-        summary_parts.append(s)
+            s += format_venue_details(r) + "\n"
+        summary_parts.append(s.strip())
 
     # Play facilities
     matched_play = []
@@ -230,9 +266,8 @@ def retrieve_relevant_data(query):
     if matched_play:
         s = "🎮 Play facilities:\n"
         for r in matched_play[:5]:
-            hours = r.get("opening_hours", "Hours not available")
-            s += f"- {r['name']} (at {r['location']})\n  Hours: {hours}\n"
-        summary_parts.append(s)
+            s += format_venue_details(r) + "\n"
+        summary_parts.append(s.strip())
 
     # Events
     matched_events = []
@@ -278,14 +313,13 @@ def restaurants_open_for(meal: str) -> str:
     for r in CACHED_DATA.get("dining", []):
         hours = r.get("opening_hours", "")
         for part in hours.split(";"):
-            m = re.search(r"(\d{1,2}):(\d{2}).*(\d{1,2}):(\d{2})", part)
-            if not m:
-                continue
-            sh = int(m.group(1))
-            eh = int(m.group(3))
-            if sh <= start_h and eh >= end_h:
-                results.append(f"- {r['name']} ({hours})")
-                break
+            times = re.findall(r"(\d{1,2}):(\d{2})", part)
+            if len(times) >= 2:
+                sh = int(times[0][0])
+                eh = int(times[1][0])
+                if sh <= start_h and eh >= end_h:
+                    results.append(r)
+                    break
 
     if not results:
         return ""
@@ -294,19 +328,45 @@ def restaurants_open_for(meal: str) -> str:
         "lunch": "🍽 Lunch options:",
         "dinner": "🍴 Dinner options:",
     }[meal]
-    return header + "\n" + "\n".join(results[:5])
+    lines = [format_venue_details(v) for v in results[:5]]
+    return header + "\n" + "\n".join(lines)
 
 
 def is_smalltalk(text: str) -> bool:
     """Return True if the text looks like a greeting or other small talk."""
     t = text.strip().lower()
-    greetings = {
-        "hi", "hello", "hey", "你好", "您好", "嗨",
-        "good morning", "good afternoon", "good evening", "早安", "早上好",
-    }
-    farewells = {"bye", "goodbye", "再見", "bye bye"}
-    thanks = {"thanks", "thank you", "謝謝", "多謝"}
-    return t in greetings or t in farewells or t in thanks
+    return t in GREETINGS or t in FAREWELLS or t in THANKS
+
+
+def smalltalk_response(text: str) -> str:
+    """Generate a friendly response for small-talk messages."""
+    t = text.strip().lower()
+    if t in GREETINGS:
+        return "Good day. This is D2 Place AI Customer Service Assistant. How may I help you?"
+    if t in THANKS:
+        return "You're welcome! If you have any more questions in the future, feel free to ask."
+    if t in FAREWELLS:
+        return "Thank you for your enquiry. The conversation has ended. Feel free to reach out again if you need help. Have a good day!"
+    return "Hello! How can I assist you with information about D2 Place?"
+
+
+def translate_to_english(text: str) -> str:
+    """Translate non-English queries to English using Qwen."""
+    if re.search(r"[\u4e00-\u9fff]", text):
+        system_prompt = "Translate the following text to concise English without adding commentary."
+        payload = {
+            "model": "qwen-turbo",
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": text},
+            ],
+            "temperature": 0.0,
+            "max_tokens": 40,
+        }
+        result = call_qwen_api(payload)
+        return result or text
+    return text
+
 
 def apply_intent_heuristics(text: str) -> str:
     """Map casual phrases to specific D2 Place intents."""
@@ -314,6 +374,8 @@ def apply_intent_heuristics(text: str) -> str:
     patterns = [
         (r"kill time|time killer|pass the time", "play or shopping options at D2 Place"),
         (r"things? to do|what to do|bored", "play or shopping options at D2 Place"),
+        (r"泊車|停車|停车|parking", "parking info at D2 Place"),
+        (r"優惠|discounts?|promotions?", "current promotions at D2 Place"),
     ]
     for pat, intent in patterns:
         if re.search(pat, lowered):
@@ -321,12 +383,11 @@ def apply_intent_heuristics(text: str) -> str:
     return text
 
 
-
 def paraphrase_for_intent(user_text: str) -> str:
     """Return a short rewritten form of the user's request."""
-    # First map common casual phrases before hitting the LLM
-    mapped = apply_intent_heuristics(user_text)
-    if mapped != user_text:
+    translated = translate_to_english(user_text)
+    mapped = apply_intent_heuristics(translated)
+    if mapped != translated:
         return mapped
 
     system_prompt = (
@@ -337,14 +398,15 @@ def paraphrase_for_intent(user_text: str) -> str:
         "model": "qwen-turbo",
         "messages": [
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_text},
+            {"role": "user", "content": translated},
+
         ],
         "temperature": 0.3,
         "max_tokens": 20,
     }
     result = call_qwen_api(payload)
     if not result or result.lower().startswith("sorry"):
-        result = user_text
+        result = translated
     # Apply heuristics again in case the LLM output still contains vague phrasing
     return apply_intent_heuristics(result)
 
@@ -368,6 +430,7 @@ def call_qwen_api(payload):
     """
     Common function to call the Qwen endpoint with the given payload.
     """
+    payload.setdefault("model", QWEN_MODEL)
     headers = {
         "Authorization": f"Bearer {QWEN_API_KEY}",
         "Content-Type": "application/json"
@@ -404,16 +467,20 @@ def handle_text_query(user_text):
         if reply:
             return reply
 
-
     if is_smalltalk(user_text):
-        return "Hello! How can I assist you with information about D2 Place?"
+        return smalltalk_response(user_text)
 
-
-    # 1) Always rewrite the query for better understanding
+    # Rewrite the query into a clear intent statement
     user_intent = paraphrase_for_intent(user_text)
-    scraped_data = query_json_llm(user_intent, CACHED_DATA)
 
-    # 2) Only call SerpAPI if scraped_data is empty or a "general fallback"
+    # Try extracting an exact answer from the JSON directly
+    direct = query_json_llm(user_intent, CACHED_DATA)
+    if direct and direct.strip().lower() != "unknown":
+        return direct
+
+    # Local fuzzy matching for a short summary
+    scraped_data = retrieve_relevant_data(user_intent) or ""
+
     if should_call_web_search(user_intent, scraped_data):
         web_results = perform_web_search(user_intent)
     else:
@@ -421,18 +488,19 @@ def handle_text_query(user_text):
 
     full_prompt = (
         f"{system_prompt}\n\n"
-        f"Rewritten Query: {user_intent}\n\n"
-        f"Scraped Data:\n{scraped_data}\n\n"
-        f"Web Search Results:\n{web_results}\n\n"
+        f"Full Mall Data JSON:\n{FULL_JSON_TEXT}\n\n"
+        f"Intent: {user_intent}\n\n"
+        f"SCRAPED DATA:\n{scraped_data}\n\n"
+        f"WEB SEARCH:\n{web_results}\n"
+
     )
     payload = {
-        "model": "qwen-turbo",
         "messages": [
             {"role": "system", "content": full_prompt},
             {"role": "user", "content": user_text}
         ],
         "temperature": 0.5,
-        "max_tokens": 300
+        "max_tokens": 500
     }
     return call_qwen_api(payload)
 
