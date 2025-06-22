@@ -120,47 +120,31 @@ def perform_web_search(query):
         logger.error("Error in perform_web_search: %s", e)
         return "Web search unavailable."
 
-def query_json_llm(user_query: str, json_data: dict) -> str:
-    """
-    Ask Qwen to find exactly what the user wants in the given JSON,
-    in *any* language, without us hard-coding any keywords.
-    """
-    system_prompt = """
-    You are a JSON-query assistant for **D2 Place**.  I will give you a JSON object with these keys:
-    • mall_info      (address, hours, transport, etc)  
-    • dining         (a list of restaurants with name, location, opening_hours)  
-    • shopping       (list of shops)  
-    • play           (list of play facilities)  
-    • events         (list of events)
 
-    The user will ask in ANY language—sometimes just one word like “晚餐” or “玩”, sometimes a full sentence.  
-    Your job is two-fold:
-    1. **Interpret** what they want (e.g. 晚餐 → “dinner restaurants”; 购物 → “shops”; 玩 → “play facilities”; 
-        or hours of a specific place; or address of the mall; etc.)
-    2. **Extract** exactly that information from the JSON and return it.
+def format_venue_details(venue: dict) -> str:
+    """Return a formatted multi-line bullet with venue details."""
+    parts = []
+    loc = venue.get("location")
+    if loc:
+        parts.append(f"Location: {loc}")
+    rating = venue.get("google_review_data", {}).get("rating")
+    reviews = venue.get("google_review_data", {}).get("reviews_count")
+    if rating:
+        r_part = f"Rating: {rating}/5"
+        if reviews:
+            r_part += f" ({reviews} reviews)"
+        parts.append(r_part)
+    cuisine = venue.get("extra_google_info", {}).get("kg_type")
+    if cuisine:
+        parts.append(f"Cuisine: {cuisine}")
+    hours = venue.get("opening_hours")
+    if hours:
+        parts.append(f"Hours: {hours}")
+    if not parts:
+        return f"- {venue.get('name','Unknown')}"
+    joined = "\n  ".join(parts)
+    return f"- {venue.get('name','Unknown')}\n  {joined}"
 
-    **You have only two valid replies**:
-    - If the JSON contains the answer: output **just** the information, either a raw string or a very short list.  
-    - Otherwise: output exactly the single word:
-        ```
-        UNKNOWN
-        ```
-    —no apologies, no extra text.
-
-    """
-    # Serialize your full D2 Place JSON (or sub-sections you want)  
-    json_text = json.dumps(json_data, ensure_ascii=False)
-    user_content = f"JSON:\n{json_text}\n\nQuestion: {user_query}"
-    payload = {
-        "model": "qwen-turbo",
-        "messages": [
-            {"role": "system", "content": system_prompt},
-            {"role": "user",   "content": user_content}
-        ],
-        "temperature": 0.0,
-        "max_tokens": 300
-    }
-    return call_qwen_api(payload)
 
 
 def format_venue_details(venue: dict) -> str:
@@ -298,7 +282,7 @@ def extract_meal_query(text: str) -> str | None:
         return "breakfast"
     return None
 
-def restaurants_open_for(meal: str) -> str:
+def restaurants_open_for(meal: str, lang: str = "en") -> str:
     """Return a formatted list of restaurants open during the given meal."""
     meal_hours = {
         "breakfast": (7, 11),
@@ -323,11 +307,20 @@ def restaurants_open_for(meal: str) -> str:
 
     if not results:
         return ""
-    header = {
-        "breakfast": "🍳 Breakfast options:",
-        "lunch": "🍽 Lunch options:",
-        "dinner": "🍴 Dinner options:",
-    }[meal]
+    if lang == "zh":
+        header_map = {
+            "breakfast": "🍳 早餐餐廳:",
+            "lunch": "🍽 午餐餐廳:",
+            "dinner": "🍴 晚餐餐廳:",
+        }
+    else:
+        header_map = {
+            "breakfast": "🍳 Breakfast options:",
+            "lunch": "🍽 Lunch options:",
+            "dinner": "🍴 Dinner options:",
+        }
+    header = header_map[meal]
+
     lines = [format_venue_details(v) for v in results[:5]]
     return header + "\n" + "\n".join(lines)
 
@@ -340,86 +333,23 @@ def is_smalltalk(text: str) -> bool:
 
 def smalltalk_response(text: str) -> str:
     """Generate a friendly response for small-talk messages."""
-    t = text.strip().lower()
-    if t in GREETINGS:
-        return "Good day. This is D2 Place AI Customer Service Assistant. How may I help you?"
-    if t in THANKS:
-        return "You're welcome! If you have any more questions in the future, feel free to ask."
-    if t in FAREWELLS:
-        return "Thank you for your enquiry. The conversation has ended. Feel free to reach out again if you need help. Have a good day!"
-    return "Hello! How can I assist you with information about D2 Place?"
+    t = text.strip()
+    lowered = t.lower()
+    lang = detect_language(t)
+    if lowered in GREETINGS:
+        return "您好，這裡是D2 Place AI客服助理。請問需要什麼協助？" if lang == "zh" else "Good day. This is D2 Place AI Customer Service Assistant. How may I help you?"
+    if lowered in THANKS:
+        return "不客氣！如果還有其他問題，隨時提出。" if lang == "zh" else "You're welcome! If you have any more questions in the future, feel free to ask."
+    if lowered in FAREWELLS:
+        return "感謝你的查詢，對話已結束。如需協助，請再與我們聯絡。祝你有美好的一天！" if lang == "zh" else "Thank you for your enquiry. The conversation has ended. Feel free to reach out again if you need help. Have a good day!"
+    return "您好！有什麼可以為你效勞？" if lang == "zh" else "Hello! How can I assist you with information about D2 Place?"
 
 
-def translate_to_english(text: str) -> str:
-    """Translate non-English queries to English using Qwen."""
-    if re.search(r"[\u4e00-\u9fff]", text):
-        system_prompt = "Translate the following text to concise English without adding commentary."
-        payload = {
-            "model": "qwen-turbo",
-            "messages": [
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": text},
-            ],
-            "temperature": 0.0,
-            "max_tokens": 40,
-        }
-        result = call_qwen_api(payload)
-        return result or text
-    return text
+def detect_language(text: str) -> str:
+    """Return 'zh' if the text contains Chinese characters, else 'en'."""
+    return "zh" if re.search(r"[\u4e00-\u9fff]", text) else "en"
 
 
-def apply_intent_heuristics(text: str) -> str:
-    """Map casual phrases to specific D2 Place intents."""
-    lowered = text.lower()
-    patterns = [
-        (r"kill time|time killer|pass the time", "play or shopping options at D2 Place"),
-        (r"things? to do|what to do|bored", "play or shopping options at D2 Place"),
-        (r"泊車|停車|停车|parking", "parking info at D2 Place"),
-        (r"優惠|discounts?|promotions?", "current promotions at D2 Place"),
-    ]
-    for pat, intent in patterns:
-        if re.search(pat, lowered):
-            return intent
-    return text
-
-
-def paraphrase_for_intent(user_text: str) -> str:
-    """Return a short rewritten form of the user's request."""
-    translated = translate_to_english(user_text)
-    mapped = apply_intent_heuristics(translated)
-    if mapped != translated:
-        return mapped
-
-    system_prompt = (
-        "Rewrite the user's question about D2 Place so that it explicitly states the information being requested. "
-        "Keep it very short. If the request is already clear or is just small talk, return it unchanged."
-    )
-    payload = {
-        "model": "qwen-turbo",
-        "messages": [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": translated},
-
-        ],
-        "temperature": 0.3,
-        "max_tokens": 20,
-    }
-    result = call_qwen_api(payload)
-    if not result or result.lower().startswith("sorry"):
-        result = translated
-    # Apply heuristics again in case the LLM output still contains vague phrasing
-    return apply_intent_heuristics(result)
-
-
-def should_call_web_search(query: str, scraped: str) -> bool:
-    """Decide whether to call SerpAPI for this query."""
-    if is_smalltalk(query):
-        return False
-
-    cleaned = scraped.strip().lower()
-    if not cleaned or cleaned == "unknown" or cleaned.startswith("i'm sorry") or cleaned.startswith("sorry"):
-        return True
-    return False
 
 
 #########################
@@ -461,35 +391,28 @@ def handle_text_query(user_text):
         """
     )
 
+    user_lang = detect_language(user_text)
+
     meal = extract_meal_query(user_text)
     if meal:
-        reply = restaurants_open_for(meal)
+        reply = restaurants_open_for(meal, user_lang)
         if reply:
             return reply
 
     if is_smalltalk(user_text):
         return smalltalk_response(user_text)
 
-    # Rewrite the query into a clear intent statement
-    user_intent = paraphrase_for_intent(user_text)
+    # Gather relevant local data
+    scraped_data = retrieve_relevant_data(user_text) or ""
 
-    # Try extracting an exact answer from the JSON directly
-    direct = query_json_llm(user_intent, CACHED_DATA)
-    if direct and direct.strip().lower() != "unknown":
-        return direct
+    # Always attempt a small web search to enrich the response
+    web_results = perform_web_search(user_text)
 
-    # Local fuzzy matching for a short summary
-    scraped_data = retrieve_relevant_data(user_intent) or ""
-
-    if should_call_web_search(user_intent, scraped_data):
-        web_results = perform_web_search(user_intent)
-    else:
-        web_results = ""
 
     full_prompt = (
         f"{system_prompt}\n\n"
         f"Full Mall Data JSON:\n{FULL_JSON_TEXT}\n\n"
-        f"Intent: {user_intent}\n\n"
+        f"User Question: {user_text}\n\n"
         f"SCRAPED DATA:\n{scraped_data}\n\n"
         f"WEB SEARCH:\n{web_results}\n"
 
@@ -502,7 +425,8 @@ def handle_text_query(user_text):
         "temperature": 0.5,
         "max_tokens": 500
     }
-    return call_qwen_api(payload)
+    response = call_qwen_api(payload)
+    return response
 
 def handle_image_query(image_b64, caption=""):
     """
