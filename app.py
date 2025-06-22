@@ -121,6 +121,31 @@ def perform_web_search(query):
         return "Web search unavailable."
 
 
+def format_venue_details(venue: dict) -> str:
+    """Return a formatted multi-line bullet with venue details."""
+    parts = []
+    loc = venue.get("location")
+    if loc:
+        parts.append(f"Location: {loc}")
+    rating = venue.get("google_review_data", {}).get("rating")
+    reviews = venue.get("google_review_data", {}).get("reviews_count")
+    if rating:
+        r_part = f"Rating: {rating}/5"
+        if reviews:
+            r_part += f" ({reviews} reviews)"
+        parts.append(r_part)
+    cuisine = venue.get("extra_google_info", {}).get("kg_type")
+    if cuisine:
+        parts.append(f"Cuisine: {cuisine}")
+    hours = venue.get("opening_hours")
+    if hours:
+        parts.append(f"Hours: {hours}")
+    if not parts:
+        return f"- {venue.get('name','Unknown')}"
+    joined = "\n  ".join(parts)
+    return f"- {venue.get('name','Unknown')}\n  {joined}"
+
+
 
 def format_venue_details(venue: dict) -> str:
     """Return a formatted multi-line bullet with venue details."""
@@ -295,6 +320,7 @@ def restaurants_open_for(meal: str, lang: str = "en") -> str:
             "dinner": "🍴 Dinner options:",
         }
     header = header_map[meal]
+
     lines = [format_venue_details(v) for v in results[:5]]
     return header + "\n" + "\n".join(lines)
 
@@ -382,12 +408,14 @@ def handle_text_query(user_text):
     # Always attempt a small web search to enrich the response
     web_results = perform_web_search(user_text)
 
+
     full_prompt = (
         f"{system_prompt}\n\n"
         f"Full Mall Data JSON:\n{FULL_JSON_TEXT}\n\n"
         f"User Question: {user_text}\n\n"
         f"SCRAPED DATA:\n{scraped_data}\n\n"
         f"WEB SEARCH:\n{web_results}\n"
+
     )
     payload = {
         "messages": [
