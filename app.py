@@ -26,6 +26,16 @@ WHATSAPP_TOKEN = os.environ.get('WHATSAPP_TOKEN')
 PHONE_NUMBER_ID = os.environ.get('PHONE_NUMBER_ID')
 LOG_RECIPIENT = os.environ.get('LOG_RECIPIENT')
 BASE_URL = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
+# Use a fixed model so the chatbot always calls the same Qwen version
+QWEN_MODEL = "qwen-plus"
+
+# Small-talk phrases used to mimic Festival Walk style responses
+GREETINGS = {
+    "hi", "hello", "hey", "你好", "您好", "嗨",
+    "good morning", "good afternoon", "good evening", "早安", "早上好",
+}
+FAREWELLS = {"bye", "goodbye", "再見", "bye bye"}
+THANKS = {"thanks", "thank you", "謝謝", "多謝"}
 
 # Custom WhatsApp log handler
 class WhatsAppLogHandler(logging.Handler):
@@ -68,6 +78,9 @@ except Exception as e:
     logger.error("Failed to load d2place_data.json into cache: %s", e)
     CACHED_DATA = {}
 
+# Pre-serialize the full JSON once for LLM context
+FULL_JSON_TEXT = json.dumps(CACHED_DATA, ensure_ascii=False)
+
 
 def async_worker(fn):
     @functools.wraps(fn)
@@ -107,79 +120,31 @@ def perform_web_search(query):
         logger.error("Error in perform_web_search: %s", e)
         return "Web search unavailable."
 
-def query_json_llm(user_query: str, json_data: dict) -> str:
-    """
-    Ask Qwen to find exactly what the user wants in the given JSON,
-    in *any* language, without us hard-coding any keywords.
-    """
-    system_prompt = """
-    You are a JSON-query assistant for **D2 Place**.  I will give you a JSON object with these keys:
-    • mall_info      (address, hours, transport, etc)  
-    • dining         (a list of restaurants with name, location, opening_hours)  
-    • shopping       (list of shops)  
-    • play           (list of play facilities)  
-    • events         (list of events)
 
-    The user will ask in ANY language—sometimes just one word like “晚餐” or “玩”, sometimes a full sentence.  
-    Your job is two-fold:
-    1. **Interpret** what they want (e.g. 晚餐 → “dinner restaurants”; 购物 → “shops”; 玩 → “play facilities”; 
-        or hours of a specific place; or address of the mall; etc.)
-    2. **Extract** exactly that information from the JSON and return it.
 
-    **You have only two valid replies**:
-    - If the JSON contains the answer: output **just** the information, either a raw string or a very short list.  
-    - Otherwise: output exactly the single word:
-        ```
-        UNKNOWN
-        ```
-    —no apologies, no extra text.
-
-    **Few-shot examples**  
-    ```json
-    JSON:
-    {"mall_info":{
-    "location":"9 Cheung Yee Street, Lai Chi Kok, Kowloon, Hong Kong"
-    }}
-    Q: Where is D2 Place ONE?
-    A: 9 Cheung Yee Street, Lai Chi Kok, Kowloon, Hong Kong
-
-    Q: Where is D2 Place?
-    A: 9 Cheung Yee Street, Lai Chi Kok, Kowloon, Hong Kong; 15 Cheung Shun Street, Lai Chi Kok, Kowloon, Hong Kong
-
-    JSON:
-    {"dining":[
-    {"name":"La Trattoria","opening_hours":"11:00–22:00"},
-    {"name":"Sushi House","opening_hours":"12:00–15:00; 18:00–22:00"}
-    ]}
-    Q: 午餐
-    A: La Trattoria (11:00–15:00), Sushi House (12:00–15:00)
-
-    Q: 晚餐
-    A: La Trattoria (18:00–22:00), Sushi House (18:00–22:00)
-
-    JSON:
-    {"shopping":[{"name":"Book World"},{"name":"Gadget Zone"}]}
-    Q: 购物
-    A: Book World; Gadget Zone
-
-    JSON:
-    {"play":[{"name":"Game Station"},{"name":"VR Arena"}]}
-    Q: 玩
-    A: Game Station; VR Arena
-    """
-    # Serialize your full D2 Place JSON (or sub-sections you want)  
-    json_text = json.dumps(json_data, ensure_ascii=False)
-    user_content = f"JSON:\n{json_text}\n\nQuestion: {user_query}"
-    payload = {
-        "model": "qwen-turbo",
-        "messages": [
-            {"role": "system", "content": system_prompt},
-            {"role": "user",   "content": user_content}
-        ],
-        "temperature": 0.0,
-        "max_tokens": 300
-    }
-    return call_qwen_api(payload)
+def format_venue_details(venue: dict) -> str:
+    """Return a formatted multi-line bullet with venue details."""
+    parts = []
+    loc = venue.get("location")
+    if loc:
+        parts.append(f"Location: {loc}")
+    rating = venue.get("google_review_data", {}).get("rating")
+    reviews = venue.get("google_review_data", {}).get("reviews_count")
+    if rating:
+        r_part = f"Rating: {rating}/5"
+        if reviews:
+            r_part += f" ({reviews} reviews)"
+        parts.append(r_part)
+    cuisine = venue.get("extra_google_info", {}).get("kg_type")
+    if cuisine:
+        parts.append(f"Cuisine: {cuisine}")
+    hours = venue.get("opening_hours")
+    if hours:
+        parts.append(f"Hours: {hours}")
+    if not parts:
+        return f"- {venue.get('name','Unknown')}"
+    joined = "\n  ".join(parts)
+    return f"- {venue.get('name','Unknown')}\n  {joined}"
 
 
 def retrieve_relevant_data(query):
@@ -238,9 +203,8 @@ def retrieve_relevant_data(query):
     if matched_dining:
         s = "🍴 Dining options:\n"
         for r in matched_dining[:5]:
-            hours = r.get("opening_hours", "Hours not available")
-            s += f"- {r['name']} (at {r['location']})\n  Hours: {hours}\n"
-        summary_parts.append(s)
+            s += format_venue_details(r) + "\n"
+        summary_parts.append(s.strip())
 
     # Shopping
     matched_shops = []
@@ -250,9 +214,8 @@ def retrieve_relevant_data(query):
     if matched_shops:
         s = "🛍️ Shops:\n"
         for r in matched_shops[:5]:
-            hours = r.get("opening_hours", "Hours not available")
-            s += f"- {r['name']} (at {r['location']})\n  Hours: {hours}\n"
-        summary_parts.append(s)
+            s += format_venue_details(r) + "\n"
+        summary_parts.append(s.strip())
 
     # Play facilities
     matched_play = []
@@ -262,9 +225,8 @@ def retrieve_relevant_data(query):
     if matched_play:
         s = "🎮 Play facilities:\n"
         for r in matched_play[:5]:
-            hours = r.get("opening_hours", "Hours not available")
-            s += f"- {r['name']} (at {r['location']})\n  Hours: {hours}\n"
-        summary_parts.append(s)
+            s += format_venue_details(r) + "\n"
+        summary_parts.append(s.strip())
 
     # Events
     matched_events = []
@@ -295,7 +257,7 @@ def extract_meal_query(text: str) -> str | None:
         return "breakfast"
     return None
 
-def restaurants_open_for(meal: str) -> str:
+def restaurants_open_for(meal: str, lang: str = "en") -> str:
     """Return a formatted list of restaurants open during the given meal."""
     meal_hours = {
         "breakfast": (7, 11),
@@ -310,47 +272,58 @@ def restaurants_open_for(meal: str) -> str:
     for r in CACHED_DATA.get("dining", []):
         hours = r.get("opening_hours", "")
         for part in hours.split(";"):
-            m = re.search(r"(\d{1,2}):(\d{2}).*(\d{1,2}):(\d{2})", part)
-            if not m:
-                continue
-            sh = int(m.group(1))
-            eh = int(m.group(3))
-            if sh <= start_h and eh >= end_h:
-                results.append(f"- {r['name']} ({hours})")
-                break
+            times = re.findall(r"(\d{1,2}):(\d{2})", part)
+            if len(times) >= 2:
+                sh = int(times[0][0])
+                eh = int(times[1][0])
+                if sh <= start_h and eh >= end_h:
+                    results.append(r)
+                    break
 
     if not results:
         return ""
-    header = {
-        "breakfast": "🍳 Breakfast options:",
-        "lunch": "🍽 Lunch options:",
-        "dinner": "🍴 Dinner options:",
-    }[meal]
-    return header + "\n" + "\n".join(results[:5])
+    if lang == "zh":
+        header_map = {
+            "breakfast": "🍳 早餐餐廳:",
+            "lunch": "🍽 午餐餐廳:",
+            "dinner": "🍴 晚餐餐廳:",
+        }
+    else:
+        header_map = {
+            "breakfast": "🍳 Breakfast options:",
+            "lunch": "🍽 Lunch options:",
+            "dinner": "🍴 Dinner options:",
+        }
+    header = header_map[meal]
+    lines = [format_venue_details(v) for v in results[:5]]
+    return header + "\n" + "\n".join(lines)
 
-<<<<<<< zxyomz-codex/fix-chatbot-message-delivery-and-audio-transcription-issues
 
 def is_smalltalk(text: str) -> bool:
     """Return True if the text looks like a greeting or other small talk."""
     t = text.strip().lower()
-    greetings = {
-        "hi", "hello", "hey", "你好", "您好", "嗨",
-        "good morning", "good afternoon", "good evening", "早安", "早上好",
-    }
-    farewells = {"bye", "goodbye", "再見", "bye bye"}
-    thanks = {"thanks", "thank you", "謝謝", "多謝"}
-    return t in greetings or t in farewells or t in thanks
+    return t in GREETINGS or t in FAREWELLS or t in THANKS
 
 
-def should_call_web_search(query: str, scraped: str) -> bool:
-    """Decide whether to call SerpAPI for this query."""
-    if is_smalltalk(query):
-        return False
+def smalltalk_response(text: str) -> str:
+    """Generate a friendly response for small-talk messages."""
+    t = text.strip()
+    lowered = t.lower()
+    lang = detect_language(t)
+    if lowered in GREETINGS:
+        return "您好，這裡是D2 Place AI客服助理。請問需要什麼協助？" if lang == "zh" else "Good day. This is D2 Place AI Customer Service Assistant. How may I help you?"
+    if lowered in THANKS:
+        return "不客氣！如果還有其他問題，隨時提出。" if lang == "zh" else "You're welcome! If you have any more questions in the future, feel free to ask."
+    if lowered in FAREWELLS:
+        return "感謝你的查詢，對話已結束。如需協助，請再與我們聯絡。祝你有美好的一天！" if lang == "zh" else "Thank you for your enquiry. The conversation has ended. Feel free to reach out again if you need help. Have a good day!"
+    return "您好！有什麼可以為你效勞？" if lang == "zh" else "Hello! How can I assist you with information about D2 Place?"
 
-    cleaned = scraped.strip().lower()
-    if not cleaned or cleaned == "unknown" or cleaned.startswith("i'm sorry") or cleaned.startswith("sorry"):
-        return True
-    return False
+
+def detect_language(text: str) -> str:
+    """Return 'zh' if the text contains Chinese characters, else 'en'."""
+    return "zh" if re.search(r"[\u4e00-\u9fff]", text) else "en"
+
+
 
 
 #########################
@@ -361,6 +334,7 @@ def call_qwen_api(payload):
     """
     Common function to call the Qwen endpoint with the given payload.
     """
+    payload.setdefault("model", QWEN_MODEL)
     headers = {
         "Authorization": f"Bearer {QWEN_API_KEY}",
         "Content-Type": "application/json"
@@ -391,42 +365,40 @@ def handle_text_query(user_text):
         """
     )
 
+    user_lang = detect_language(user_text)
+
     meal = extract_meal_query(user_text)
     if meal:
-        reply = restaurants_open_for(meal)
+        reply = restaurants_open_for(meal, user_lang)
         if reply:
             return reply
 
-
     if is_smalltalk(user_text):
-        return "Hello! How can I assist you with information about D2 Place?"
+        return smalltalk_response(user_text)
 
+    # Gather relevant local data
+    scraped_data = retrieve_relevant_data(user_text) or ""
 
-    # 1) Always pull from cache / fuzzy logic
-    scraped_data = query_json_llm(user_text, CACHED_DATA)
-
-    # 2) Only call SerpAPI if scraped_data is empty or a "general fallback"
-    if should_call_web_search(user_text, scraped_data):
-        web_results = perform_web_search(user_text)
-    else:
-        web_results = ""
+    # Always attempt a small web search to enrich the response
+    web_results = perform_web_search(user_text)
 
     full_prompt = (
         f"{system_prompt}\n\n"
-        f"User Query: {user_text}\n\n"
-        f"Scraped Data:\n{scraped_data}\n\n"
-        f"Web Search Results:\n{web_results}\n\n"
+        f"Full Mall Data JSON:\n{FULL_JSON_TEXT}\n\n"
+        f"User Question: {user_text}\n\n"
+        f"SCRAPED DATA:\n{scraped_data}\n\n"
+        f"WEB SEARCH:\n{web_results}\n"
     )
     payload = {
-        "model": "qwen-turbo",
         "messages": [
             {"role": "system", "content": full_prompt},
             {"role": "user", "content": user_text}
         ],
         "temperature": 0.5,
-        "max_tokens": 300
+        "max_tokens": 500
     }
-    return call_qwen_api(payload)
+    response = call_qwen_api(payload)
+    return response
 
 def handle_image_query(image_b64, caption=""):
     """
