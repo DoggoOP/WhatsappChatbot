@@ -15,6 +15,7 @@ from datetime import datetime, timedelta
 from threading import Thread
 import functools
 from concurrent.futures import ThreadPoolExecutor
+import time
 
 load_dotenv()
 
@@ -256,14 +257,16 @@ def retrieve_relevant_data(query):
     # Events
     matched_events = []
     for ev in data.get("events", []):
-        combined = f"{ev.get('name','')} {ev.get('description','')}"
+        event_name = ev.get("name") or ev.get("title", "")
+        combined = f"{event_name} {ev.get('description','')}"
         if fuzz.partial_ratio(query_lower, combined.lower()) >= threshold:
             matched_events.append(ev)
     if matched_events:
         s = "🎉 Events:\n"
         for ev in matched_events[:3]:
-            s += f"- {ev['name']} (on {ev.get('date','')})\n"
-        summary_parts.append(s)
+            name = ev.get("name") or ev.get("title", "Unnamed event")
+            s += f"- {name} (on {ev.get('date','')})\n"
+        summary_parts.append(s.strip())
 
     # Final fallback
     if not summary_parts:
@@ -356,28 +359,30 @@ def detect_language(text: str) -> str:
 # 2. Qwen Handlers
 #########################
 
-def call_qwen_api(payload):
-    """
-    Common function to call the Qwen endpoint with the given payload.
-    """
+def call_qwen_api(payload, retries: int = 2):
+    """Call the Qwen endpoint and return the response text."""
     payload.setdefault("model", QWEN_MODEL)
     headers = {
         "Authorization": f"Bearer {QWEN_API_KEY}",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
     }
     url = f"{BASE_URL}/chat/completions"
-    try:
-        resp = requests.post(url, headers=headers, json=payload, timeout=20)
-        resp.raise_for_status()
-        result = resp.json()
-        content = result['choices'][0]['message']['content']
-        if isinstance(content, str):
-            return content.strip()
-        else:
+
+    for attempt in range(retries + 1):
+        try:
+            resp = requests.post(url, headers=headers, json=payload, timeout=20)
+            resp.raise_for_status()
+            result = resp.json()
+            content = result["choices"][0]["message"]["content"]
+            if isinstance(content, str):
+                return content.strip()
             return json.dumps(content)
-    except Exception as e:
-        logger.error("Qwen API error: %s", e)
-        return "Sorry, I'm having trouble generating an answer right now."
+        except Exception as e:
+            logger.error("Qwen API error: %s", e)
+            if attempt < retries:
+                time.sleep(2 ** attempt)
+                continue
+            return "Sorry, I'm having trouble generating an answer right now."
 
 def handle_text_query(user_text):
     system_prompt = (
