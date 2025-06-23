@@ -12,7 +12,7 @@ from tempfile import NamedTemporaryFile
 import tempfile
 import hashlib
 from datetime import datetime, timedelta
-from threading import Thread
+from threading import Thread, Lock
 import functools
 from concurrent.futures import ThreadPoolExecutor
 import time
@@ -68,6 +68,7 @@ app = Flask(__name__)
 
 _scraped_data_cache = None
 _processed_messages = {}  # Store processed message IDs
+_messages_lock = Lock()  # synchronize access to processed messages
 _CLEANUP_INTERVAL = timedelta(hours=1)  # Clean up old messages every hour
 _executor = ThreadPoolExecutor(max_workers=5)
 
@@ -676,11 +677,12 @@ def cleanup_old_messages():
     """Clean up old processed message IDs."""
     now = datetime.now()
     global _processed_messages
-    _processed_messages = {
-        msg_id: timestamp 
-        for msg_id, timestamp in _processed_messages.items() 
-        if now - timestamp < _CLEANUP_INTERVAL
-    }
+    with _messages_lock:
+        _processed_messages = {
+            msg_id: timestamp
+            for msg_id, timestamp in _processed_messages.items()
+            if now - timestamp < _CLEANUP_INTERVAL
+        }
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -712,10 +714,11 @@ def process_message(msg):
     """Handle a single WhatsApp message in a background thread."""
     msg_id = msg.get('id')
     if msg_id:
-        if msg_id in _processed_messages:
-            logger.info("Duplicate message %s ignored", msg_id)
-            return
-        _processed_messages[msg_id] = datetime.now()
+        with _messages_lock:
+            if msg_id in _processed_messages:
+                logger.info("Duplicate message %s ignored", msg_id)
+                return
+            _processed_messages[msg_id] = datetime.now()
         cleanup_old_messages()
     from_user = msg.get('from', '')
     msg_type = msg.get('type', '')
