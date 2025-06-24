@@ -184,7 +184,7 @@ def retrieve_relevant_data(query):
         return ""
 
     query_lower = query.lower()
-    threshold = 20  # fuzzy-match threshold
+    threshold = 10  # fuzzy-match threshold
     summary_parts = []
 
     # Check for opening hours queries

@@ -10,3 +10,4 @@ selenium
 apscheduler
 backoff
 serpapi
+rapidfuzz

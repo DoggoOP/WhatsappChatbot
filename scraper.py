@@ -762,7 +762,7 @@ class D2PlaceScraper:
         logger.info(f"Searching Google Maps for '{query}' with SerpAPI ...")
         params = {
             "engine": "google_maps",
-            "q": query,
+            "q": query + "D2 Place HK",
             "type": "search",
             "hl": "en",
             "google_domain": "google.com.hk",
