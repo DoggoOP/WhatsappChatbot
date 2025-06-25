@@ -452,7 +452,7 @@ def handle_text_query(user_text):
     if any(k in user_text.lower() for k in ["event", "shop", "happening", "store"]):
         social_links, social_image = search_social_media_links(user_text)
         if social_links:
-            scraped_data += "\nSocial Media:\n" + "\n".join(social_links)
+            web_results += "\nSocial Media:\n" + "\n".join(social_links)
 
 
     full_prompt = (
