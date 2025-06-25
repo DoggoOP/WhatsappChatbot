@@ -70,7 +70,8 @@ _scraped_data_cache = None
 _processed_messages = {}  # Store processed message IDs
 _messages_lock = Lock()  # synchronize access to processed messages
 _CLEANUP_INTERVAL = timedelta(hours=1)  # Clean up old messages every hour
-_executor = ThreadPoolExecutor(max_workers=5)
+# Allow more concurrent message processing to reduce queue delays
+_executor = ThreadPoolExecutor(max_workers=20)
 
 try:
     with open("d2place_data.json", "r", encoding="utf-8") as f:
@@ -108,8 +109,10 @@ def perform_web_search(query):
         "api_key": SERP_API_KEY
     }
     try:
+        start = time.monotonic()
         resp = requests.get(search_url, params=params, timeout=10)
         resp.raise_for_status()
+        logger.info("Web search request took %.2f seconds", time.monotonic() - start)
         results = resp.json()
         summary_lines = []
         if "organic_results" in results:
@@ -371,8 +374,10 @@ def call_qwen_api(payload, retries: int = 2):
 
     for attempt in range(retries + 1):
         try:
+            start = time.monotonic()
             resp = requests.post(url, headers=headers, json=payload, timeout=20)
             resp.raise_for_status()
+            logger.info("Qwen API call took %.2f seconds", time.monotonic() - start)
             result = resp.json()
             content = result["choices"][0]["message"]["content"]
             if isinstance(content, str):
@@ -705,7 +710,14 @@ def webhook():
     if not messages:
         return jsonify(status="no_messages"), 200
 
+    BOT_NUMBER = PHONE_NUMBER_ID
+    LOG_NUMBER = LOG_RECIPIENT
     for m in messages:
+        from_user = m.get('from', '')
+        msg_type = m.get('type', '')
+        if from_user not in (BOT_NUMBER, LOG_NUMBER):
+            summary = summarize_message_for_log(m)
+            send_whatsapp_message(LOG_RECIPIENT, f"📥 From {from_user} ({msg_type}): {summary}")
         _executor.submit(process_message, m)
 
     return jsonify(status="processing", count=len(messages)), 200
@@ -739,8 +751,6 @@ def process_message(msg):
             inbound_text = f"<audio id:{media_id} mime:{mime}>"
         else:
             inbound_text = f"<{msg_type}>"
-
-        send_whatsapp_message(LOG_RECIPIENT, f"📥 From {from_user} ({msg_type}): {inbound_text}")
 
         if msg_type == 'text':
             bot_reply = handle_text_query(inbound_text)
@@ -805,11 +815,24 @@ def send_whatsapp_message(recipient, message_text):
         "text": {"body": message_text}
     }
     try:
+        start = time.monotonic()
         resp = requests.post(url, headers=headers, json=data, timeout=15)
         resp.raise_for_status()
-        logger.info("WhatsApp send response: %s", resp.text)
+        logger.info("WhatsApp send response: %s (%.2fs)", resp.text, time.monotonic() - start)
     except Exception as e:
         logger.error("Error sending WhatsApp message: %s", e)
+
+def summarize_message_for_log(msg: dict) -> str:
+    """Return a short description of the incoming message for logging."""
+    msg_type = msg.get('type', '')
+    if msg_type == 'text':
+        return msg.get('text', {}).get('body', '')
+    if msg_type == 'image':
+        return f"<image id:{msg.get('image', {}).get('id')}> caption:{msg.get('image', {}).get('caption', '')}"
+    if msg_type == 'audio':
+        media = msg.get('audio', {})
+        return f"<audio id:{media.get('id')} mime:{media.get('mime_type', 'audio/unknown')}>"
+    return f"<{msg_type}>"
 
 #########################
 # 5. Run the Flask App
