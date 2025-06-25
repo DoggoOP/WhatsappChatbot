@@ -16,6 +16,8 @@ from threading import Thread, Lock
 import functools
 from concurrent.futures import ThreadPoolExecutor
 import time
+from urllib.parse import urljoin
+from bs4 import BeautifulSoup
 
 load_dotenv()
 
@@ -126,6 +128,24 @@ def perform_web_search(query):
         return "Web search unavailable."
 
 
+def fetch_first_image(url: str) -> str | None:
+    """Return the first image URL found on ``url`` (e.g. og:image or first <img>)."""
+    try:
+        headers = {"User-Agent": "Mozilla/5.0"}
+        resp = requests.get(url, headers=headers, timeout=10)
+        resp.raise_for_status()
+        soup = BeautifulSoup(resp.text, "html.parser")
+        meta = soup.find("meta", property="og:image")
+        if meta and meta.get("content"):
+            return urljoin(resp.url, meta["content"])
+        img = soup.find("img")
+        if img and img.get("src"):
+            return urljoin(resp.url, img["src"])
+    except Exception as e:
+        logger.error("Error fetching image from %s: %s", url, e)
+    return None
+
+
 def search_social_media_links(query):
     """Return (links, image_url) for social media related to ``query`` using SerpAPI."""
     search_url = "https://serpapi.com/search"
@@ -146,9 +166,11 @@ def search_social_media_links(query):
             if any(d in link for d in ["facebook.com", "instagram.com", "twitter.com", "linkedin.com"]):
                 links.append(link)
                 if not image_url:
-                    image_url = r.get("thumbnail")
-            if len(links) >= 3:
-                break
+                    image_url = r.get("thumbnail") or fetch_first_image(link)
+                if len(links) >= 3:
+                    break
+            elif not image_url:
+                image_url = r.get("thumbnail") or fetch_first_image(link)
     except Exception as e:
         logger.error("Error searching social media links: %s", e)
     return links, image_url
