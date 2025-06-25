@@ -163,7 +163,7 @@ def search_social_media_links(query):
         results = resp.json()
         for r in results.get("organic_results", []):
             link = r.get("link", "")
-            if any(d in link for d in ["facebook.com", "instagram.com", "twitter.com", "linkedin.com"]):
+            if any(d in link for d in ["facebook.com", "instagram.com"]):
                 links.append(link)
                 if not image_url:
                     image_url = r.get("thumbnail") or fetch_first_image(link)
