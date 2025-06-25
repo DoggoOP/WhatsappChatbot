@@ -112,7 +112,7 @@ def perform_web_search(query):
     }
     try:
         start = time.monotonic()
-        resp = requests.get(search_url, params=params, timeout=10)
+        resp = requests.get(search_url, params=params, timeout=20)
         resp.raise_for_status()
         logger.info("Web search request took %.2f seconds", time.monotonic() - start)
         results = resp.json()
@@ -132,7 +132,7 @@ def fetch_first_image(url: str) -> str | None:
     """Return the first image URL found on ``url`` (e.g. og:image or first <img>)."""
     try:
         headers = {"User-Agent": "Mozilla/5.0"}
-        resp = requests.get(url, headers=headers, timeout=10)
+        resp = requests.get(url, headers=headers, timeout=20)
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
         meta = soup.find("meta", property="og:image")
@@ -158,7 +158,7 @@ def search_social_media_links(query):
     links = []
     image_url = None
     try:
-        resp = requests.get(search_url, params=params, timeout=10)
+        resp = requests.get(search_url, params=params, timeout=30)
         resp.raise_for_status()
         results = resp.json()
         for r in results.get("organic_results", []):
@@ -425,7 +425,7 @@ def call_qwen_api(payload, retries: int = 2):
     for attempt in range(retries + 1):
         try:
             start = time.monotonic()
-            resp = requests.post(url, headers=headers, json=payload, timeout=20)
+            resp = requests.post(url, headers=headers, json=payload, timeout=45)
             resp.raise_for_status()
             logger.info("Qwen API call took %.2f seconds", time.monotonic() - start)
             result = resp.json()
@@ -836,13 +836,13 @@ def download_media_file(media_id):
     # 1) get media URL
     info_url = f"https://graph.facebook.com/v16.0/{media_id}"
     headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}"}
-    info_resp = requests.get(info_url, headers=headers, timeout=10)
+    info_resp = requests.get(info_url, headers=headers, timeout=20)
     info_resp.raise_for_status()
     media_url = info_resp.json().get("url")
     mime = info_resp.json().get("mime_type", "")
 
     # 2) download raw media
-    file_resp = requests.get(media_url, headers=headers, timeout=10)
+    file_resp = requests.get(media_url, headers=headers, timeout=20)
     file_resp.raise_for_status()
     raw_bytes = file_resp.content
 
