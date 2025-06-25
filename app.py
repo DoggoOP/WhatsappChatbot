@@ -469,9 +469,14 @@ def handle_text_query(user_text):
     # Always attempt a small web search to enrich the response
     web_results = perform_web_search(user_text)
 
-    # Try to find social media links and an image
+    # Try to find social media links and an image. Previously this only
+    # triggered when certain keywords were present, which meant queries like
+    # "PowerPlay Arena" would not fetch any images. We now also trigger this
+    # logic when the query matches our scraped data so that images are returned
+    # for venue specific queries.
     social_links, social_image = ([], None)
-    if any(k in user_text.lower() for k in ["event", "shop", "happening", "store"]):
+    lower_query = user_text.lower()
+    if scraped_data or any(k in lower_query for k in ["event", "shop", "happening", "store"]):
         social_links, social_image = search_social_media_links(user_text)
         if social_links:
             web_results += "\nSocial Media:\n" + "\n".join(social_links)
