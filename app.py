@@ -126,6 +126,34 @@ def perform_web_search(query):
         return "Web search unavailable."
 
 
+def search_social_media_links(query):
+    """Return (links, image_url) for social media related to ``query`` using SerpAPI."""
+    search_url = "https://serpapi.com/search"
+    params = {
+        "engine": "google",
+        "q": f"{query} facebook instagram",
+        "num": "5",
+        "api_key": SERP_API_KEY,
+    }
+    links = []
+    image_url = None
+    try:
+        resp = requests.get(search_url, params=params, timeout=10)
+        resp.raise_for_status()
+        results = resp.json()
+        for r in results.get("organic_results", []):
+            link = r.get("link", "")
+            if any(d in link for d in ["facebook.com", "instagram.com", "twitter.com", "linkedin.com"]):
+                links.append(link)
+                if not image_url:
+                    image_url = r.get("thumbnail")
+            if len(links) >= 3:
+                break
+    except Exception as e:
+        logger.error("Error searching social media links: %s", e)
+    return links, image_url
+
+
 def format_venue_details(venue: dict) -> str:
     """Return a formatted multi-line bullet with venue details."""
     parts = []
@@ -408,16 +436,23 @@ def handle_text_query(user_text):
     if meal:
         reply = restaurants_open_for(meal, user_lang)
         if reply:
-            return reply
+            return reply, None
 
     if is_smalltalk(user_text):
-        return smalltalk_response(user_text)
+        return smalltalk_response(user_text), None
 
     # Gather relevant local data
     scraped_data = retrieve_relevant_data(user_text) or ""
 
     # Always attempt a small web search to enrich the response
     web_results = perform_web_search(user_text)
+
+    # Try to find social media links and an image
+    social_links, social_image = ([], None)
+    if any(k in user_text.lower() for k in ["event", "shop", "happening", "store"]):
+        social_links, social_image = search_social_media_links(user_text)
+        if social_links:
+            scraped_data += "\nSocial Media:\n" + "\n".join(social_links)
 
 
     full_prompt = (
@@ -437,7 +472,7 @@ def handle_text_query(user_text):
         "max_tokens": 500
     }
     response = call_qwen_api(payload)
-    return response
+    return response, social_image
 
 def handle_image_query(image_b64, caption=""):
     """
@@ -638,7 +673,7 @@ def handle_audio_query(audio_bytes, caption=""):
     logger.info("Audio transcribed to: %s", transcript)
 
     if not transcript or transcript.lower().startswith("sorry"):
-        return "抱歉，無法轉錄你的語音訊息。請稍後再試。"
+        return "抱歉，無法轉錄你的語音訊息。請稍後再試。", None
 
     # --- Step 2: treat that transcript as a normal text query ---
     return handle_text_query(transcript)
@@ -753,19 +788,21 @@ def process_message(msg):
             inbound_text = f"<{msg_type}>"
 
         if msg_type == 'text':
-            bot_reply = handle_text_query(inbound_text)
+            bot_reply, image_url = handle_text_query(inbound_text)
         elif msg_type == 'audio':
             audio_bytes, content_type = download_media_file(msg['audio']['id'])
             transcript = transcribe_audio(audio_bytes, content_type)
             if not transcript:
-                bot_reply = "抱歉，我無法轉錄你的語音訊息。請稍後再試。"
+                bot_reply, image_url = "抱歉，我無法轉錄你的語音訊息。請稍後再試。", None
             else:
-                bot_reply = handle_text_query(transcript)
+                bot_reply, image_url = handle_text_query(transcript)
         else:
-            bot_reply = "Sorry, I only handle text and audio messages for now."
+            bot_reply, image_url = "Sorry, I only handle text and audio messages for now.", None
 
         send_whatsapp_message(LOG_RECIPIENT, f"📤 To   {from_user}: {bot_reply}")
         send_whatsapp_message(from_user, bot_reply)
+        if image_url:
+            send_whatsapp_image(from_user, image_url)
 
     except Exception as e:
         logger.error(f"Error processing webhook: {e}")
@@ -821,6 +858,31 @@ def send_whatsapp_message(recipient, message_text):
         logger.info("WhatsApp send response: %s (%.2fs)", resp.text, time.monotonic() - start)
     except Exception as e:
         logger.error("Error sending WhatsApp message: %s", e)
+
+def send_whatsapp_image(recipient, image_url, caption=""):
+    """Send an image via WhatsApp Cloud API."""
+    url = f"https://graph.facebook.com/v16.0/{PHONE_NUMBER_ID}/messages"
+    headers = {
+        "Authorization": f"Bearer {WHATSAPP_TOKEN}",
+        "Content-Type": "application/json",
+    }
+    data = {
+        "messaging_product": "whatsapp",
+        "to": recipient,
+        "type": "image",
+        "image": {"link": image_url, "caption": caption},
+    }
+    try:
+        start = time.monotonic()
+        resp = requests.post(url, headers=headers, json=data, timeout=15)
+        resp.raise_for_status()
+        logger.info(
+            "WhatsApp image response: %s (%.2fs)",
+            resp.text,
+            time.monotonic() - start,
+        )
+    except Exception as e:
+        logger.error("Error sending WhatsApp image: %s", e)
 
 def summarize_message_for_log(msg: dict) -> str:
     """Return a short description of the incoming message for logging."""
