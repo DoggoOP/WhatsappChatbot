@@ -485,7 +485,7 @@ def handle_text_query(user_text):
     full_prompt = (
         f"{system_prompt}\n\n"
         f"Full Mall Data JSON:\n{FULL_JSON_TEXT}\n\n"
-        f"User Question: {user_text}\n\n"
+        # f"User Question: {user_text}\n\n"
         # f"SCRAPED DATA:\n{scraped_data}\n\n"
         f"WEB SEARCH:\n{web_results}\n"
 
