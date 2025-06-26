@@ -180,11 +180,11 @@ def search_social_media_links(query):
             if any(d in link for d in ["facebook.com", "instagram.com"]):
                 links.append(link)
                 if not image_url:
-                    image_url = fetch_first_image(link) or r.get("thumbnail")
+                    image_url = r.get("thumbnail") or fetch_first_image(link)
                 if len(links) >= 3:
                     break
             elif not image_url:
-                image_url = fetch_first_image(link) or r.get("thumbnail")
+                image_url = r.get("thumbnail") or fetch_first_image(link)
     except Exception as e:
         logger.error("Error searching social media links: %s", e)
     return links, image_url
