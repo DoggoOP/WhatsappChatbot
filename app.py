@@ -40,6 +40,18 @@ GREETINGS = {
 FAREWELLS = {"bye", "goodbye", "再見", "bye bye"}
 THANKS = {"thanks", "thank you", "謝謝", "多謝"}
 
+# Fuzzy matching helper utilities
+FUZZY_THRESHOLD = 80
+
+def fuzzy_match(text: str, phrases: list[str] | set[str], threshold: int = FUZZY_THRESHOLD) -> bool:
+    """Return True if ``text`` fuzzily matches any phrase in ``phrases``."""
+    lowered = text.lower()
+    for p in phrases:
+        pl = p.lower()
+        if pl in lowered or fuzz.partial_ratio(lowered, pl) >= threshold:
+            return True
+    return False
+
 # Custom WhatsApp log handler
 class WhatsAppLogHandler(logging.Handler):
     def emit(self, record):
@@ -244,7 +256,7 @@ def retrieve_relevant_data(query):
     summary_parts = []
 
     # Check for opening hours queries
-    if any(keyword in query_lower for keyword in ["opening hours", "hours", "time", "when open", "business hours"]):
+    if fuzzy_match(query_lower, ["opening hours", "hours", "time", "when open", "business hours"]):
         # First check for specific venue
         venue_name = None
         for word in query_lower.split():
@@ -317,6 +329,8 @@ def retrieve_relevant_data(query):
         combined = f"{event_name} {ev.get('description','')}"
         if fuzz.partial_ratio(query_lower, combined.lower()) >= threshold:
             matched_events.append(ev)
+    if not matched_events and is_market_event_query(query):
+        matched_events.extend(data.get("events", []))
     if matched_events:
         s = "🎉 Events:\n"
         for ev in matched_events[:3]:
@@ -333,13 +347,21 @@ def retrieve_relevant_data(query):
 def extract_meal_query(text: str) -> str | None:
     """Return 'breakfast', 'lunch' or 'dinner' if text looks like a meal query."""
     lowered = text.lower()
-    if any(k in lowered for k in ["dinner", "晚餐", "晚飯"]):
+    if fuzzy_match(lowered, ["dinner", "晚餐", "晚飯"]):
         return "dinner"
-    if any(k in lowered for k in ["lunch", "午餐", "午飯"]):
+    if fuzzy_match(lowered, ["lunch", "午餐", "午飯"]):
         return "lunch"
-    if any(k in lowered for k in ["breakfast", "早餐"]):
+    if fuzzy_match(lowered, ["breakfast", "早餐"]):
         return "breakfast"
     return None
+
+def is_market_event_query(text: str) -> bool:
+    """Return True if the text seems to ask about markets or weekend markets."""
+    lowered = text.lower()
+    if fuzzy_match(lowered, ["market", "weekend market", "市集"]):
+        if not fuzzy_match(lowered, ["supermarket"]):
+            return True
+    return False
 
 def restaurants_open_for(meal: str, lang: str = "en") -> str:
     """Return a formatted list of restaurants open during the given meal."""
@@ -387,7 +409,11 @@ def restaurants_open_for(meal: str, lang: str = "en") -> str:
 def is_smalltalk(text: str) -> bool:
     """Return True if the text looks like a greeting or other small talk."""
     t = text.strip().lower()
-    return t in GREETINGS or t in FAREWELLS or t in THANKS
+    return (
+        fuzzy_match(t, GREETINGS)
+        or fuzzy_match(t, FAREWELLS)
+        or fuzzy_match(t, THANKS)
+    )
 
 
 def smalltalk_response(text: str) -> str:
@@ -395,11 +421,11 @@ def smalltalk_response(text: str) -> str:
     t = text.strip()
     lowered = t.lower()
     lang = detect_language(t)
-    if lowered in GREETINGS:
+    if fuzzy_match(lowered, GREETINGS):
         return "您好，這裡是D2 Place AI客服助理。請問需要什麼協助？" if lang == "zh" else "Good day. This is D2 Place AI Customer Service Assistant. How may I help you?"
-    if lowered in THANKS:
+    if fuzzy_match(lowered, THANKS):
         return "不客氣！如果還有其他問題，隨時提出。" if lang == "zh" else "You're welcome! If you have any more questions in the future, feel free to ask."
-    if lowered in FAREWELLS:
+    if fuzzy_match(lowered, FAREWELLS):
         return "感謝你的查詢，對話已結束。如需協助，請再與我們聯絡。祝你有美好的一天！" if lang == "zh" else "Thank you for your enquiry. The conversation has ended. Feel free to reach out again if you need help. Have a good day!"
     return "您好！有什麼可以為你效勞？" if lang == "zh" else "Hello! How can I assist you with information about D2 Place?"
 
@@ -478,7 +504,7 @@ def handle_text_query(user_text):
     # for venue specific queries.
     social_links, social_image = ([], None)
     lower_query = user_text.lower()
-    if scraped_data or any(k in lower_query for k in ["event", "shop", "happening", "store"]):
+    if scraped_data or fuzzy_match(lower_query, ["event", "shop", "happening", "store"]):
         social_links, social_image = search_social_media_links(user_text)
         if social_links:
             web_results += "\nSocial Media:\n" + "\n".join(social_links)
