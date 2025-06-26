@@ -106,7 +106,7 @@ def perform_web_search(query):
     search_url = "https://serpapi.com/search"
     params = {
         "engine": "google",
-        "q": query,
+        "q": query + " d2 place hong kong",
         "num": "5",
         "api_key": SERP_API_KEY
     }
@@ -151,7 +151,7 @@ def search_social_media_links(query):
     search_url = "https://serpapi.com/search"
     params = {
         "engine": "google",
-        "q": f"{query} facebook instagram",
+        "q": f"{query} d2 place hong kong facebook instagram",
         "num": "5",
         "api_key": SERP_API_KEY,
     }
