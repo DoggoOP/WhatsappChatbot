@@ -108,6 +108,7 @@ def perform_web_search(query):
         "engine": "google",
         "q": query + " d2 place hong kong",
         "num": "5",
+        "gl": "hk",
         "api_key": SERP_API_KEY
     }
     try:
@@ -152,6 +153,7 @@ def search_social_media_links(query):
     params = {
         "engine": "google",
         "q": f"{query} d2 place hong kong facebook instagram",
+        "gl": "hk",  
         "num": "5",
         "api_key": SERP_API_KEY,
     }
