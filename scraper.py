@@ -672,14 +672,20 @@ class D2PlaceScraper:
 
     def scrape_events(self):
         query = """
-        query FindManyEventPublic(
-            $where: EventWhereInput,
-            $width: Int,
-            $height: Int,
-            $take: Int,
-            $orderBy: [EventOrderByWithRelationInput!]
-        ) {
-            findManyEventPublic(take: $take, where: $where, orderBy: $orderBy) {
+        {
+            findManyEventPublic(
+                take: 1000,
+                where: {
+                    OR: [
+                        { eventType: { equals: EVENT } },
+                        { eventType: { equals: WEEKEND_MARKET } }
+                    ]
+                },
+                orderBy: [
+                    { sortingWeight: desc },
+                    { eventEndDate: desc }
+                ]
+            ) {
                 alias
                 nameEn
                 nameTc
@@ -691,23 +697,7 @@ class D2PlaceScraper:
         }
         """
 
-        variables = {
-            "take": 1000,
-            "width": 500,
-            "height": 500,
-            "where": {
-                "OR": [
-                    {"eventType": {"equals": "EVENT"}},
-                    {"eventType": {"equals": "WEEKEND_MARKET"}},
-                ]
-            },
-            "orderBy": [
-                {"sortingWeight": "desc"},
-                {"eventEndDate": "desc"},
-            ],
-        }
-
-        events = gql(query, variables, headers=self.headers).get(
+        events = gql(query, headers=self.headers).get(
             "findManyEventPublic", []
         )
 
