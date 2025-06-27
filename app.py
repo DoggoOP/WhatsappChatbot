@@ -488,8 +488,8 @@ def handle_text_query(user_text):
         if reply:
             return reply, None
 
-    if is_smalltalk(user_text):
-        return smalltalk_response(user_text), None
+    # if is_smalltalk(user_text):
+    #     return smalltalk_response(user_text), None
 
     # Gather relevant local data
     scraped_data = retrieve_relevant_data(user_text) or ""
