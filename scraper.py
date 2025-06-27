@@ -669,33 +669,52 @@ class D2PlaceScraper:
 
         logger.info("Shopping scraped via GraphQL → %d entries", len(self.data["shopping"]))
 
+
     def scrape_events(self):
-        events = gql(
-            """
-            query($take:Int!){
-                findManyEventPublic(take:$take){
-                    nameEn nameTc venueEn venueTc alias
-                    displayOpeningHoursEn displayOpeningHoursTc
-                    eventStartDate eventEndDate
-                }
+        query = """
+        query FindManyEventPublic(
+            $where: EventWhereInput,
+            $width: Int,
+            $height: Int,
+            $take: Int,
+            $orderBy: [EventOrderByWithRelationInput!]
+        ) {
+            findManyEventPublic(take: $take, where: $where, orderBy: $orderBy) {
+                alias
+                nameEn
+                nameTc
+                venueEn
+                venueTc
+                displayDateEn
+                displayDateTc
             }
-            """,
-            {"take": 1000},
-            headers=self.headers,
-        ).get("findManyEventPublic", [])
+        }
+        """
+
+        variables = {
+            "take": 1000,
+            "width": 500,
+            "height": 500,
+            "where": {
+                "OR": [
+                    {"eventType": {"equals": "EVENT"}},
+                    {"eventType": {"equals": "WEEKEND_MARKET"}},
+                ]
+            },
+            "orderBy": [
+                {"sortingWeight": "desc"},
+                {"eventEndDate": "desc"},
+            ],
+        }
+
+        events = gql(query, variables, headers=self.headers).get(
+            "findManyEventPublic", []
+        )
 
         for ev in events:
-            try:
-                start = datetime.fromisoformat(ev["eventStartDate"].replace("Z", "+00:00")).date()
-                end = datetime.fromisoformat(ev["eventEndDate"].replace("Z", "+00:00")).date()
-                date_str = f"{start} - {end}"
-            except Exception:
-                date_str = ""
-
             item = {
                 "title": ev.get("nameEn") or ev.get("nameTc", ""),
-                "date": date_str,
-                "opening_hours": ev.get("displayOpeningHoursEn") or ev.get("displayOpeningHoursTc", ""),
+                "date": ev.get("displayDateEn") or ev.get("displayDateTc", ""),
                 "venue": ev.get("venueEn") or ev.get("venueTc", ""),
                 "detail_url": f"{self.base_url}/events/{ev['alias']}",
             }
