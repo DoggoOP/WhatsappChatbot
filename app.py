@@ -14,6 +14,7 @@ import hashlib
 from datetime import datetime, timedelta
 from threading import Thread, Lock
 import functools
+from functools import lru_cache
 from concurrent.futures import ThreadPoolExecutor
 import time
 from urllib.parse import urljoin
@@ -111,6 +112,7 @@ def async_worker(fn):
 
 
 
+@lru_cache(maxsize=32)
 def perform_web_search(query):
     """
     Uses SerpAPI to get top results for 'query' and return a short summary.
@@ -190,55 +192,56 @@ def search_social_media_links(query):
     return links, image_url
 
 
-def format_venue_details(venue: dict) -> str:
-    """Return a formatted multi-line bullet with venue details."""
-    parts = []
-    loc = venue.get("location")
-    if loc:
-        parts.append(f"Location: {loc}")
-    rating = venue.get("google_review_data", {}).get("rating")
-    reviews = venue.get("google_review_data", {}).get("reviews_count")
-    if rating:
-        r_part = f"Rating: {rating}/5"
-        if reviews:
-            r_part += f" ({reviews} reviews)"
-        parts.append(r_part)
-    cuisine = venue.get("extra_google_info", {}).get("kg_type")
-    if cuisine:
-        parts.append(f"Cuisine: {cuisine}")
-    hours = venue.get("opening_hours")
-    if hours:
-        parts.append(f"Hours: {hours}")
-    if not parts:
-        return f"- {venue.get('name','Unknown')}"
-    joined = "\n  ".join(parts)
-    return f"- {venue.get('name','Unknown')}\n  {joined}"
-
+def extract_building(venue: dict) -> str:
+    """Return 'D2 Place ONE' or 'D2 Place TWO' if found in the address."""
+    addr = venue.get("google_review_data", {}).get("address", "")
+    m = re.search(r"D2 Place\s*(ONE|TWO)", addr, re.IGNORECASE)
+    if m:
+        return f"D2 Place {m.group(1).upper()}"
+    return ""
 
 
 def format_venue_details(venue: dict) -> str:
     """Return a formatted multi-line bullet with venue details."""
-    parts = []
+    lines = [f"- {venue.get('name', 'Unknown')}"]
+
     loc = venue.get("location")
+    building = extract_building(venue)
     if loc:
-        parts.append(f"Location: {loc}")
+        loc_line = loc
+        if building and building.lower() not in loc.lower():
+            loc_line = f"{loc}, {building}"
+        lines.append(f"  Location: {loc_line}")
+    elif building:
+        lines.append(f"  Location: {building}")
+
+    phone = venue.get("phone")
+    if phone:
+        lines.append(f"  Phone: {phone}")
+
     rating = venue.get("google_review_data", {}).get("rating")
     reviews = venue.get("google_review_data", {}).get("reviews_count")
     if rating:
-        r_part = f"Rating: {rating}/5"
+        r_line = f"Rating: {rating}/5"
         if reviews:
-            r_part += f" ({reviews} reviews)"
-        parts.append(r_part)
+            r_line += f" ({reviews} reviews)"
+        lines.append(f"  {r_line}")
+
     cuisine = venue.get("extra_google_info", {}).get("kg_type")
     if cuisine:
-        parts.append(f"Cuisine: {cuisine}")
+        lines.append(f"  Cuisine: {cuisine}")
+
     hours = venue.get("opening_hours")
     if hours:
-        parts.append(f"Hours: {hours}")
-    if not parts:
-        return f"- {venue.get('name','Unknown')}"
-    joined = "\n  ".join(parts)
-    return f"- {venue.get('name','Unknown')}\n  {joined}"
+        lines.append(f"  Hours: {hours}")
+
+    links = [venue.get("website"), venue.get("facebook"), venue.get("instagram")]
+    links = [l for l in links if l]
+    if links:
+        lines.append(f"  Links: {' '.join(links)}")
+
+    return "\n".join(lines)
+
 
 
 def retrieve_relevant_data(query):
@@ -453,7 +456,7 @@ def call_qwen_api(payload, retries: int = 2):
     for attempt in range(retries + 1):
         try:
             start = time.monotonic()
-            resp = requests.post(url, headers=headers, json=payload, timeout=45)
+            resp = requests.post(url, headers=headers, json=payload, timeout=30)
             resp.raise_for_status()
             logger.info("Qwen API call took %.2f seconds", time.monotonic() - start)
             result = resp.json()
@@ -471,12 +474,10 @@ def call_qwen_api(payload, retries: int = 2):
 def handle_text_query(user_text):
     system_prompt = (
        """
-        You are a data-driven assistant for D2 Place mall in Hong Kong, answer any questions the user has about D2 Place.
-        Do NOT give out any information that is not related to D2 Place or may be false.
-        ONLY use the information under “SCRAPED DATA” or “WEB SEARCH RESULTS” below.
-        Do NOT invent, embellish, or guess anything outside those sources.
-        If the answer is not fully contained in those two inputs, reply: “I’m sorry, I don’t know.”
-        Respond in the same language as the user.
+        You are a friendly assistant for D2 Place mall in Hong Kong. Answer user questions using only the provided scraped data or web search results.
+        If the information is missing, politely reply that you do not know.
+        Format lists using '-' bullets and include location, hours and helpful links when available.
+        Keep responses concise and maintain a warm tone. Reply in the user's language.
         """
     )
 
@@ -488,8 +489,8 @@ def handle_text_query(user_text):
         if reply:
             return reply, None
 
-    # if is_smalltalk(user_text):
-    #     return smalltalk_response(user_text), None
+    if is_smalltalk(user_text):
+        return smalltalk_response(user_text), None
 
     # Gather relevant local data
     scraped_data = retrieve_relevant_data(user_text) or ""
