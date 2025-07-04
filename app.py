@@ -121,13 +121,13 @@ def perform_web_search(query):
     params = {
         "engine": "google",
         "q": query + " d2 place hong kong",
-        "num": "5",
+        "num": "3",
         "gl": "hk",
         "api_key": SERP_API_KEY
     }
     try:
         start = time.monotonic()
-        resp = requests.get(search_url, params=params, timeout=20)
+        resp = requests.get(search_url, params=params, timeout=10)
         resp.raise_for_status()
         logger.info("Web search request took %.2f seconds", time.monotonic() - start)
         results = resp.json()
@@ -147,7 +147,7 @@ def fetch_first_image(url: str) -> str | None:
     """Return the first image URL found on ``url`` (e.g. og:image or first <img>)."""
     try:
         headers = {"User-Agent": "Mozilla/5.0"}
-        resp = requests.get(url, headers=headers, timeout=20)
+        resp = requests.get(url, headers=headers, timeout=10)
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
         meta = soup.find("meta", property="og:image")
@@ -167,14 +167,14 @@ def search_social_media_links(query):
     params = {
         "engine": "google",
         "q": f"{query} d2 place hong kong facebook instagram",
-        "gl": "hk",  
-        "num": "5",
+        "gl": "hk",
+        "num": "3",
         "api_key": SERP_API_KEY,
     }
     links = []
     image_url = None
     try:
-        resp = requests.get(search_url, params=params, timeout=30)
+        resp = requests.get(search_url, params=params, timeout=10)
         resp.raise_for_status()
         results = resp.json()
         for r in results.get("organic_results", []):
@@ -205,6 +205,15 @@ def format_venue_details(venue: dict) -> str:
     """Return a formatted multi-line bullet with venue details."""
     lines = [f"- {venue.get('name', 'Unknown')}"]
 
+    description = (
+        venue.get("top_snippet")
+        or venue.get("google_review_snippet")
+        or venue.get("description")
+        or ""
+    )
+    if description:
+        lines.append(f"  Description: {description}")
+
     loc = venue.get("location")
     building = extract_building(venue)
     if loc:
@@ -215,30 +224,24 @@ def format_venue_details(venue: dict) -> str:
     elif building:
         lines.append(f"  Location: {building}")
 
-    phone = venue.get("phone")
-    if phone:
-        lines.append(f"  Phone: {phone}")
-
-    rating = venue.get("google_review_data", {}).get("rating")
-    reviews = venue.get("google_review_data", {}).get("reviews_count")
-    if rating:
-        r_line = f"Rating: {rating}/5"
-        if reviews:
-            r_line += f" ({reviews} reviews)"
-        lines.append(f"  {r_line}")
-
-    cuisine = venue.get("extra_google_info", {}).get("kg_type")
-    if cuisine:
-        lines.append(f"  Cuisine: {cuisine}")
-
     hours = venue.get("opening_hours")
     if hours:
         lines.append(f"  Hours: {hours}")
 
-    links = [venue.get("website"), venue.get("facebook"), venue.get("instagram")]
+    links = [
+        venue.get("website"),
+        venue.get("detail_url"),
+        venue.get("google_review_data", {}).get("website"),
+        venue.get("facebook"),
+        venue.get("instagram"),
+    ]
     links = [l for l in links if l]
     if links:
-        lines.append(f"  Links: {' '.join(links)}")
+        lines.append(f"  Link: {links[0]}")
+
+    phone = venue.get("phone")
+    if phone:
+        lines.append(f"  Phone: {phone}")
 
     return "\n".join(lines)
 
@@ -438,6 +441,22 @@ def detect_language(text: str) -> str:
     return "zh" if re.search(r"[\u4e00-\u9fff]", text) else "en"
 
 
+def postprocess_text(text: str) -> str:
+    """Clean up chatbot responses for a consistent style."""
+    cleaned = text.strip()
+    # remove markdown style emphasis characters
+    cleaned = re.sub(r"\*+([^\*]+)\*+", r"\1", cleaned)
+    # unify bullet markers and remove leading hashes
+    cleaned = re.sub(r"^\s*[\*#]+\s*", "- ", cleaned, flags=re.MULTILINE)
+    return cleaned
+
+
+def should_send_image(text: str) -> bool:
+    """Return True if the query explicitly asks for an image."""
+    lowered = text.lower()
+    return fuzzy_match(lowered, ["photo", "image", "picture", "poster", "instagram", "facebook"])
+
+
 
 
 #########################
@@ -462,8 +481,8 @@ def call_qwen_api(payload, retries: int = 2):
             result = resp.json()
             content = result["choices"][0]["message"]["content"]
             if isinstance(content, str):
-                return content.strip()
-            return json.dumps(content)
+                return postprocess_text(content)
+            return postprocess_text(json.dumps(content))
         except Exception as e:
             logger.error("Qwen API error: %s", e)
             if attempt < retries:
@@ -506,9 +525,11 @@ def handle_text_query(user_text):
     social_links, social_image = ([], None)
     lower_query = user_text.lower()
     if scraped_data or fuzzy_match(lower_query, ["event", "shop", "happening", "store"]):
-        social_links, social_image = search_social_media_links(user_text)
+        social_links, img = search_social_media_links(user_text)
         if social_links:
             web_results += "\nSocial Media:\n" + "\n".join(social_links)
+        if should_send_image(user_text):
+            social_image = img
 
 
     full_prompt = (
@@ -528,7 +549,7 @@ def handle_text_query(user_text):
         "max_tokens": 500
     }
     response = call_qwen_api(payload)
-    return response, social_image
+    return postprocess_text(response), social_image
 
 def handle_image_query(image_b64, caption=""):
     """
@@ -556,7 +577,7 @@ def handle_image_query(image_b64, caption=""):
             {"role": "user", "content": user_content}
         ]
     }
-    return call_qwen_api(payload)
+    return postprocess_text(call_qwen_api(payload))
 
 def convert_ogg_to_mp3(ogg_bytes: bytes) -> bytes:
     """
