@@ -451,6 +451,28 @@ def postprocess_text(text: str) -> str:
     return cleaned
 
 
+def maybe_replace_unknown(text: str) -> str:
+    """Replace generic unknown replies with a friendly message and hotline."""
+    lowered = text.lower()
+    if re.search(r"i\s+do(?:n't| not)\s+know", lowered):
+        return (
+            "I might not have the full details right now. "
+            "You can reach our concierge at 3620 3098 for more assistance."
+        )
+    return text
+
+
+def follow_up_promotion(query: str) -> str | None:
+    """Return an extra promotional line based on the user query."""
+    q = query.lower()
+    if "pet" in q or "dog" in q:
+        return (
+            "You may also be interested in our pet-friendly weekend market "
+            "where furry friends are welcome!"
+        )
+    return None
+
+
 def should_send_image(text: str) -> bool:
     """Return True if the query explicitly asks for an image."""
     lowered = text.lower()
@@ -488,15 +510,23 @@ def call_qwen_api(payload, retries: int = 2):
             if attempt < retries:
                 time.sleep(2 ** attempt)
                 continue
-            return "Sorry, I'm having trouble generating an answer right now."
+            return (
+                "I'm having trouble generating an answer right now. "
+                "Please contact our concierge at 3620 3098 for immediate help."
+            )
 
 def handle_text_query(user_text):
     system_prompt = (
        """
-        You are a friendly assistant for D2 Place mall in Hong Kong. Answer user questions using only the provided scraped data or web search results.
-        If the information is missing, politely reply that you do not know.
-        Format lists using '-' bullets and include location, hours and helpful links when available.
-        Keep responses concise and maintain a warm tone. Reply in the user's language.
+        You are a friendly assistant for D2 Place mall in Hong Kong. Answer user
+        questions using the provided scraped data or web search results.
+        If details are missing, offer any related information you have instead of
+        simply saying you don't know. Mention that users can call our concierge
+        at 3620 3098 for further help.
+        Format lists using '-' bullets and include location, hours and helpful
+        links when available. Keep responses concise and maintain a warm tone.
+        Suggest related venues or events when appropriate and reply in the user's
+        language.
         """
     )
 
@@ -549,7 +579,11 @@ def handle_text_query(user_text):
         "max_tokens": 500
     }
     response = call_qwen_api(payload)
-    return postprocess_text(response), social_image
+    final_reply = maybe_replace_unknown(postprocess_text(response))
+    promo = follow_up_promotion(user_text)
+    if promo:
+        final_reply += "\n\n" + promo
+    return final_reply, social_image
 
 def handle_image_query(image_b64, caption=""):
     """
