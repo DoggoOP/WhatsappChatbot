@@ -278,7 +278,9 @@ def format_venue_details(venue: dict) -> str:
 
 
     instagram = venue.get("instagram", "")
+    facebook = venue.get("facebook", "")
     openrice = extract_openrice_link(venue)
+
     if SERP_API_KEY and (not instagram or not openrice):
         ig, or_link = search_instagram_openrice(venue.get("name", ""))
         if not instagram:
@@ -286,19 +288,26 @@ def format_venue_details(venue: dict) -> str:
         if not openrice:
             openrice = or_link
 
-    links = [
+    website_candidates = [
         venue.get("website"),
-        venue.get("detail_url"),
         venue.get("google_review_data", {}).get("website"),
-        venue.get("facebook"),
+        venue.get("extra_google_info", {}).get("kg_website"),
     ]
-    links = [l for l in links if l]
-    if links:
-        lines.append(f"  Link: {links[0]}")
-    if instagram:
+    website = next((w for w in website_candidates if w and "openrice.com" not in w), "")
+    d2_url = venue.get("detail_url")
+
+    main_link = website or instagram or facebook or openrice or d2_url
+    if main_link:
+        lines.append(f"  Link: {main_link}")
+
+    if instagram and main_link != instagram:
         lines.append(f"  Instagram: {instagram}")
-    if openrice:
+    if facebook and main_link != facebook:
+        lines.append(f"  Facebook: {facebook}")
+    if openrice and main_link != openrice:
         lines.append(f"  OpenRice: {openrice}")
+    if d2_url and main_link != d2_url:
+        lines.append(f"  D2 Place Page: {d2_url}")
 
     phone = venue.get("phone")
     if phone:
