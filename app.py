@@ -199,7 +199,7 @@ def search_instagram_openrice(query: str) -> tuple[str, str]:
         "engine": "google",
         "q": f"{query} d2 place hong kong instagram openrice",
         "gl": "hk",
-        "num": "5",
+        "num": "2",
         "api_key": SERP_API_KEY,
     }
     ig = ""
