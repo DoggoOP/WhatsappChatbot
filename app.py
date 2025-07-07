@@ -222,13 +222,35 @@ def search_instagram_openrice(query: str) -> tuple[str, str]:
 
 
 def extract_building(venue: dict) -> str:
-    """Return 'D2 Place ONE (D2 1)' or 'D2 Place TWO (D2 2)' if found in the address."""
-    addr = venue.get("google_review_data", {}).get("address", "")
-    m = re.search(r"D2 Place\s*(ONE|TWO)", addr, re.IGNORECASE)
-    if m:
-        building = m.group(1).upper()
-        number = "1" if building == "ONE" else "2"
-        return f"D2 Place {building} (D2 {number})"
+    """Return 'D2 Place ONE (D2 1)' or 'D2 Place TWO (D2 2)' if found in any venue fields."""
+    pieces = [
+        venue.get("google_review_data", {}).get("address", ""),
+        venue.get("extra_google_info", {}).get("top_snippet", ""),
+        venue.get("location", ""),
+    ]
+    text = " ".join(p for p in pieces if p)
+
+    # Check street names first as some addresses omit the building name
+    if re.search(r"Cheung\s*Yee|長義街", text, re.IGNORECASE):
+        return "D2 Place ONE (D2 1)"
+    if re.search(r"Cheung\s*Shun|長順街", text, re.IGNORECASE):
+        return "D2 Place TWO (D2 2)"
+
+    # Look for explicit references to ONE/TWO or Phase 1/2
+    patterns = [
+        r"D2\s*Place[^A-Za-z0-9]*(ONE|TWO)",
+        r"D2\s*Place[^A-Za-z0-9]*(1|2)\s*期",
+        r"D2廣場\s*(一期|二期)",
+        r"D2\s*Place[^A-Za-z0-9]*(1|2)\b",
+    ]
+    for pat in patterns:
+        m = re.search(pat, text, re.IGNORECASE)
+        if m:
+            val = m.group(1).upper()
+            if val in ["1", "一期", "ONE"]:
+                return "D2 Place ONE (D2 1)"
+            if val in ["2", "二期", "TWO"]:
+                return "D2 Place TWO (D2 2)"
     return ""
 
 
