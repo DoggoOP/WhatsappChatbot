@@ -583,7 +583,7 @@ def handle_text_query(user_text):
         questions using the provided scraped data. You may enrich replies with
         web search results **only if** the restaurant, shop or event mentioned is
         confirmed to exist in the scraped JSON data. Otherwise politely indicate
-        that the venue was not found.
+        that the venue was not found. Only mention events that are happening currently or in the future; do not mention events that have ended already.
 
         If details are missing, offer any related information you have instead of
         simply saying you don't know. Mention that users can call our concierge
