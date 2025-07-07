@@ -166,7 +166,7 @@ def search_social_media_links(query):
     search_url = "https://serpapi.com/search"
     params = {
         "engine": "google",
-        "q": f"{query} d2 place hong kong facebook instagram",
+        "q": f"{query} d2 place hong kong facebook instagram openrice",
         "gl": "hk",
         "num": "3",
         "api_key": SERP_API_KEY,
@@ -179,7 +179,7 @@ def search_social_media_links(query):
         results = resp.json()
         for r in results.get("organic_results", []):
             link = r.get("link", "")
-            if any(d in link for d in ["facebook.com", "instagram.com"]):
+            if any(d in link for d in ["facebook.com", "instagram.com", "openrice.com"]):
                 links.append(link)
                 if not image_url:
                     image_url = r.get("thumbnail") or fetch_first_image(link)
@@ -192,12 +192,60 @@ def search_social_media_links(query):
     return links, image_url
 
 
+def search_instagram_openrice(query: str) -> tuple[str, str]:
+    """Return Instagram and OpenRice links for ``query`` using SerpAPI."""
+    search_url = "https://serpapi.com/search"
+    params = {
+        "engine": "google",
+        "q": f"{query} d2 place hong kong instagram openrice",
+        "gl": "hk",
+        "num": "5",
+        "api_key": SERP_API_KEY,
+    }
+    ig = ""
+    or_link = ""
+    try:
+        resp = requests.get(search_url, params=params, timeout=10)
+        resp.raise_for_status()
+        results = resp.json()
+        for r in results.get("organic_results", []):
+            link = r.get("link", "")
+            if not ig and "instagram.com" in link:
+                ig = link
+            if not or_link and "openrice.com" in link:
+                or_link = link
+            if ig and or_link:
+                break
+    except Exception as e:
+        logger.error("Error searching Instagram/OpenRice: %s", e)
+    return ig, or_link
+
+
 def extract_building(venue: dict) -> str:
-    """Return 'D2 Place ONE' or 'D2 Place TWO' if found in the address."""
+    """Return 'D2 Place ONE (D2 1)' or 'D2 Place TWO (D2 2)' if found in the address."""
     addr = venue.get("google_review_data", {}).get("address", "")
     m = re.search(r"D2 Place\s*(ONE|TWO)", addr, re.IGNORECASE)
     if m:
-        return f"D2 Place {m.group(1).upper()}"
+        building = m.group(1).upper()
+        number = "1" if building == "ONE" else "2"
+        return f"D2 Place {building} (D2 {number})"
+    return ""
+
+
+def extract_openrice_link(venue: dict) -> str:
+    """Return an OpenRice URL found in ``venue`` if any."""
+    candidates = [
+        venue.get("website"),
+        venue.get("google_review_data", {}).get("website"),
+        venue.get("extra_google_info", {}).get("kg_website"),
+    ]
+    for c in candidates:
+        if c and "openrice.com" in c:
+            return c
+    snippet = venue.get("extra_google_info", {}).get("top_snippet", "")
+    m = re.search(r"https?://[^\s,]*openrice\.com[^\s,]*", snippet)
+    if m:
+        return m.group(0)
     return ""
 
 
@@ -228,16 +276,29 @@ def format_venue_details(venue: dict) -> str:
     if hours:
         lines.append(f"  Hours: {hours}")
 
+
+    instagram = venue.get("instagram", "")
+    openrice = extract_openrice_link(venue)
+    if SERP_API_KEY and (not instagram or not openrice):
+        ig, or_link = search_instagram_openrice(venue.get("name", ""))
+        if not instagram:
+            instagram = ig
+        if not openrice:
+            openrice = or_link
+
     links = [
         venue.get("website"),
         venue.get("detail_url"),
         venue.get("google_review_data", {}).get("website"),
         venue.get("facebook"),
-        venue.get("instagram"),
     ]
     links = [l for l in links if l]
     if links:
         lines.append(f"  Link: {links[0]}")
+    if instagram:
+        lines.append(f"  Instagram: {instagram}")
+    if openrice:
+        lines.append(f"  OpenRice: {openrice}")
 
     phone = venue.get("phone")
     if phone:
