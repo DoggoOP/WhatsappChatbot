@@ -618,8 +618,6 @@ def handle_text_query(user_text):
 
         If details are missing, offer any related information you have instead of
         simply saying you don't know. Do not mention any concierge phone number.
-        Note: D2 Place currently has no dedicated vegan restaurants; some venues
-        may provide vegetarian options.
         Format lists using '-' bullets and include location, hours and helpful
         links when available. Keep responses concise and maintain a warm tone.
         Suggest related venues or events when appropriate and reply in the user's
