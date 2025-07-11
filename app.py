@@ -272,68 +272,37 @@ def extract_openrice_link(venue: dict) -> str:
 
 
 def format_venue_details(venue: dict) -> str:
-    """Return a formatted multi-line bullet with venue details."""
-    lines = [f"- {venue.get('name', 'Unknown')}"]
+    """Return name, address, hours and D2 Place link for the venue."""
 
-    description = (
-        venue.get("top_snippet")
-        or venue.get("google_review_snippet")
-        or venue.get("description")
+    name = venue.get("name") or venue.get("title") or "Unknown"
+
+    address = (
+        venue.get("location")
+        or venue.get("google_review_data", {}).get("address")
+        or venue.get("venue")
         or ""
     )
-    if description:
-        lines.append(f"  Description: {description}")
-
-    loc = venue.get("location")
     building = extract_building(venue)
-    if loc:
-        loc_line = loc
-        if building and building.lower() not in loc.lower():
-            loc_line = f"{loc}, {building}"
-        lines.append(f"  Location: {loc_line}")
-    elif building:
-        lines.append(f"  Location: {building}")
+    if address and building and building.lower() not in address.lower():
+        address = f"{address}, {building}"
+    elif not address:
+        address = building
 
-    hours = venue.get("opening_hours")
+    hours = (
+        venue.get("opening_hours")
+        or venue.get("date")
+        or ""
+    )
+
+    d2_url = venue.get("detail_url", "")
+
+    lines = [name]
+    if address:
+        lines.append(f"Address: {address}")
     if hours:
-        lines.append(f"  Hours: {hours}")
-
-
-    instagram = venue.get("instagram", "")
-    facebook = venue.get("facebook", "")
-    openrice = extract_openrice_link(venue)
-
-    if SERP_API_KEY and (not instagram or not openrice):
-        ig, or_link = search_instagram_openrice(venue.get("name", ""))
-        if not instagram:
-            instagram = ig
-        if not openrice:
-            openrice = or_link
-
-    website_candidates = [
-        venue.get("website"),
-        venue.get("google_review_data", {}).get("website"),
-        venue.get("extra_google_info", {}).get("kg_website"),
-    ]
-    website = next((w for w in website_candidates if w and "openrice.com" not in w), "")
-    d2_url = venue.get("detail_url")
-
-    main_link = website or instagram or facebook or openrice or d2_url
-    if main_link:
-        lines.append(f"  Link: {main_link}")
-
-    if instagram and main_link != instagram:
-        lines.append(f"  Instagram: {instagram}")
-    if facebook and main_link != facebook:
-        lines.append(f"  Facebook: {facebook}")
-    if openrice and main_link != openrice:
-        lines.append(f"  OpenRice: {openrice}")
-    if d2_url and main_link != d2_url:
-        lines.append(f"  D2 Place Page: {d2_url}")
-
-    phone = venue.get("phone")
-    if phone:
-        lines.append(f"  Phone: {phone}")
+        lines.append(f"Business hour: {hours}")
+    if d2_url:
+        lines.append(f"D2 Place Page: {d2_url}")
 
     return "\n".join(lines)
 
@@ -395,7 +364,7 @@ def retrieve_relevant_data(query):
     if matched_dining:
         s = "🍴 Dining options:\n"
         for r in matched_dining[:5]:
-            s += format_venue_details(r) + "\n"
+            s += format_venue_details(r) + "\n\n"
         summary_parts.append(s.strip())
 
     # Shopping
@@ -406,7 +375,7 @@ def retrieve_relevant_data(query):
     if matched_shops:
         s = "🛍️ Shops:\n"
         for r in matched_shops[:5]:
-            s += format_venue_details(r) + "\n"
+            s += format_venue_details(r) + "\n\n"
         summary_parts.append(s.strip())
 
     # Play facilities
@@ -417,7 +386,7 @@ def retrieve_relevant_data(query):
     if matched_play:
         s = "🎮 Play facilities:\n"
         for r in matched_play[:5]:
-            s += format_venue_details(r) + "\n"
+            s += format_venue_details(r) + "\n\n"
         summary_parts.append(s.strip())
 
     # Events
@@ -432,8 +401,7 @@ def retrieve_relevant_data(query):
     if matched_events:
         s = "🎉 Events:\n"
         for ev in matched_events[:3]:
-            name = ev.get("name") or ev.get("title", "Unnamed event")
-            s += f"- {name} (on {ev.get('date','')})\n"
+            s += format_venue_details(ev) + "\n\n"
         summary_parts.append(s.strip())
 
     # Final fallback
@@ -501,7 +469,7 @@ def restaurants_open_for(meal: str, lang: str = "en") -> str:
     header = header_map[meal]
 
     lines = [format_venue_details(v) for v in results[:5]]
-    return header + "\n" + "\n".join(lines)
+    return header + "\n" + "\n\n".join(lines)
 
 
 def is_smalltalk(text: str) -> bool:
@@ -519,18 +487,41 @@ def smalltalk_response(text: str) -> str:
     t = text.strip()
     lowered = t.lower()
     lang = detect_language(t)
+    reply_lang = "en" if lang == "en" else "zh"
     if fuzzy_match(lowered, GREETINGS):
-        return "您好，這裡是D2 Place AI客服助理。請問需要什麼協助？" if lang == "zh" else "Good day. This is D2 Place AI Customer Service Assistant. How may I help you?"
+        return (
+            "您好，這裡是D2 Place AI客服助理。請問需要什麼協助？"
+            if reply_lang == "zh"
+            else "Good day. This is D2 Place AI Customer Service Assistant. How may I help you?"
+        )
     if fuzzy_match(lowered, THANKS):
-        return "不客氣！如果還有其他問題，隨時提出。" if lang == "zh" else "You're welcome! If you have any more questions in the future, feel free to ask."
+        return (
+            "不客氣！如果還有其他問題，隨時提出。"
+            if reply_lang == "zh"
+            else "You're welcome! If you have any more questions in the future, feel free to ask."
+        )
     if fuzzy_match(lowered, FAREWELLS):
-        return "感謝你的查詢，對話已結束。如需協助，請再與我們聯絡。祝你有美好的一天！" if lang == "zh" else "Thank you for your enquiry. The conversation has ended. Feel free to reach out again if you need help. Have a good day!"
-    return "您好！有什麼可以為你效勞？" if lang == "zh" else "Hello! How can I assist you with information about D2 Place?"
+        return (
+            "感謝你的查詢，對話已結束。如需協助，請再與我們聯絡。祝你有美好的一天！"
+            if reply_lang == "zh"
+            else "Thank you for your enquiry. The conversation has ended. Feel free to reach out again if you need help. Have a good day!"
+        )
+    return (
+        "您好！有什麼可以為你效勞？"
+        if reply_lang == "zh"
+        else "Hello! How can I assist you with information about D2 Place?"
+    )
 
 
 def detect_language(text: str) -> str:
-    """Return 'zh' if the text contains Chinese characters, else 'en'."""
-    return "zh" if re.search(r"[\u4e00-\u9fff]", text) else "en"
+    """Return 'en', 'zh', or 'mixed' based on the characters in the text."""
+    has_zh = bool(re.search(r"[\u4e00-\u9fff]", text))
+    has_en = bool(re.search(r"[A-Za-z]", text))
+    if has_zh and has_en:
+        return "mixed"
+    if has_zh:
+        return "zh"
+    return "en"
 
 
 def postprocess_text(text: str) -> str:
@@ -616,20 +607,23 @@ def handle_text_query(user_text):
         confirmed to exist in the scraped JSON data. Otherwise politely indicate
         that the venue was not found. Only mention events that are happening currently or in the future; do not mention events that have ended already.
 
+        Keep all answers focused on D2 Place or the LAWSGROUP community only.
+
         If details are missing, offer any related information you have instead of
         simply saying you don't know. Do not mention any concierge phone number.
-        Format lists using '-' bullets and include location, hours and helpful
-        links when available. Keep responses concise and maintain a warm tone.
-        Suggest related venues or events when appropriate and reply in the user's
-        language.
+        Avoid using tables. Format each venue with its name, address, business
+        hour and D2 Place page, separated by blank lines. Reply in Chinese if the
+        user's message contains Chinese characters or is mixed; otherwise reply
+        in English. Maintain a warm tone.
         """
     )
 
     user_lang = detect_language(user_text)
+    reply_lang = "en" if user_lang == "en" else "zh"
 
     meal = extract_meal_query(user_text)
     if meal:
-        reply = restaurants_open_for(meal, user_lang)
+        reply = restaurants_open_for(meal, reply_lang)
         if reply:
             return reply, None
 
@@ -992,6 +986,15 @@ def process_message(msg):
             inbound_text = f"<audio id:{media_id} mime:{mime}>"
         else:
             inbound_text = f"<{msg_type}>"
+
+        # Send immediate greeting/kind note to reduce perceived wait time
+        lang = detect_language(inbound_text) if msg_type == 'text' else 'zh'
+        note = (
+            "Good day. This is D2 Place AI Customer Service Assistant. Processing your request, please wait……"
+            if lang == 'en'
+            else "系統正在處理，請稍等……"
+        )
+        send_whatsapp_message(from_user, note)
 
         if msg_type == 'text':
             bot_reply, image_url = handle_text_query(inbound_text)
