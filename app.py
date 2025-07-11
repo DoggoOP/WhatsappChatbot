@@ -549,7 +549,7 @@ def maybe_replace_unknown(text: str) -> str:
     if re.search(r"i\s+do(?:n't| not)\s+know", lowered):
         return (
             "I might not have the full details right now. "
-            "You can reach our concierge at 3620 3098 for more assistance."
+            "Please let me know if there's anything else I can help with."
         )
     return text
 
@@ -604,7 +604,7 @@ def call_qwen_api(payload, retries: int = 2):
                 continue
             return (
                 "I'm having trouble generating an answer right now. "
-                "Please contact our concierge at 3620 3098 for immediate help."
+                "Please try again in a moment."
             )
 
 def handle_text_query(user_text):
@@ -617,8 +617,9 @@ def handle_text_query(user_text):
         that the venue was not found. Only mention events that are happening currently or in the future; do not mention events that have ended already.
 
         If details are missing, offer any related information you have instead of
-        simply saying you don't know. Mention that users can call our concierge
-        at 3620 3098 for further help.
+        simply saying you don't know. Do not mention any concierge phone number.
+        Note: D2 Place currently has no dedicated vegan restaurants; some venues
+        may provide vegetarian options.
         Format lists using '-' bullets and include location, hours and helpful
         links when available. Keep responses concise and maintain a warm tone.
         Suggest related venues or events when appropriate and reply in the user's

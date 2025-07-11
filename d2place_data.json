@@ -1535,10 +1535,11 @@
     {
       "name": "Concierge",
       "location": "G/F, D2 Place ONE (near main entrance)",
-      "phone": "3620 3098",
       "opening_hours": "Daily 10:00 - 22:00",
       "description": "Provides general customer service and lost-and-found assistance."
     }
   ],
-  "manual_info": {}
+  "manual_info": {
+    "vegan_restaurants": "D2 Place暫時未有素食餐廳，但有些餐廳會提供素食菜品。"
+  }
 }
