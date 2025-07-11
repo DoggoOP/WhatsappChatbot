@@ -83,9 +83,20 @@ class D2PlaceScraper:
                 "location": "",
                 "parking": "",
                 "leasing": "",
+                "general_information": "",
             }
         }
-        
+
+        # Load manual section from existing file if present
+        self.manual_info = {}
+        if os.path.exists("d2place_data.json"):
+            try:
+                with open("d2place_data.json", "r", encoding="utf-8") as f:
+                    existing = json.load(f)
+                self.manual_info = existing.get("manual_info", {})
+            except Exception as e:
+                logger.warning(f"Failed to load manual_info: {e}")
+
         self.headers = {                      #  <<<  ADD THIS
             "User-Agent": (
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -365,6 +376,18 @@ class D2PlaceScraper:
         text = soup.get_text(separator="\n", strip=True)
         self.data["mall_info"]["leasing"] = text
         logger.info("Scraped leasing/renting info")
+
+    def scrape_general_information(self):
+        url = f"{self.base_url}/General-Information"
+        html = self.load_page(url)
+        if not html:
+            return
+        soup = BeautifulSoup(html, "html.parser")
+        container = soup.select_one("#__next main") or soup.select_one("#__next")
+        if container:
+            text = container.get_text(separator="\n", strip=True)
+            self.data["mall_info"]["general_information"] = text
+            logger.info("Scraped general information")
 
     # ================== HOME HAPPENINGS (Homepage) ==================
     def scrape_home_happenings(self):
@@ -863,6 +886,7 @@ class D2PlaceScraper:
             self.scrape_location()
             self.scrape_parking()
             self.scrape_leasing()
+            self.scrape_general_information()
             
             # Scrape dynamic content
             self.scrape_home_happenings()
@@ -899,8 +923,10 @@ class D2PlaceScraper:
     def save_data(self):
         """Save scraped data to JSON file."""
         try:
+            output = self.data.copy()
+            output["manual_info"] = self.manual_info
             with open("d2place_data.json", "w", encoding="utf-8") as f:
-                json.dump(self.data, f, ensure_ascii=False, indent=2)
+                json.dump(output, f, ensure_ascii=False, indent=2)
             logger.info("Data saved to d2place_data.json")
             stats = {
                 "happenings": len(self.data["home_happenings"]),

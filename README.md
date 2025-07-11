@@ -39,6 +39,10 @@ python scraper.py
 ```
 The script also schedules a weekly run every Monday at 02:00 Hong Kong time when executed directly.
 
+The JSON file contains a `manual_info` section where you can store custom notes.
+This portion of the file is preserved whenever the scraper runs, so feel free to
+edit it manually without worrying about it being overwritten.
+
 ## License
 
 This project is provided as‑is under the MIT license. See `LICENSE` for details.
