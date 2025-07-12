@@ -643,6 +643,14 @@ class D2PlaceScraper:
             logger.error(f"Error extracting card details: {e}")
             return None
 
+    def slugify(self, text: str) -> str:
+        """Return *text* converted to a URL slug."""
+        if not text:
+            return ""
+        slug = re.sub(r"[^A-Za-z0-9]+", "-", text).strip("-")
+        slug = re.sub(r"-+", "-", slug)
+        return slug
+
     def scrape_dining(self):
         cats = gql("{findManyShopCategory(where:{categoryType:{equals:DINING}}){id}}")
         for c in cats.get("findManyShopCategory", []):
@@ -660,18 +668,19 @@ class D2PlaceScraper:
                 headers=self.headers,
             ).get("findManyShop", [])
 
-            for shop in shops:
-                item = {
-                    "name": shop.get("nameEn") or shop.get("nameTc", ""),
-                    "location": shop.get("addressEn") or shop.get("addressTc", ""),
-                    "detail_url": self.resolve_detail_url(f"{self.base_url}/shops/{shop['passcode']}"),
-                    "phone": shop.get("phoneNumber", ""),
-                    "opening_hours": shop.get("displayOpeningHoursEn") or shop.get("displayOpeningHoursTc", ""),
-                    "facebook": shop.get("facebookUrl", ""),
-                    "instagram": shop.get("instagramUrl", ""),
-                    "website": shop.get("websiteUrl", ""),
-                }
-                self.data["dining"].append(item)
+        for shop in shops:
+            name_en = shop.get("nameEn") or shop.get("nameTc", "")
+            item = {
+                "name": name_en,
+                "location": shop.get("addressEn") or shop.get("addressTc", ""),
+                "detail_url": f"{self.base_url}/shops/DINING/{self.slugify(name_en)}",
+                "phone": shop.get("phoneNumber", ""),
+                "opening_hours": shop.get("displayOpeningHoursEn") or shop.get("displayOpeningHoursTc", ""),
+                "facebook": shop.get("facebookUrl", ""),
+                "instagram": shop.get("instagramUrl", ""),
+                "website": shop.get("websiteUrl", ""),
+            }
+            self.data["dining"].append(item)
 
         logger.info("Dining scraped via GraphQL → %d entries", len(self.data["dining"]))
 
@@ -693,18 +702,19 @@ class D2PlaceScraper:
                 headers=self.headers,
             ).get("findManyShop", [])
 
-            for shop in shops:
-                item = {
-                    "name": shop.get("nameEn") or shop.get("nameTc", ""),
-                    "location": shop.get("addressEn") or shop.get("addressTc", ""),
-                    "detail_url": self.resolve_detail_url(f"{self.base_url}/shops/{shop['passcode']}"),
-                    "phone": shop.get("phoneNumber", ""),
-                    "opening_hours": shop.get("displayOpeningHoursEn") or shop.get("displayOpeningHoursTc", ""),
-                    "facebook": shop.get("facebookUrl", ""),
-                    "instagram": shop.get("instagramUrl", ""),
-                    "website": shop.get("websiteUrl", ""),
-                }
-                self.data["shopping"].append(item)
+        for shop in shops:
+            name_en = shop.get("nameEn") or shop.get("nameTc", "")
+            item = {
+                "name": name_en,
+                "location": shop.get("addressEn") or shop.get("addressTc", ""),
+                "detail_url": f"{self.base_url}/shops/SHOP/{self.slugify(name_en)}",
+                "phone": shop.get("phoneNumber", ""),
+                "opening_hours": shop.get("displayOpeningHoursEn") or shop.get("displayOpeningHoursTc", ""),
+                "facebook": shop.get("facebookUrl", ""),
+                "instagram": shop.get("instagramUrl", ""),
+                "website": shop.get("websiteUrl", ""),
+            }
+            self.data["shopping"].append(item)
 
         logger.info("Shopping scraped via GraphQL → %d entries", len(self.data["shopping"]))
 
@@ -741,11 +751,12 @@ class D2PlaceScraper:
         )
 
         for ev in events:
+            alias = ev.get("alias", "")
             item = {
                 "title": ev.get("nameEn") or ev.get("nameTc", ""),
                 "date": ev.get("displayDateEn") or ev.get("displayDateTc", ""),
                 "venue": ev.get("venueEn") or ev.get("venueTc", ""),
-                "detail_url": f"{self.base_url}/events/{ev['alias']}",
+                "detail_url": f"{self.base_url}/events/{self.slugify(alias)}",
             }
             self.data["events"].append(item)
 
@@ -769,10 +780,11 @@ class D2PlaceScraper:
             ).get("findManyShop", [])
 
             for shop in shops:
+                name_en = shop.get("nameEn") or shop.get("nameTc", "")
                 item = {
-                    "name": shop.get("nameEn") or shop.get("nameTc", ""),
+                    "name": name_en,
                     "location": shop.get("addressEn") or shop.get("addressTc", ""),
-                    "detail_url": self.resolve_detail_url(f"{self.base_url}/shops/{shop['passcode']}"),
+                    "detail_url": f"{self.base_url}/shops/PLAY/{self.slugify(name_en)}",
                     "phone": shop.get("phoneNumber", ""),
                     "opening_hours": shop.get("displayOpeningHoursEn") or shop.get("displayOpeningHoursTc", ""),
                     "facebook": shop.get("facebookUrl", ""),
