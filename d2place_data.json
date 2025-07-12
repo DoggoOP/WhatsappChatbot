@@ -1,8 +1,8 @@
 {
   "home_happenings": [
     {
-      "title": "好好生活 好好手作",
-      "date": "July 5-6 2025",
+      "title": "廢青漫遊世界市集",
+      "date": "26 - 27 July, 2025",
       "venue": "THE SPACE"
     },
     {
@@ -11,21 +11,16 @@
       "venue": "THE SPACE"
     },
     {
-      "title": "夏日BB購物展及玩具開倉2025",
-      "date": "27 June - 1 July 2025",
-      "venue": "11:30am - 7:30pm"
-    },
-    {
-      "title": "Hololive Only HK",
-      "date": "June 29, 2025",
+      "title": "#大力吸 動物深究會市集",
+      "date": "12 - 13 July 2025",
       "venue": "THE SPACE"
     }
   ],
   "dining": [
     {
       "name": "Rustico",
-      "location": "G/F, Shop G01",
-      "detail_url": "https://www.d2place.com/shops/708027",
+      "location": "G/F, Shop G01, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/DINING/Rustico",
       "phone": "2743 4511",
       "opening_hours": "Monday - Sunday: 12:00 - 22:00",
       "facebook": "https://www.facebook.com/rustico.hk?fref=ts",
@@ -47,13 +42,13 @@
         "kg_website": "https://www.rustico.com.hk/",
         "kg_reviews": null,
         "kg_cuisines": null,
-        "top_snippet": "Weekend Brunch Menu · Summer Cooking Class · A La Carte Menu · Event Menu (For 8ppl or above group) · Lunch Menu · Tasting Menu · Weekend Afternoon Tea Menu."
+        "top_snippet": "Rustico 的餐廳地址、網上訂座、電話、食評、相片及餐牌，餐廳位於荔枝角長義街9號D2 Place ONE地下G01號舖。主要菜式包括西班牙鱈魚釀紅椒, 招牌西班牙黑毛豬海鮮飯, ..."
       }
     },
     {
       "name": "Umai 鵜舞",
-      "location": "G/F, Shop G02",
-      "detail_url": "https://www.d2place.com/shops/108299",
+      "location": "G/F, Shop G02, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/DINING/Umai",
       "phone": "2743 8011",
       "opening_hours": "Monday - Sunday: 12:00 - 22:30",
       "facebook": "https://www.facebook.com/umai.hk?fref=ts",
@@ -70,13 +65,13 @@
         "kg_website": "http://www.umai.com.hk/",
         "kg_reviews": null,
         "kg_cuisines": null,
-        "top_snippet": "「鵜（う）舞（まい）」— UMAI 日語解為鵜鶘的舞蹈，同音亦解為「鮮味」。 Artboard 1.png. 主餐牌 · 日本鄉土及B級美食餐牌 · 外賣自取日式便當餐牌 · 午市餐牌."
+        "top_snippet": "「鵜（う）舞（まい）」— UMAI 日語解為鵜鶘的舞蹈，同音亦解為「鮮味」。 Artboard 1.png. 主餐牌 · 日本鄉土及B級美食餐牌 · Happy Hour 餐牌 · 外賣自取日式便當餐牌."
       }
     },
     {
       "name": "LUCULLUS CACAO",
-      "location": "G/F, Shop V1",
-      "detail_url": "https://www.d2place.com/shops/762184",
+      "location": "G/F, Shop V1, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/DINING/LUCULLUS-CACAO",
       "phone": "3481 7750",
       "opening_hours": "Monday - Sunday: 10:00 - 21:00",
       "facebook": "https://www.facebook.com/LucullusHongKong",
@@ -91,13 +86,13 @@
         "serpapi_link": "https://www.google.com.hk/maps/search/LUCULLUS+CACAOD2+Place+HK?hl=en"
       },
       "extra_google_info": {
-        "top_snippet": "龍島(D2 Place ONE) LUCULLUS CACAO (D2 Place ONE)的餐牌，餐廳位於荔枝角長義街9號D2 Place ONE地下V1號舖。"
+        "top_snippet": "龍島LUCULLUS CACAO的餐廳地址、電話、食評、相片及餐牌，餐廳位於荔枝角長義街9號D2 Place ONE地下V1號舖。主要菜式包括S.O.C., Single Origin Chocolate Flight, ..."
       }
     },
     {
       "name": "我想和你無所事事",
-      "location": "G/F, Shop V2",
-      "detail_url": "https://www.d2place.com/shops/558671",
+      "location": "G/F, Shop V2, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/DINING/",
       "phone": "",
       "opening_hours": "Mon-Sun: 17:00-23:00",
       "facebook": "https://www.facebook.com/idle.awhile.hk/",
@@ -107,13 +102,13 @@
         "error": "0"
       },
       "extra_google_info": {
-        "top_snippet": "蜂蜜珍珠鮮奶炭燒烏龍茶 · $26 ; 蜂蜜珍珠鮮奶茉莉綠茶 · $26 ; 蜂蜜珍珠鮮奶鴨屎香青茶. $29."
+        "top_snippet": "港鐵荔枝角站D1 出口, 港鐵荔枝角站D2 出口 繼續閱讀. 53481536. 台灣菜/ 台式飲品. $50以下. 所有分店(4). 其他資料. 今日營業. 12:00 - 20:30. 星期一至四."
       }
     },
     {
       "name": "FoodBox",
-      "location": "1/F, Shop 102",
-      "detail_url": "https://www.d2place.com/shops/858003",
+      "location": "1/F, Shop 102, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/DINING/FoodBox",
       "phone": "2680 9099",
       "opening_hours": "Monday - Sunday: 12:00 - 20:00",
       "facebook": "https://www.facebook.com/foodboxhk/",
@@ -130,13 +125,13 @@
         "kg_website": "http://www.foodbox.hk/",
         "kg_reviews": null,
         "kg_cuisines": null,
-        "top_snippet": "港鐵荔枝角站D1 出口, 港鐵荔枝角站D2 出口 繼續閱讀. 26809099. 西式/ 三文治/ 漢堡包/ 沙律. $51-100. 所有分店(3). 其他資料. 今日營業. 11:30 - 19:00. 星期一至日."
+        "top_snippet": "荔枝角長義街9號D2 Place ONE 1樓102號舖. 港鐵荔枝角站D1 出口, 港鐵荔枝角站D2 出口 繼續閱讀. 26809099. 西式/ 三文治/ 漢堡包/ 沙律. $51-100. 所有分店(3) ..."
       }
     },
     {
       "name": "PICK A BOWL",
-      "location": "1/F, Shop 112",
-      "detail_url": "https://www.d2place.com/shops/769608",
+      "location": "1/F, Shop 112, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/DINING/PICK-A-BOWL",
       "phone": "2590 9606",
       "opening_hours": "Monday - Sunday: 11:30 - 21:00",
       "facebook": "",
@@ -158,13 +153,13 @@
         "kg_website": "https://pickabowl.com.hk/",
         "kg_reviews": null,
         "kg_cuisines": null,
-        "top_snippet": "At Pickabowl, we offer a variety of seafood and meat options, along with fresh vegetables and sauces mixed together to create a refreshing and healthy meal! You ..."
+        "top_snippet": "At Pickabowl, we offer a variety of seafood and meat options, along with fresh vegetables and sauces mixed together to create a refreshing and healthy meal!"
       }
     },
     {
       "name": "MOS Burger",
-      "location": "3/F, Shop 304",
-      "detail_url": "https://www.d2place.com/shops/484524",
+      "location": "3/F, Shop 304, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/DINING/MOS-Burger",
       "phone": "3709 8249",
       "opening_hours": "Mon-Sun: 11:00-22:00",
       "facebook": "https://www.facebook.com/mosburger.hk/",
@@ -191,8 +186,8 @@
     },
     {
       "name": "BUGIS @ 叻沙‧海南雞飯",
-      "location": "3/F, Shop 305",
-      "detail_url": "https://www.d2place.com/shops/982546",
+      "location": "3/F, Shop 305, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/DINING/BUGIS",
       "phone": "2116 0160",
       "opening_hours": "Monday - Sunday: 11:30 - 21:00",
       "facebook": "",
@@ -209,13 +204,13 @@
         "kg_website": null,
         "kg_reviews": null,
         "kg_cuisines": null,
-        "top_snippet": "Bugis@叻沙・海南雞飯(D2 Place). HK$ 39運費. 最低消費HK$ 120. 4.9/5(500+) ... 從HK$ 108.0HK$ 127. 配健康唐生菜、靚湯(1碗)及飲品(1款). 0. 慢煮新加坡無骨海南雞 ..."
+        "top_snippet": "Bugis@叻沙・海南雞飯的餐牌，餐廳位於荔枝角長義街9號D2 Place ONE 3樓305號舖。"
       }
     },
     {
       "name": "捌捌陸",
-      "location": "3/F, Shop 306",
-      "detail_url": "https://www.d2place.com/shops/693623",
+      "location": "3/F, Shop 306, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/DINING/",
       "phone": "2217 8866",
       "opening_hours": "Monday - Sunday: 12:00 - Late Night",
       "facebook": "https://www.facebook.com/profile.php?id=100088354156575",
@@ -230,8 +225,8 @@
     },
     {
       "name": "譚仔三哥米線",
-      "location": "3/F, Shop 309",
-      "detail_url": "https://www.d2place.com/shops/046228",
+      "location": "3/F, Shop 309, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/DINING/",
       "phone": "2827 4788",
       "opening_hours": "Monday - Sunday: 12:00 - 21:00",
       "facebook": "https://www.facebook.com/tamsnoodle/",
@@ -258,8 +253,8 @@
     },
     {
       "name": "Coffee Galaxy",
-      "location": "4/F, Kiosk 9",
-      "detail_url": "https://www.d2place.com/shops/666539",
+      "location": "4/F, Kiosk 9, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/DINING/Coffee-Galaxy",
       "phone": "6992 0893",
       "opening_hours": "Mon-Sun: 10:00-19:00",
       "facebook": "https://www.facebook.com/CoffeeGalaxy.HK",
@@ -270,7 +265,7 @@
         "reviews_count": 36,
         "address": "Hong Kong, Lai Chi Kok, 4/F, D2 Place One, 9 Cheung Yee Street, Kiosk 9",
         "phone": "+852 6992 0893",
-        "website": "https://www.instagram.com/coffeegalaxy.hk/",
+        "website": "/url?q=https://www.instagram.com/coffeegalaxy.hk/&opi=79508299&sa=U&ved=0ahUKEwiZj7ih-beOAxUr4ckDHc76KnUQ61gIHygT&usg=AOvVaw2gTE9q9i1UdMQue44D9u5b",
         "serpapi_link": "https://www.google.com.hk/maps/search/Coffee+GalaxyD2+Place+HK?hl=en"
       },
       "extra_google_info": {
@@ -281,13 +276,13 @@
         "kg_website": "https://www.instagram.com/coffeegalaxy.hk/",
         "kg_reviews": null,
         "kg_cuisines": null,
-        "top_snippet": "Coffee Galaxy Roaster 的餐牌，餐廳位於荔枝角長義街9號D2 Place ONE 4樓Kiosk 9。"
+        "top_snippet": "荔枝角長義街9號D2 Place ONE 4樓Kiosk 9. 港鐵荔枝角站D3 出口, 步行約2分鐘 繼續閱讀. 西式/ 咖啡店. $51-100. 其他資料. 現金. 附近餐廳. 您可能也喜歡."
       }
     },
     {
       "name": "大公館",
-      "location": "10/F, Unit A",
-      "detail_url": "https://www.d2place.com/shops/194012",
+      "location": "10/F, Unit A, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/DINING/",
       "phone": "2743 8055",
       "opening_hours": "Mon – Thu: 12:00-00:00; Fri: 12:00-01:00; Sat, Sun & PH: 11:00-01:00",
       "facebook": "",
@@ -302,8 +297,8 @@
     },
     {
       "name": "The Pizza Pig",
-      "location": "G/F, Shop G02",
-      "detail_url": "https://www.d2place.com/shops/439539",
+      "location": "G/F, Shop G02, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/DINING/The-Pizza-Pig",
       "phone": "2806 1681",
       "opening_hours": "Monday - Friday: 11:30 - 23:30; Saturday, Sunday & Public Holiday: 11:00 - 23:30",
       "facebook": "https://www.facebook.com/thepizzapighk",
@@ -311,7 +306,7 @@
       "website": "https://thepizzapig.com.hk/",
       "google_review_data": {
         "rating": 4.1,
-        "reviews_count": 611,
+        "reviews_count": 612,
         "address": "G02 G/F D2 Place Two, 15 Cheung Shun St, Lai Chi Kok, Hong Kong",
         "phone": "+852 2806 1681",
         "website": "https://thepizzapig.com.hk/",
@@ -330,8 +325,8 @@
     },
     {
       "name": "Pici Pasta Bar",
-      "location": "G/F, Shop G03",
-      "detail_url": "https://www.d2place.com/shops/387177",
+      "location": "G/F, Shop G03, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/DINING/Pici-Pasta-Bar",
       "phone": "2557 7227",
       "opening_hours": "Monday - Thursday: 12:00 - 22:30; Friday: 12:00 - 23:00; Saturday: 11:30 - 23:00; Sunday: 11:30 - 22:30",
       "facebook": "https://www.facebook.com/picihk/",
@@ -339,7 +334,7 @@
       "website": "",
       "google_review_data": {
         "rating": 4.5,
-        "reviews_count": 845,
+        "reviews_count": 911,
         "address": "地下G03號舖, D2 Place二期, Shop G03, G/F, D2 Place TWO, 15, 15號 Cheung Shun St, Lai Chi Kok, Hong Kong",
         "phone": "+852 2557 7009",
         "website": "http://www.pici.hk/",
@@ -358,8 +353,8 @@
     },
     {
       "name": "牛火火",
-      "location": "1/F, 109 ",
-      "detail_url": "https://www.d2place.com/shops/086883",
+      "location": "1/F, 109, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/DINING/",
       "phone": "",
       "opening_hours": "Mon-Sun: 11:00-23:00",
       "facebook": "",
@@ -369,13 +364,13 @@
         "error": "0"
       },
       "extra_google_info": {
-        "top_snippet": "牛火火任食火鍋Hot Fire Hotpot的餐牌，餐廳位於荔枝角長順街15號D2 Place TWO 1樓109號舖。"
+        "top_snippet": "港鐵荔枝角站D1 出口, 港鐵荔枝角站D2 出口 繼續閱讀. 44990120. 多國菜/ 火鍋/ 任食/ 放題. $201-400. 其他資料. 今日營業. 11:30 - 16:30. 17:00 - 23:00."
       }
     },
     {
       "name": "紅葉茶屋",
-      "location": "1/F, Shop 110-111",
-      "detail_url": "https://www.d2place.com/shops/117620",
+      "location": "1/F, Shop 110-111, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/DINING/",
       "phone": "3705 1725",
       "opening_hours": "Monday - Sunday: 11:30 - 21:30",
       "facebook": "https://www.facebook.com/momijichayahk",
@@ -392,13 +387,13 @@
         "kg_website": null,
         "kg_reviews": null,
         "kg_cuisines": null,
-        "top_snippet": "生薑燒豚肉定食. $108 ; 香辣燒牛肉定食. $118 ; 吉列豬扒定食. $118 ; 照燒雞肉定食. $108 ; 炸雞定食(配自家製他他醬). $98."
+        "top_snippet": "生薑燒豚肉定食. $108 ; 香辣燒牛肉定食. $118 ; 吉列豬扒定食. $118 ; 照燒雞肉定食. $108 ; 和牛肉壽喜燒定食(不配蛋). $168."
       }
     },
     {
       "name": "JOYSTICK",
-      "location": "2/F, inside PowerPlay Arena",
-      "detail_url": "https://www.d2place.com/shops/284392",
+      "location": "2/F, inside PowerPlay Arena, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/DINING/JOYSTICK",
       "phone": "6618 7012",
       "opening_hours": "Monday - Sunday: 11:00 - 19:00",
       "facebook": "https://www.facebook.com/hk.joystick",
@@ -418,8 +413,8 @@
     },
     {
       "name": "繼 TSUGU",
-      "location": "3/F, Shop 309-310",
-      "detail_url": "https://www.d2place.com/shops/993240",
+      "location": "3/F, Shop 309-310, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/DINING/TSUGU",
       "phone": "3706 7703",
       "opening_hours": "Monday - Sunday: 12 PM - 3 PM & 6 PM - 11 PM",
       "facebook": "",
@@ -427,7 +422,7 @@
       "website": "",
       "google_review_data": {
         "rating": 4.5,
-        "reviews_count": 291,
+        "reviews_count": 293,
         "address": "Shop 309-310, 3/F, D2 Place Two, 15 Cheung Shun St, Lai Chi Kok, Hong Kong",
         "phone": "+852 3706 7703",
         "website": "",
@@ -446,8 +441,8 @@
     },
     {
       "name": "金鳳大餐廳",
-      "location": "3/F, Shop 312",
-      "detail_url": "https://www.d2place.com/shops/749468",
+      "location": "3/F, Shop 312, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/DINING/",
       "phone": "",
       "opening_hours": "Monday - Sunday: 11:00 - 23:00",
       "facebook": "",
@@ -464,21 +459,21 @@
         "kg_website": null,
         "kg_reviews": null,
         "kg_cuisines": null,
-        "top_snippet": "複製餐廳資料. 複製到剪貼簿. 返回. 金鳳大餐廳(D2 Place TWO)(香港) 網址: https://s.openrice.com/QrbS0p8u800 地址: 香港荔枝角長順街15號D2 Place TWO 3樓312號舖電話 ..."
+        "top_snippet": "金鳳大餐廳GOLDEN PHOENIX RESTAURANT的餐廳地址、電話、食評、相片及餐牌，餐廳位於荔枝角長順街15號D2 Place TWO 3樓312號舖。主要菜式包括美式雜扒餐, 羅宋湯, ..."
       }
     },
     {
       "name": "九龍玖記",
-      "location": "3/F, Shop 313",
-      "detail_url": "https://www.d2place.com/shops/767621",
+      "location": "3/F, Shop 313, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/DINING/",
       "phone": "",
       "opening_hours": "Monday - Sunday",
       "facebook": "",
       "instagram": "",
       "website": "",
       "google_review_data": {
-        "rating": 3.7,
-        "reviews_count": 3,
+        "rating": 2.6,
+        "reviews_count": 5,
         "address": "Hong Kong, Lai Chi Kok, D2 place, two 3/F, shop313",
         "phone": "",
         "website": "",
@@ -490,8 +485,8 @@
     },
     {
       "name": "大叔拉麵",
-      "location": "3/F, Shop 314",
-      "detail_url": "https://www.d2place.com/shops/589700",
+      "location": "3/F, Shop 314, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/DINING/",
       "phone": "5368 6323",
       "opening_hours": "Monday - Sunday: 11:00 - 22:00",
       "facebook": "",
@@ -508,13 +503,13 @@
         "kg_website": null,
         "kg_reviews": null,
         "kg_cuisines": null,
-        "top_snippet": "大叔拉麵Ojisan Ramen的餐廳地址、網上訂座、電話、食評、相片及餐牌，餐廳位於荔枝角長順街15號D2 Place TWO 3樓314號舖。主要菜式包括炙燒西班牙黑 ..."
+        "top_snippet": "大叔拉麵Ojisan Ramen的餐牌，餐廳位於荔枝角長順街15號D2 Place TWO 3樓314號舖。"
       }
     },
     {
       "name": "米青蛋包飯公司 ",
-      "location": "3/F, Shop 303",
-      "detail_url": "https://www.d2place.com/shops/634192",
+      "location": "3/F, Shop 303, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/DINING/",
       "phone": "6925 3677",
       "opening_hours": "Monday - Sunday: 12:00 - 21:00",
       "facebook": "",
@@ -531,13 +526,13 @@
         "kg_website": "https://www.facebook.com/profile.php?id=61563905410282",
         "kg_reviews": null,
         "kg_cuisines": null,
-        "top_snippet": "米青蛋包飯公司MICHING OMURICE CO的餐牌，餐廳位於荔枝角長義街9號D2 Place ONE 3樓303號舖。"
+        "top_snippet": "複製餐廳資料. 複製到剪貼簿. 返回. 米青蛋包飯公司(荔枝角) 網址: https://s.openrice.com/QrbS0o74D00 地址: 香港荔枝角長義街9號D2 Place ONE 3樓303號舖電話: +852 ..."
       }
     },
     {
       "name": "銀座炎蔵燒肉",
-      "location": "3/F, Shop 302",
-      "detail_url": "https://www.d2place.com/shops/317273",
+      "location": "3/F, Shop 302, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/DINING/",
       "phone": "3709 8150",
       "opening_hours": "Mon-Sun: 11:30-22:00",
       "facebook": "https://www.facebook.com/ginzaenzohk",
@@ -547,8 +542,8 @@
         "error": "0"
       },
       "extra_google_info": {
-        "kg_title": "銀座炎蔵燒肉 - 香港",
-        "kg_type": "日式燒肉餐廳",
+        "kg_title": null,
+        "kg_type": null,
         "kg_description": null,
         "kg_menu_link": null,
         "kg_website": "https://www.facebook.com/ginzaenzohk",
@@ -559,8 +554,8 @@
     },
     {
       "name": "鮨樂",
-      "location": "4/F, Shop 406",
-      "detail_url": "https://www.d2place.com/shops/765400",
+      "location": "4/F, Shop 406, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/DINING/",
       "phone": "2367 1628",
       "opening_hours": "Mon-Sun: 11:30 – 22:00",
       "facebook": "https://www.facebook.com/SushiRakuHK",
@@ -582,8 +577,8 @@
     },
     {
       "name": "百芳池上便當",
-      "location": "3/F, Shop 307",
-      "detail_url": "https://www.d2place.com/shops/875182",
+      "location": "3/F, Shop 307, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/DINING/",
       "phone": "3709 8575",
       "opening_hours": "Monday - Sunday: 12:00 - 21:00",
       "facebook": "",
@@ -591,20 +586,20 @@
       "website": "",
       "google_review_data": {
         "rating": 3.9,
-        "reviews_count": 3662,
+        "reviews_count": 3668,
         "address": "9 Cheung Yee St, Lai Chi Kok, Hong Kong",
         "phone": "+852 3620 3098",
         "website": "http://www.d2place.com/",
         "serpapi_link": "https://www.google.com.hk/maps/search/%E7%99%BE%E8%8A%B3%E6%B1%A0%E4%B8%8A%E4%BE%BF%E7%95%B6D2+Place+HK?hl=en"
       },
       "extra_google_info": {
-        "top_snippet": "百芳池上便當BAI FUNG BENTO的餐廳地址、電話、食評、相片及餐牌，餐廳位於荔枝角長義街9號D2 Place ONE 3樓307號舖。"
+        "top_snippet": "正價8折主菜單. 十二味(D2 Place TWO) · 全單9折. 捌捌陸台式料理(D2 Place ONE)."
       }
     },
     {
       "name": "Chill Vietnam Cuisine & Bar",
-      "location": "3/F, Shop 301",
-      "detail_url": "https://www.d2place.com/shops/184429",
+      "location": "3/F, Shop 301, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/DINING/Chill-Vietnam-Cuisine-Bar",
       "phone": "6536 2686",
       "opening_hours": "Monday - Sunday: 12:00 - 22:00",
       "facebook": "https://www.facebook.com/profile.php?id=100090410035585&sk=about",
@@ -612,7 +607,7 @@
       "website": "https://chill-vietnam.business.site/",
       "google_review_data": {
         "rating": 4.5,
-        "reviews_count": 191,
+        "reviews_count": 193,
         "address": "Hong Kong, Lai Chi Kok, Cheung Yee St, 9號, D2廣場一期, 3/F, 301號鋪",
         "phone": "+852 6536 2686",
         "website": "",
@@ -631,8 +626,8 @@
     },
     {
       "name": "Yoake  夜明け",
-      "location": "3/F, Shop 311",
-      "detail_url": "https://www.d2place.com/shops/497865",
+      "location": "3/F, Shop 311, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/DINING/Yoake",
       "phone": "57347800",
       "opening_hours": "Mon-Sun: 12 PM - 3 PM & 6 PM - 11 PM",
       "facebook": "https://www.facebook.com/profile.php?id=100095228082703&mibextid=ZbWKwL",
@@ -654,8 +649,8 @@
     },
     {
       "name": "十二味",
-      "location": "2/F, Shop 212B, 213 & 216A",
-      "detail_url": "https://www.d2place.com/shops/573136",
+      "location": "2/F, Shop 212B, 213 & 216A, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/DINING/",
       "phone": "6502 3560",
       "opening_hours": "Monday - Sunday: 11: 30 - 22:00",
       "facebook": "https://www.facebook.com/twelveflavor",
@@ -672,13 +667,13 @@
         "kg_website": "https://www.12flavors.com/",
         "kg_reviews": null,
         "kg_cuisines": null,
-        "top_snippet": "主打正宗川菜，當中以酸菜魚和麻辣香鍋最受歡迎，其中酸菜魚用上二十個月雲南老埕酸菜、四川酸菜及廣東鹹酸菜炮製，非常惹味。 繼續閱讀. 今日營業. 11:00 - 16:00."
+        "top_snippet": "全素麻辣香鍋- 午市套餐 · $55 ; 田雞麻辣香鍋- 午市套餐 · $63 ; 牛肉麻辣香鍋- 午市套餐 · $68 ; 雞翼麻辣香鍋- 午市套餐 · $62 ; 海鮮麻辣香鍋- 午市套餐 · $85."
       }
     },
     {
       "name": "番茄師兄",
-      "location": "2/F, shop 211B, 212A &215",
-      "detail_url": "https://www.d2place.com/shops/671539",
+      "location": "2/F, shop 211B, 212A &215, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/DINING/",
       "phone": "",
       "opening_hours": "Monday - Sunday: 12: 00 - 22:00",
       "facebook": "",
@@ -693,8 +688,8 @@
     },
     {
       "name": "阿木台灣麵 Mu Taiwan Noodles",
-      "location": "1/F, Shop 102",
-      "detail_url": "https://www.d2place.com/shops/116731",
+      "location": "1/F, Shop 102, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/DINING/Mu-Taiwan-Noodles",
       "phone": "",
       "opening_hours": "Monday - Sunday: 11:30 - 22:00",
       "facebook": "https://www.mutaiwanstore.com",
@@ -702,7 +697,7 @@
       "website": "",
       "google_review_data": {
         "rating": 4.7,
-        "reviews_count": 125,
+        "reviews_count": 129,
         "address": "1F , shop102, D2 place TWO, 15號 Cheung Shun St, Lai Chi Kok, Hong Kong",
         "phone": "+852 5598 5351",
         "website": "https://www.mutaiwanstore.com/",
@@ -721,8 +716,8 @@
     },
     {
       "name": "大街小館 Big Sweet House ",
-      "location": "1/F, Kiosk 18",
-      "detail_url": "https://www.d2place.com/shops/226031",
+      "location": "1/F, Kiosk 18, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/DINING/Big-Sweet-House",
       "phone": "",
       "opening_hours": "Monday - Sunday: 12:00 - 21:30",
       "facebook": "https://www.facebook.com/bigsweethouse/?locale=zh_HK",
@@ -739,13 +734,13 @@
         "kg_website": null,
         "kg_reviews": null,
         "kg_cuisines": null,
-        "top_snippet": "人氣之選 ; 楊枝甘露. 從HK$ 52 ; 芒果芋圓小丸子配牛奶布甸. 從HK$ 52 ; 椰皇蛋白燉桃膠. 從HK$ 68 ; 椰汁芋圓西米露. 從HK$ 47 ; 椰皇芋圓燉蛋白. 從HK$ 68."
+        "top_snippet": "甜品蛋糕外賣. 甜多1點, 皇室甜品, 大街小館, 東記甜甜店. 荔枝角長順街15號D2 Place Two 1樓18號舖. AK11/5/2025之前啲芒果好甜，呢批唔得，酸，有渣. Ka1/5/2025紫米露好 ..."
       }
     },
     {
       "name": "BAKINGHAM",
-      "location": "2/F, Shop 224",
-      "detail_url": "https://www.d2place.com/shops/950139",
+      "location": "2/F, Shop 224, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/DINING/BAKINGHAM",
       "phone": "",
       "opening_hours": " Monday - Friday  :12:00 - 20:00; Saturday - Sunday :11:30- 20:30",
       "facebook": "",
@@ -760,8 +755,8 @@
         "serpapi_link": "https://www.google.com.hk/maps/search/BAKINGHAMD2+Place+HK?hl=en"
       },
       "extra_google_info": {
-        "kg_title": "Bakingham",
-        "kg_type": "麵包西餅店",
+        "kg_title": null,
+        "kg_type": null,
         "kg_description": null,
         "kg_menu_link": null,
         "kg_website": null,
@@ -772,16 +767,16 @@
     },
     {
       "name": "Thai-ger",
-      "location": "G/F, Shop G03",
-      "detail_url": "https://www.d2place.com/shops/504010",
+      "location": "G/F, Shop G03, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/DINING/Thai-ger",
       "phone": "2311 1520",
       "opening_hours": "Monday - Sunday: 12:00 - 21:30",
       "facebook": "https://www.facebook.com/thaigerhk",
       "instagram": "",
       "website": "",
       "google_review_data": {
-        "rating": 3.9,
-        "reviews_count": 141,
+        "rating": 3.8,
+        "reviews_count": 146,
         "address": "Shop G03, D2 Place, 9 Cheung Yee St, Lai Chi Kok, Hong Kong",
         "phone": "+852 2311 1520",
         "website": "",
@@ -800,8 +795,8 @@
     },
     {
       "name": "栢檔極品海南雞飯",
-      "location": "1/F, Shop 101",
-      "detail_url": "https://www.d2place.com/shops/29384",
+      "location": "1/F, Shop 101, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/DINING/",
       "phone": "",
       "opening_hours": "Mon-Sun: 11:00-22:00",
       "facebook": "https://www.facebook.com/PakDonChickenRice/",
@@ -823,8 +818,8 @@
     },
     {
       "name": "Sugidama 杉玉",
-      "location": "G/F, Shop G01",
-      "detail_url": "https://www.d2place.com/shops/726389",
+      "location": "G/F, Shop G01, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/DINING/Sugidama",
       "phone": "2698 0688",
       "opening_hours": "Monday - Sunday: 11:00 - 23:00",
       "facebook": "https://www.instagram.com/sugidama.hk/",
@@ -834,445 +829,22 @@
         "error": "0"
       },
       "extra_google_info": {
+        "kg_title": "杉玉 (荔枝角)",
+        "kg_type": "日本餐廳",
+        "kg_description": null,
+        "kg_menu_link": null,
+        "kg_website": "https://www.instagram.com/sugidama.hk",
+        "kg_reviews": null,
+        "kg_cuisines": null,
         "top_snippet": "荔枝角長順街15號D2 Place TWO 地下G01號舖. 港鐵荔枝角站D1 出口, 港鐵荔枝角站D2 出口 繼續閱讀. 26980688. 日本菜/ 壽司/ 刺身/ 居酒屋. $101-200."
       }
     }
   ],
   "shopping": [
     {
-      "name": "Kind of Goods",
-      "location": "G/F, Shop V3",
-      "detail_url": "https://www.d2place.com/shops/849380",
-      "phone": "5597 0389",
-      "opening_hours": "Monday - Sunday: 11:00 - 20:00",
-      "facebook": "",
-      "instagram": "https://www.instagram.com/kind.of.goods/",
-      "website": "https://kindofgoods.hk/?fbclid=PAZXh0bgNhZW0CMTEAAaZYdL4Ha1qCeW476itYCJqBAXqSoRmQETzoIsjmMqZmKZ3TBhNBR0nS-t4_aem_hD5kik8LMGW-l4pTMztbBg"
-    },
-    {
-      "name": "PetKoikoi",
-      "location": "1/F, Shop 104, 106-111",
-      "detail_url": "https://www.d2place.com/shops/062552",
-      "phone": "",
-      "opening_hours": "Monday - Sunday: 12:00 - 20:30",
-      "facebook": "",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "微影 TINY",
-      "location": "1/F, Shop 113B",
-      "detail_url": "https://www.d2place.com/shops/764619",
-      "phone": "2781 1182",
-      "opening_hours": "Mon - Sun: 11:00 - 21:00",
-      "facebook": "https://www.facebook.com/tinyhk/",
-      "instagram": "",
-      "website": "https://www.tiny.com.hk/"
-    },
-    {
-      "name": "香港手作",
-      "location": "2/F, Shop 219",
-      "detail_url": "https://www.d2place.com/shops/635440",
-      "phone": "6271 6285",
-      "opening_hours": "Monday - Sunday: 12:00 - 20:00",
-      "facebook": "https://www.facebook.com/hongkonghandmade",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "手作仔 Handcrafter",
-      "location": "4/F, Shop 403-404",
-      "detail_url": "https://www.d2place.com/shops/901972",
-      "phone": "2669 8928",
-      "opening_hours": "Monday - Sunday: 13:00 - 20:00",
-      "facebook": "https://www.facebook.com/handcrafter.hk/?fref=ts",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "劍玉兄弟花式劍球專門店",
-      "location": "3/F, Kiosk 20",
-      "detail_url": "https://www.d2place.com/shops/978657",
-      "phone": "",
-      "opening_hours": "Monday - Sunday: 12:30 - 21:00",
-      "facebook": "",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "Gothic Vintage HK",
-      "location": "2/F, Shop 221A",
-      "detail_url": "https://www.d2place.com/shops/208674",
-      "phone": "6654 3625",
-      "opening_hours": "Monday - Friday: 12:30 - 21:00",
-      "facebook": "http://www.facebook.com/gothicvintagehk",
-      "instagram": "https://instagram.com/gothicvintagehk",
-      "website": "http://www.gothicvintagehk.com"
-    },
-    {
-      "name": "The Barn",
-      "location": "2/F, Shop 201-204",
-      "detail_url": "https://www.d2place.com/shops/716597",
-      "phone": "3572 0072",
-      "opening_hours": "Monday - Sunday : 12:00 - 21:30",
-      "facebook": "",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "TOY PLUS",
-      "location": "2/F, Shop 218",
-      "detail_url": "https://www.d2place.com/shops/956964",
-      "phone": "",
-      "opening_hours": "Monday - Sunday: 12:30 - 20:30",
-      "facebook": "",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "創意生活 TOUT EN UN",
-      "location": "2/F, Shop 219",
-      "detail_url": "https://www.d2place.com/shops/635031",
-      "phone": "",
-      "opening_hours": "Monday - Sunday: 12:00 - 20:00",
-      "facebook": "https://www.facebook.com/Tout-En-Un-2233809596849026/",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "Q-PETS",
-      "location": "3/F, Shop 301-303",
-      "detail_url": "https://www.d2place.com/shops/304261",
-      "phone": "3188 0737",
-      "opening_hours": "Mon - Sun : 10:30 - 20:20",
-      "facebook": "",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "木見x不只",
-      "location": "1/F, Shop 113A",
-      "detail_url": "https://www.d2place.com/shops/810372",
-      "phone": "9863 8414",
-      "opening_hours": "Monday - Sunday: 12:00 - 20:00",
-      "facebook": "https://www.facebook.com/muk6jin6",
-      "instagram": "https://www.instagram.com/muk6jin6/",
-      "website": ""
-    },
-    {
-      "name": "港薈城百貨超市",
-      "location": "9/F, Unit D",
-      "detail_url": "https://www.d2place.com/shops/677639",
-      "phone": "2728 8386",
-      "opening_hours": "Monday - Sunday: 10:00 - 21:00",
-      "facebook": "",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "果然店 & 甘鹿仔",
-      "location": "1/F, Shop 101",
-      "detail_url": "https://www.d2place.com/shops/855821",
-      "phone": "",
-      "opening_hours": "Mon - Sun 12:00 - 20:00",
-      "facebook": "",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "Meet Pet Pet",
-      "location": "1/F, Shop 114A",
-      "detail_url": "https://www.d2place.com/shops/795132",
-      "phone": "",
-      "opening_hours": "Monday - Sunday: 12:00 - 20:30",
-      "facebook": "",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "叁拾士多",
-      "location": "4/F, Shop 402",
-      "detail_url": "https://www.d2place.com/shops/670687",
-      "phone": "",
-      "opening_hours": "Monday - Sunday: 10:30 - 20:00",
-      "facebook": "",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "MG Military Surplus",
-      "location": "3/F, Shop 305",
-      "detail_url": "https://www.d2place.com/shops/480123",
-      "phone": "",
-      "opening_hours": "Mon - Sun : 12PM - 8PM",
-      "facebook": "",
-      "instagram": "",
-      "website": "https://mg-military.com/"
-    },
-    {
-      "name": "Designers Last Call",
-      "location": "1/F, Shop 103",
-      "detail_url": "https://www.d2place.com/shops/459086",
-      "phone": "3755 0402",
-      "opening_hours": "Monday - Sunday: 11:00 - 20:00",
-      "facebook": "",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "Belongs to J.",
-      "location": "2/F, Shop 213B",
-      "detail_url": "https://www.d2place.com/shops/415337",
-      "phone": "9609 5521",
-      "opening_hours": "Monday - Sunday: 12:30 - 21:00",
-      "facebook": "",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "The Korner",
-      "location": "2/F, Shop 214A",
-      "detail_url": "https://www.d2place.com/shops/001128",
-      "phone": "9625 5010",
-      "opening_hours": "Monday - Sunday: 12:00 - 21:00",
-      "facebook": "https://www.facebook.com/happykorners/",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "Torio Store",
-      "location": "2/F, Shop 215",
-      "detail_url": "https://www.d2place.com/shops/759630",
-      "phone": "3702 1089",
-      "opening_hours": "Monday - Sunday: 12:00 - 20:00",
-      "facebook": "https://www.facebook.com/toriostore",
-      "instagram": "https://www.instagram.com/toriostore/",
-      "website": "https://www.toriostore.com/"
-    },
-    {
-      "name": "Free Running",
-      "location": "2/F, Shop 216 & 217",
-      "detail_url": "https://www.d2place.com/shops/794767",
-      "phone": "2742 0806",
-      "opening_hours": "Monday - Sunday: 10:30 - 20:30",
-      "facebook": "https://www.facebook.com/hengfusport/",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "Lost n Found 811",
-      "location": "2/F, Shop 218",
-      "detail_url": "https://www.d2place.com/shops/694947",
-      "phone": "",
-      "opening_hours": "Monday - Sunday: 12:30 - 21:00",
-      "facebook": "",
-      "instagram": "https://www.instagram.com/lostnfound811/",
-      "website": ""
-    },
-    {
-      "name": "Grandma Mary Vintage",
-      "location": "2/F, Shop 220",
-      "detail_url": "https://www.d2place.com/shops/090433",
-      "phone": "",
-      "opening_hours": "Monday - Sunday: 12:30 - 21:00",
-      "facebook": "",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "Chapter Two",
-      "location": "2/F, Shop 221B",
-      "detail_url": "https://www.d2place.com/shops/565324",
-      "phone": "",
-      "opening_hours": "Monday - Sunday: 12:30 - 21:00",
-      "facebook": "",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "Share Happinesss",
-      "location": "2/F, Shop 222",
-      "detail_url": "https://www.d2place.com/shops/724648",
-      "phone": "",
-      "opening_hours": "Monday - Sunday: 12:00 - 20:00",
-      "facebook": "https://www.facebook.com/sshare.happinesss/",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "WHITELISTED BY NOVELTY LANE & FASHION FARM FOUNDATION",
-      "location": "4/F, Shop 405",
-      "detail_url": "https://www.d2place.com/shops/927268",
-      "phone": "2153 3385",
-      "opening_hours": "Monday - Thursday: 12:00 - 20:00; Friday - Sunday: 12:00 - 21:00",
-      "facebook": "",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "hoopla",
-      "location": "4/F, Kiosk 9",
-      "detail_url": "https://www.d2place.com/shops/462398",
-      "phone": "",
-      "opening_hours": "Mon-Sun: 11:00-20:00",
-      "facebook": "https://www.facebook.com/hoopla.hk/",
-      "instagram": "https://www.instagram.com/hoopla_hk/",
-      "website": "https://shop.hoo-pla.com/products"
-    },
-    {
-      "name": "BREAD N BUTTER",
-      "location": "1/F, Shop 115-116",
-      "detail_url": "https://www.d2place.com/shops/263735",
-      "phone": "2156 3842",
-      "opening_hours": "Mon-Sun: 11:00-20:30",
-      "facebook": "https://www.facebook.com/breadnbutter.fr/?fref=ts",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "九鳥蛙古董館",
-      "location": "1/F, Shop 118",
-      "detail_url": "https://www.d2place.com/shops/728117",
-      "phone": "",
-      "opening_hours": "Monday - Sunday: 12:30 - 21:00",
-      "facebook": "https://www.facebook.com/ninebirdfrog/",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "ISLAHOLA",
-      "location": "2/F, Shop 223",
-      "detail_url": "https://www.d2place.com/shops/883344",
-      "phone": "",
-      "opening_hours": "Monday - Sunday: 12:00 - 20:00",
-      "facebook": "",
-      "instagram": "",
-      "website": "https://islahola.com/"
-    },
-    {
-      "name": "Moka Vintage",
-      "location": "2/F, Shop 214B",
-      "detail_url": "https://www.d2place.com/shops/359817",
-      "phone": "6567 1415",
-      "opening_hours": "Monday - Sunday: 11:00 - 21:00",
-      "facebook": "https://www.facebook.com/moka.vintage.hk",
-      "instagram": "https://www.instagram.com/mokavtg.hk/",
-      "website": "https://mokavtghk.com/"
-    },
-    {
-      "name": "OSMOSIS",
-      "location": "3/F, Kiosk 13",
-      "detail_url": "https://www.d2place.com/shops/393075",
-      "phone": "9474 5658",
-      "opening_hours": "Monday - Sunday: 13:00 - 20:30",
-      "facebook": "https://www.facebook.com/osmosis.hk/",
-      "instagram": "https://www.instagram.com/osmosis.hk/",
-      "website": "https://www.osmosis-fashion.com/en/content.php?wid=28"
-    },
-    {
-      "name": "Inscoo",
-      "location": "2/F, Shop 213A",
-      "detail_url": "https://www.d2place.com/shops/110606",
-      "phone": "",
-      "opening_hours": "Monday - Sunday: 12: 00 - 20:00",
-      "facebook": "",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "MG",
-      "location": "6/F, Unit A1",
-      "detail_url": "https://www.d2place.com/shops/582138",
-      "phone": "98633780",
-      "opening_hours": "Monday - Sunday: 12:00 - 20:00",
-      "facebook": "https://www.facebook.com/militaryguy/",
-      "instagram": "https://www.instagram.com/militaryguy/",
-      "website": "https://mg-military.com/"
-    },
-    {
-      "name": "Good Leather",
-      "location": " 1/F, Kiosk 19",
-      "detail_url": "https://www.d2place.com/shops/732470",
-      "phone": "",
-      "opening_hours": "Mon - Sun: 12PM - 8PM",
-      "facebook": "",
-      "instagram": "https://www.instagram.com/goodleather.88/",
-      "website": ""
-    },
-    {
-      "name": "柴犬工房 ",
-      "location": "2/F, Kiosk 1 & 2",
-      "detail_url": "https://www.d2place.com/shops/168285",
-      "phone": "",
-      "opening_hours": "Monday - Sunday: 11:00 - 20:00",
-      "facebook": "https://www.facebook.com/SHIBAINC/",
-      "instagram": "https://www.instagram.com/shibainc/",
-      "website": "https://shibainc.com/"
-    },
-    {
-      "name": "Perfecto",
-      "location": "3/F, Kiosk 12",
-      "detail_url": "https://www.d2place.com/shops/606988",
-      "phone": "6705 7663",
-      "opening_hours": "Monday - Sunday: 12:30 - 21:30",
-      "facebook": "https://www.facebook.com/Perfecto-International-Limited-%E6%B5%9A%E5%A8%81%E5%9C%8B%E9%9A%9B%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8-110332337213355/",
-      "instagram": "",
-      "website": "https://perfectointernational.boutir.com"
-    },
-    {
-      "name": "A.Jennbakery",
-      "location": "3/F, Kiosk 11",
-      "detail_url": "https://www.d2place.com/shops/079709",
-      "phone": "",
-      "opening_hours": "Monday - Sunday: 12:00 - 20:00",
-      "facebook": "",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "BB甜",
-      "location": "3/F, CC6",
-      "detail_url": "https://www.d2place.com/shops/684492",
-      "phone": "",
-      "opening_hours": "Monday - Sunday: 12:00 - 20:00",
-      "facebook": "https://www.facebook.com/profile.php?id=61551938822508&mibextid=LQQJ4d",
-      "instagram": "https://www.instagram.com/b.b_sweetness/",
-      "website": ""
-    },
-    {
-      "name": "MsFriday",
-      "location": "1/F, Shop 119",
-      "detail_url": "https://www.d2place.com/shops/802981",
-      "phone": "",
-      "opening_hours": "Monday - Sunday: 12:00 - 20:30",
-      "facebook": "https://www.facebook.com/msfriday.hongkong/",
-      "instagram": "https://www.instagram.com/msfriday.hk/",
-      "website": "https://www.msfriday.com.hk/"
-    },
-    {
-      "name": "CATALO Experience Store",
-      "location": "5/F, Unit C",
-      "detail_url": "https://www.d2place.com/shops/174237",
-      "phone": "",
-      "opening_hours": "Monday - Sunday: 09:30 - 19:00",
-      "facebook": "",
-      "instagram": "",
-      "website": ""
-    },
-    {
-      "name": "四季薈 My Seasons",
-      "location": "5/F, Unit A",
-      "detail_url": "https://www.d2place.com/shops/302972",
-      "phone": "2311 8668",
-      "opening_hours": "Monday - Sunday: 12 PM - 8 PM",
-      "facebook": "https://www.facebook.com/myseasonshk",
-      "instagram": "https://www.instagram.com/myseasonshk/",
-      "website": "https://www.myseasons.com.hk/"
-    },
-    {
       "name": "Jennymadrose",
-      "location": "1/F, Kiosk 3",
-      "detail_url": "https://www.d2place.com/shops/616213",
+      "location": "1/F, Kiosk 3, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/SHOP/Jennymadrose",
       "phone": "9124 0325",
       "opening_hours": "Monday - Sunday : 11:00 - 20:00",
       "facebook": "https://www.facebook.com/jennymadrose",
@@ -1281,8 +853,8 @@
     },
     {
       "name": "KINDANATURALS",
-      "location": "1/F, Shop 114",
-      "detail_url": "https://www.d2place.com/shops/316965",
+      "location": "1/F, Shop 114, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/SHOP/KINDANATURALS",
       "phone": "9226 7062",
       "opening_hours": "Monday - Sunday: 12:00 - 20:00",
       "facebook": "",
@@ -1291,8 +863,8 @@
     },
     {
       "name": "OUD",
-      "location": "1/F, Shop 117",
-      "detail_url": "https://www.d2place.com/shops/207637",
+      "location": "1/F, Shop 117, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/SHOP/OUD",
       "phone": "",
       "opening_hours": "Monday - Sunday: 12:30 - 21:00",
       "facebook": "",
@@ -1301,8 +873,8 @@
     },
     {
       "name": "Incoco",
-      "location": "1/F, Kiosk 1",
-      "detail_url": "https://www.d2place.com/shops/087289",
+      "location": "1/F, Kiosk 1, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/SHOP/Incoco",
       "phone": "3709 2679",
       "opening_hours": "Monday - Sunday: 12:00 - 20:00",
       "facebook": "https://www.facebook.com/IncocoHK/?fref=ts",
@@ -1311,8 +883,8 @@
     },
     {
       "name": "MUSEE PLATINUM TOKYO",
-      "location": "6/F, Unit D",
-      "detail_url": "https://www.d2place.com/shops/356114",
+      "location": "6/F, Unit D, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/SHOP/MUSEE-PLATINUM-TOKYO",
       "phone": "2169 4888",
       "opening_hours": "Monday - Sunday: 11:00 - 20:00",
       "facebook": "",
@@ -1321,8 +893,8 @@
     },
     {
       "name": "Be Good To Life",
-      "location": "1/F, Shop 105",
-      "detail_url": "https://www.d2place.com/shops/440070",
+      "location": "1/F, Shop 105, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/SHOP/Be-Good-To-Life",
       "phone": "5200 0323",
       "opening_hours": "Monday - Sunday: 12:00 - 20:00",
       "facebook": "https://www.facebook.com/begoodtolife/",
@@ -1331,8 +903,8 @@
     },
     {
       "name": "Something about Happiness",
-      "location": "2/F, Shop 213 A2",
-      "detail_url": "https://www.d2place.com/shops/962865",
+      "location": "2/F, Shop 213 A2, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/SHOP/Something-about-Happiness",
       "phone": "6579 3715",
       "opening_hours": "Mon-Sun: 12:30 PM - 7:30 PM",
       "facebook": "https://www.facebook.com/something.about.happiness",
@@ -1341,8 +913,8 @@
     },
     {
       "name": " FIRM Cosmo by i-FIRM",
-      "location": "7/F, Unit B",
-      "detail_url": "https://www.d2place.com/shops/32193",
+      "location": "7/F, Unit B, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/SHOP/FIRM-Cosmo-by-i-FIRM",
       "phone": "2148 4889",
       "opening_hours": "Mon – Fri : 11:30am - 8:30pm / Sat: 10:30am – 7:00pm / Sun:10:30am – 6:00pm",
       "facebook": "https://www.facebook.com/firmcosmo/",
@@ -1352,41 +924,29 @@
   ],
   "events": [
     {
-      "title": "好好生活 好好手作",
-      "date": "July 5-6 2025",
+      "title": "廢青漫遊世界市集",
+      "date": "26 - 27 July, 2025",
       "venue": "THE SPACE",
-      "detail_url": "https://www.d2place.com/events/bluemart-july"
+      "detail_url": "https://www.d2place.com/events/circle-event-0726-27"
     },
     {
       "title": "《感謝及讚美》主題手作市集",
       "date": "19 - 20 July, 2025 ",
       "venue": "THE SPACE",
-      "detail_url": "https://www.d2place.com/events/life mart"
+      "detail_url": "https://www.d2place.com/events/life-mart"
     },
     {
-      "title": "夏日BB購物展及玩具開倉2025",
-      "date": "27 June - 1 July 2025 ",
-      "venue": "11:30am - 7:30pm",
-      "detail_url": "https://www.d2place.com/events/chopchopbaby"
-    },
-    {
-      "title": "Hololive Only HK",
-      "date": "June 29, 2025",
+      "title": "#大力吸 動物深究會市集",
+      "date": "12 - 13 July 2025",
       "venue": "THE SPACE",
-      "detail_url": "https://www.d2place.com/events/hololive only hk"
-    },
-    {
-      "title": "Blue Archive 蔚藍檔案 Only HK 3",
-      "date": "June 28, 2025",
-      "venue": "THE SPACE",
-      "detail_url": "https://www.d2place.com/events/only hk 3"
+      "detail_url": "https://www.d2place.com/events/freeture-july1213"
     }
   ],
   "play": [
     {
       "name": "CGV Cinemas D2 Place",
-      "location": "11/F",
-      "detail_url": "https://www.d2place.com/shops/974154",
+      "location": "11/F, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/PLAY/CGV-Cinemas-D2-Place",
       "phone": "2863 4100",
       "opening_hours": "Monday - Sunday: 11:30 - 22:30",
       "facebook": "https://www.facebook.com/cgvcinemashongkong",
@@ -1395,8 +955,8 @@
     },
     {
       "name": "大樹先生的家",
-      "location": "1/F, Shop 103-107, 120-121",
-      "detail_url": "https://www.d2place.com/shops/772265",
+      "location": "1/F, Shop 103-107, 120-121, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/PLAY/",
       "phone": "3184 0033",
       "opening_hours": "Monday, Wednesday - Sunday: 09:30 - 21:00",
       "facebook": "https://www.facebook.com/mr.tree38/?fref=ts",
@@ -1405,8 +965,8 @@
     },
     {
       "name": "Golfzon GreenLive",
-      "location": "1/F, Shop 114-127",
-      "detail_url": "https://www.d2place.com/shops/813535",
+      "location": "1/F, Shop 114-127, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/PLAY/Golfzon-GreenLive",
       "phone": "2593 6888",
       "opening_hours": "Monday - Sunday: 11:00 - 02:00",
       "facebook": "https://www.facebook.com/GreenLiveClub",
@@ -1415,8 +975,8 @@
     },
     {
       "name": "VAR LIVE",
-      "location": "1/F, Shop 114-127",
-      "detail_url": "https://www.d2place.com/shops/805811",
+      "location": "1/F, Shop 114-127, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/PLAY/VAR-LIVE",
       "phone": "6239 2699",
       "opening_hours": "Sunday - Thursday: 12:30 - 21:30",
       "facebook": "https://www.facebook.com/VARLIVEHK/",
@@ -1425,8 +985,8 @@
     },
     {
       "name": "寰宇家庭俱樂部 World Family Club",
-      "location": "4/F, Shop 401",
-      "detail_url": "https://www.d2place.com/shops/588448",
+      "location": "4/F, Shop 401, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/PLAY/World-Family-Club",
       "phone": "2268 1300",
       "opening_hours": "Monday - Sunday: 09:30 - 18:00",
       "facebook": "",
@@ -1435,8 +995,8 @@
     },
     {
       "name": "GO24 Fitness",
-      "location": "6/F, Unit B",
-      "detail_url": "https://www.d2place.com/shops/524806",
+      "location": "6/F, Unit B, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/PLAY/GO24-Fitness",
       "phone": "6778 5553",
       "opening_hours": "Monday - Sunday: 00:00 - 24:00",
       "facebook": "https://www.go24fitness.com/zh/look-inside/lai-chi-kok",
@@ -1445,8 +1005,8 @@
     },
     {
       "name": "黑暗中對話體驗館 Dialogue Experience Place",
-      "location": "7/F, Unit B",
-      "detail_url": "https://www.d2place.com/shops/858689",
+      "location": "7/F, Unit B, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/PLAY/Dialogue-Experience-Place",
       "phone": "2310 0833",
       "opening_hours": "Mon-Sun: 10:00-19:00",
       "facebook": "",
@@ -1455,8 +1015,8 @@
     },
     {
       "name": "名將桌球城",
-      "location": "9/F, Unit A",
-      "detail_url": "https://www.d2place.com/shops/719028",
+      "location": "9/F, Unit A, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/PLAY/",
       "phone": "3996 8993",
       "opening_hours": "Monday - Sunday: 10:00 - 06:00",
       "facebook": "",
@@ -1465,8 +1025,8 @@
     },
     {
       "name": "PowerPlay Arena",
-      "location": "2/F & 3/F",
-      "detail_url": "https://www.d2place.com/shops/019073",
+      "location": "2/F & 3/F, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/PLAY/PowerPlay-Arena",
       "phone": "3165 1628",
       "opening_hours": "Mon-Sun 12:00-21:30",
       "facebook": "",
@@ -1475,8 +1035,8 @@
     },
     {
       "name": "LOST JUNIOR",
-      "location": "3/F, Shop 304",
-      "detail_url": "https://www.d2place.com/shops/938282",
+      "location": "3/F, Shop 304, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/PLAY/LOST-JUNIOR",
       "phone": "2890 2093",
       "opening_hours": "Monday - Friday: 13:00 - 21:00 ; Saturday, Sunday & Public Holiday: 11:00 - 21:00",
       "facebook": "https://www.facebook.com/lostjuniorhk/",
@@ -1485,8 +1045,8 @@
     },
     {
       "name": "SKATE SPADE CO. LTD.",
-      "location": "5/F, Unit B",
-      "detail_url": "https://www.d2place.com/shops/877994",
+      "location": "5/F, Unit B, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/PLAY/SKATE-SPADE-CO-LTD",
       "phone": "3556 8600",
       "opening_hours": "Monday - Friday: 10:00 - 19:00",
       "facebook": "https://www.facebook.com/HKSK8ACADEMY",
@@ -1495,8 +1055,8 @@
     },
     {
       "name": "Bun's 2020 Roller Training Center ",
-      "location": "5/F, Unit A ",
-      "detail_url": "https://www.d2place.com/shops/773000",
+      "location": "5/F, Unit A, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/PLAY/Bun-s-2020-Roller-Training-Center",
       "phone": "2727 1100",
       "opening_hours": "Mon-Fri: 13:00-22:00 / Sat & Sun, Public Holiday: 10:00-22:00",
       "facebook": "https://www.facebook.com/Buns2020hk/",
@@ -1505,8 +1065,8 @@
     },
     {
       "name": "M48 WELLNESS LAB ",
-      "location": "7/F, Unit C",
-      "detail_url": "https://www.d2place.com/shops/067985",
+      "location": "7/F, Unit C, D2 Place TWO",
+      "detail_url": "https://www.d2place.com/shops/PLAY/M48-WELLNESS-LAB",
       "phone": "5388 2525 ",
       "opening_hours": "Monday - Sunday: 10:00 - 22:00",
       "facebook": "https://www.facebook.com/m48wellnesslab",
@@ -1515,8 +1075,8 @@
     },
     {
       "name": "Resalaser Lasertag",
-      "location": "5/F, Unit B",
-      "detail_url": "https://www.d2place.com/shops/307007",
+      "location": "5/F, Unit B, D2 Place ONE",
+      "detail_url": "https://www.d2place.com/shops/PLAY/Resalaser-Lasertag",
       "phone": "3580 0030",
       "opening_hours": "Monday - Friday: 12:00 - 22:00  /  Saturday - Sunday: 10:00 - 22:00",
       "facebook": "https://www.facebook.com/ResaLaserhk",
@@ -1529,16 +1089,8 @@
     "location": "Location\nD2 Place ONE\nAddress\n9 Cheung Yee Street, Lai Chi Kok, Kowloon, Hong Kong\nBusiness Hours\nMonday - Sunday & Public Holiday: 10:00 - 22:00\nD2 Place TWO\nAddress\n15 Cheung Shun Street, Lai Chi Kok, Kowloon, Hong Kong\nBusiness Hours\nMonday - Sunday & Public Holiday: 10:00 - 22:00",
     "parking": "D2 Place Parking\nD2 Place Parking\nLogin / Register\nD2 Place Parking\n優惠受條款及細則約束，按此了解詳情。\n指定商戶包括：\n條款及細則 Terms and Conditions:\n1.顧客凡於 D2 PLACE ONE 或 D2 PLACE TWO 指定商戶* 累積消費滿港幣300元或以上(以最多2張單據計算)，可享用1小時免費泊車優惠；累積滿港幣500元或以上(以最多2張單據計算)，則可享用2小時免費泊車優惠。(*不包括於市集，POP-UP Stores或其他商場推廣活動之消費)；\nShoppers could enjoy 1 Hour of Free Parking for spending HK$300 or more, OR 2 Hours of Free Parking for spending HK$500 or more in designated shops* at D2 Place ONE or D2 Place TWO. The total spending amount could be accumulated by NOT more than 2 receipts (*NOT applicable to Weekend Markets, POP-UP Stores or other in-mall promotional activities);\n2. 顧客需憑即日機印消費單據，於一期或二期商場地面泊車收費站登記。免費時段以外之泊車時間將以正常收費計算；\nShoppers must present On-day Printed Receipts to the G/F Shroff Office of D2 Place ONE or D2 Place TWO for redemption. Any additional parking time outside of the free period will be charged with regular fares;\n3. 機印單據必須為正本並清晰印有商戶名稱、消費日期及金額。任何單據影印本、複印本、已被損毀或經塗改之單據、手寫單據、易辦事及信用咭收據存根等，恕不接受；\nPrinted receipts must be original and clearly show the shop name, issued date and spending amount. Photocopies, reprints, damaged or altered receipts, handwritten receipts, EPS or credit cards counterfoils are not accepted;\n4. 此優惠只適用於私家車及客貨車類別；\nThis offer is applicable to private cars and light goods vehicle only;\n5. 已用作泊車優惠之單據仍可用作參與其他商場推廣活動；\nReceipts redeemed for Free Parking can be used for other redemption or promotional offer by D2 Place;\n6. D2 PLACE 商戶及其職員均不能享用此項免費泊車優惠。D2 PLACE 保留隨時更改優惠條款及細則之權利。如有任何爭議，D2 PLACE 保留最終決定權。\nD2 PLACE tenants and their staff are not eligible to participate in this offer. D2 PLACE reserves the rights to alter or amend the terms and conditions at any time without prior notice. In case of any dispute, the decision by D2 PLACE shall be final.\nFollow and stay in the know\nSite Map\nVisit Us\nAbout Us\nOur Awards\nTerm of Use\nPrivacy Policy\nCopyright © 2022 D2 Place.\nAll Rights Reserved.\nEvents\nShops\nDine\nPlay",
     "leasing": "Leasing And Renting\nLogin / Register\nLeasing And Renting\nFOR SHOPS\nUNIQUE MALL EXPERIENCE\nD2 Place locates at the Kowloon west transportation hub, next to Lai Chi Kok MTR Exit D2 which is highly accessible, with parking spaces available for your added convenience. The five-storey mall provides customers with one-stop dining, shopping and enjoyment of life.  Adding the charm, the rooftop garden offers a comfortable and beautiful outdoor environment, exposure to different view of Lai Chi Kok.\nLeasing Department\nTel: 2371 1999\nE-mail: leasing@d2place.com\nFOR VENUES\nEXHIBITION & EVENT VENUES\nThe promotion and exhibition venues are composed of lightings, sound equipments and other facilities , ideal for corporate events, fashion show, product launches, workshops, markets, fashion show, themed parties, photo shoots and more.\nD2 Place ONE\nRooftop Garden\nLocation: Rooftop, D2 Place ONE\nSize: 12,000 sq.ft\nThe Space\nLocation: 2/F, D2 Place ONE\nSize: 6,000 sq.ft\nThe Upper Stage\nLocation: 7/F, D2 Place ONE\nSize: 8,000 sq.ft\nMarketing Department\nE-mail:\nmarketing@d2place.com\nTel: 2371 1876\nFOR POP-UP STORES\n‘Dream it. Do it’\nPop-up Store Anniversary Campaign\nHigh rent has turned most shopping malls in Hong Kong into a cookie-cutter and forced small and individual business operators to either shut down or relocate to suburban areas. In contrary, D2 Place strives to promote local culture through organizing regular creative events, and in 2016, we has successfully launched a Pop-up Store campaign “Dream It, Do It”which received over 100 applications and more than 20 local brands have started their first business here. To celebrate its anniversary, we are now offering a brand new pop-up store campaign for all entrepreneurs and local handcrafters.\nShort-term Lease x Flexible Terms x Local Brands\n“Dream It, Do It! Anniversary Campaign\" offers a total of 15 Pop-up Store spaces, located along high traffic pathways within D2 Place ONE and D2 Place TWO. To differentiate from other in-mall tenants, D2 Pop-up Stores will be only applicable to Local Brands on short-term lease of 1 to 3 months. In addition to flexible terms and rental offers, D2 Place will also provide a list of furniture for shop owners to choose from for an easy startup.\nIn just less-than-a-year time, the Pop-up Store campaign received over 100 applications and is highly welcomed by the local creative industries and young entrepreneurs. 6 of those brands have become our valuable shop tenants from the Pop-up Stores campaign, including:\n「Jennymadrose」－selling own-formulated handmade skincare & lifestyle products;\n「Lisa & Sara」－selling own-formulated perfume, aroma diffuser and handmade soap;\n「Jasoo 자수」－selling Korean style handmade gemstone & simple accessories;\n「Fábula Select Shop」－offering handmade leather products, customization service and DIY workshops;\n「Curate」－selling designer fashion items & accessories;\n「Lost n Found 811」－featuring a wide collection of designer fashion items & lifestyle products.\nPop-up Store Campaign Details\n• 15 Pop-up Stores open for application\n• Short-term lease for 1 - 3 months only\n• D2 Place ONE (1/F - 4/F) and D2 Place TWO (1/F)\n• Free provision of basic furniture & display accessories\n• Promotion & other operation supports\n• Special Rental Offers\nLeasing Department\nTel: 2371 1999\nE-mail:\nleasing@d2place.com\nFOR BOOTHS\n\"D2 Place Weekend Markets\" regularly organizes a variety of local markets, aiming to promote local culture and encourage young people to develop their own business. With the mission of \"Small Shops with Big Ideas\", D2 Place strived to create a new and ideal destination for everyone to spend their weekends.  We are welcome for any handcrafters, designers or artiste joining our big party!\nMarketing Department\nE-mail: weekendmarkets@d2place.com\nAPPLY NOW\nFollow and stay in the know\nSite Map\nVisit Us\nAbout Us\nOur Awards\nTerm of Use\nPrivacy Policy\nCopyright © 2022 D2 Place.\nAll Rights Reserved.\nEvents\nShops\nDine\nPlay",
-    "general_information": ""
+    "general_information": "停車場\nD2 place ONE, TWO, Lai Chi Kok Road 822 Street: van, motor cycle, private car $25/hr; goods vehicle $40/hr\nD2 place TWO (4/F): Daily Parking (8am-7pm) $120\nLai Chi Kok Road 822 Street: Daily Parking (8am-7pm) $150\nContact 31064500\n商舖有個別的營業時間(Snookers, Go24)\n停車場於凌晨12時後不可進入，但可以出車\n停車優惠\nEvent 1\n顧客凡於 D2 PLACE ONE 或 D2 PLACE TWO 指定商戶 累積消費滿港幣300元或以上（以最多2張單據計算），可享用1小時免費泊車優惠；累積滿港幣500元或以上（以最多2張單據計算），則可享用2小時免費泊車優惠。（不包括於市集、POP-UP Stores或其他商場推廣活動之消費）\n須憑當日機印消費單據，到商場地面層的泊車收費站登記。\nEvent 2 : Free Parking 平日晚市限定\n凡出示滿足下列所有條件之單一消費收據，\n由晚上6:00至11:00於商場一期或二期消費，可享有免泊車指定日子：逢星期一至五（公眾假期除外）\n消費泊車優惠：\nHK$100=1小時\nHK$200=2小時\nHK$300=3小時\n（每張單據可享一小時免費泊車，最多接受3張不同商戶收據）\nFree parking from 18:00 to 23:00 on presentation of a single purchase receipt satisfying all of the following conditions will be entitled:\nMondays to Fridays (excluding public holidays)\nConsumption parking privileges:\nHK$100 = 1 hour\nHK$200 = 2 hours\nHK$300 = 3 hours\n(Each receipt can enjoy 1 hour of free parking, up to a maximum of 3 different merchant receipts)\nEvent 3: 夜繽紛 Happy Hour\n過夜泊車優惠 凡出示滿足下列所有條件之單一消費收據，即可由晚上11:00至翌日早上8:00享有免費泊車優惠：\n晚上9:00後的消費收據滿HK$500或以上\n﻿消費單上含酒精飲品\n﻿指定食肆餐廳商戶^\nFree parking from 23:00 to 8:00 (the next day) on presentation of a single purchase receipt satisfying all of the following conditions will be entitled:\n﻿﻿HK$500 or more for receipts after 21:00\n﻿﻿Alcoholic beverages on the consumption list\n﻿﻿Designated Food and Beverage shops*\n停車月租\nD2 Place ONE: $3300/month\nD2 Place TWO：$3600/month\nLaws Commercial Plaza: $4300/month\n寄存行李\nD2 Place暫時未能提供行李寄存服務。\nATM機/自助提款服務\nD2 Place暫時未能提供自助提款（ATM）服務。如需提款，請移步長沙灣廣場匯豐銀行、恆生銀行或東亞銀行提款機。\n便利店\nD2 Place暫時未設有便利商店。請移步荔枝角地鐵站旁的Circle K （[google map]\nhttps://maps.app.goo.gl/9WmfRRqcjDjGxD1p7?g_st=ipc\n）\n回收垃圾桶\n位於D2 Place ONE地下停車場以及D2 Place TWO 三樓大堂。\n電話\nD2 Place ONE 3620 2098\nD2 Place Two 2557 7988\n育兒室\nD2 Place TWO 一樓男廁隔壁"
   },
-  "services": [
-    {
-      "name": "Concierge",
-      "location": "G/F, D2 Place ONE (near main entrance)",
-      "opening_hours": "Daily 10:00 - 22:00",
-      "description": "Provides general customer service and lost-and-found assistance."
-    }
-  ],
   "manual_info": {
     "vegan_restaurants": "D2 Place暫時未有素食餐廳，但有些餐廳會提供素食菜品。"
   }
