@@ -267,6 +267,22 @@ class D2PlaceScraper:
         except TimeoutException:
             logger.warning(f"Timeout waiting for element: {selector}")
             return None
+
+    def resolve_detail_url(self, url: str) -> str:
+        """Follow redirects for numeric shop URLs and return the final URL."""
+        if not url or not re.search(r"/shops/\d+", url):
+            return url
+        try:
+            resp = requests.get(url, headers=self.headers, timeout=10, allow_redirects=True)
+            if resp.status_code == 200 and resp.url:
+                return resp.url
+            soup = BeautifulSoup(resp.text, "html.parser")
+            link = soup.find("link", rel="canonical")
+            if link and link.get("href"):
+                return link["href"]
+        except Exception as e:
+            logger.warning(f"resolve_detail_url failed for {url}: {e}")
+        return url
         
     def extract_next_data(html_text: str) -> dict | None:
         """
@@ -648,7 +664,7 @@ class D2PlaceScraper:
                 item = {
                     "name": shop.get("nameEn") or shop.get("nameTc", ""),
                     "location": shop.get("addressEn") or shop.get("addressTc", ""),
-                    "detail_url": f"{self.base_url}/shops/{shop['passcode']}",
+                    "detail_url": self.resolve_detail_url(f"{self.base_url}/shops/{shop['passcode']}"),
                     "phone": shop.get("phoneNumber", ""),
                     "opening_hours": shop.get("displayOpeningHoursEn") or shop.get("displayOpeningHoursTc", ""),
                     "facebook": shop.get("facebookUrl", ""),
@@ -681,7 +697,7 @@ class D2PlaceScraper:
                 item = {
                     "name": shop.get("nameEn") or shop.get("nameTc", ""),
                     "location": shop.get("addressEn") or shop.get("addressTc", ""),
-                    "detail_url": f"{self.base_url}/shops/{shop['passcode']}",
+                    "detail_url": self.resolve_detail_url(f"{self.base_url}/shops/{shop['passcode']}"),
                     "phone": shop.get("phoneNumber", ""),
                     "opening_hours": shop.get("displayOpeningHoursEn") or shop.get("displayOpeningHoursTc", ""),
                     "facebook": shop.get("facebookUrl", ""),
@@ -756,7 +772,7 @@ class D2PlaceScraper:
                 item = {
                     "name": shop.get("nameEn") or shop.get("nameTc", ""),
                     "location": shop.get("addressEn") or shop.get("addressTc", ""),
-                    "detail_url": f"{self.base_url}/shops/{shop['passcode']}",
+                    "detail_url": self.resolve_detail_url(f"{self.base_url}/shops/{shop['passcode']}"),
                     "phone": shop.get("phoneNumber", ""),
                     "opening_hours": shop.get("displayOpeningHoursEn") or shop.get("displayOpeningHoursTc", ""),
                     "facebook": shop.get("facebookUrl", ""),

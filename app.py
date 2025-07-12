@@ -96,6 +96,7 @@ except Exception as e:
     logger.error("Failed to load d2place_data.json into cache: %s", e)
     CACHED_DATA = {}
 
+
 # Pre-serialize the full JSON once for LLM context
 FULL_JSON_TEXT = json.dumps(CACHED_DATA, ensure_ascii=False)
 
@@ -562,6 +563,33 @@ def should_send_image(text: str) -> bool:
     return fuzzy_match(lowered, ["photo", "image", "picture", "poster", "instagram", "facebook"])
 
 
+def is_parking_query(text: str) -> bool:
+    """Return True if the user is asking about parking."""
+    lowered = text.lower()
+    keywords = ["parking", "car park", "泊車", "停車", "車位"]
+    return any(k in lowered for k in keywords)
+
+
+@lru_cache(maxsize=1)
+def get_parking_image_urls() -> list[str]:
+    """Fetch parking page and return all image URLs."""
+    url = "https://www.d2place.com/parking"
+    try:
+        headers = {"User-Agent": "Mozilla/5.0"}
+        resp = requests.get(url, headers=headers, timeout=10)
+        resp.raise_for_status()
+        soup = BeautifulSoup(resp.text, "html.parser")
+        imgs = []
+        for img in soup.find_all("img"):
+            src = img.get("src") or img.get("data-src")
+            if src:
+                imgs.append(urljoin(resp.url, src))
+        return imgs
+    except Exception as e:
+        logger.error("Failed fetching parking images: %s", e)
+        return []
+
+
 
 
 #########################
@@ -995,6 +1023,10 @@ def process_message(msg):
             else "系統正在處理，請稍等……"
         )
         send_whatsapp_message(from_user, note)
+
+        if msg_type == 'text' and is_parking_query(inbound_text):
+            for img in get_parking_image_urls():
+                send_whatsapp_image(from_user, img)
 
         if msg_type == 'text':
             bot_reply, image_url = handle_text_query(inbound_text)
