@@ -580,6 +580,7 @@ def get_parking_image_urls() -> list[str]:
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
         imgs = []
+        # Regular <img> tags
         for img in soup.find_all("img"):
             src = img.get("src") or img.get("data-src")
             alt = (img.get("alt") or "").lower()
@@ -590,6 +591,17 @@ def get_parking_image_urls() -> list[str]:
                 k in alt for k in ["parking", "car park", "carpark"]
             ):
                 imgs.append(full)
+
+        # Styles like style="background-image:url(...)"
+        for el in soup.find_all(style=True):
+            style = el.get("style", "")
+            m = re.search(r"background-image:\s*url\(['\"]?([^')\"]+)['\"]?\)", style)
+            if m:
+                src = m.group(1)
+                full = urljoin(resp.url, src)
+                if "parking" in full.lower() and full not in imgs:
+                    imgs.append(full)
+
         return imgs
     except Exception as e:
         logger.error("Failed fetching parking images: %s", e)
