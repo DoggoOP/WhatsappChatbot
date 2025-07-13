@@ -582,8 +582,14 @@ def get_parking_image_urls() -> list[str]:
         imgs = []
         for img in soup.find_all("img"):
             src = img.get("src") or img.get("data-src")
-            if src:
-                imgs.append(urljoin(resp.url, src))
+            alt = (img.get("alt") or "").lower()
+            if not src:
+                continue
+            full = urljoin(resp.url, src)
+            if any(k in full.lower() for k in ["parking", "carpark", "car-park"]) or any(
+                k in alt for k in ["parking", "car park", "carpark"]
+            ):
+                imgs.append(full)
         return imgs
     except Exception as e:
         logger.error("Failed fetching parking images: %s", e)
@@ -648,6 +654,9 @@ def handle_text_query(user_text):
 
     user_lang = detect_language(user_text)
     reply_lang = "en" if user_lang == "en" else "zh"
+    lang_instruction = (
+        "Please answer in English." if reply_lang == "en" else "請以中文回答。"
+    )
 
     meal = extract_meal_query(user_text)
     if meal:
@@ -685,6 +694,7 @@ def handle_text_query(user_text):
         # f"User Question: {user_text}\n\n"
         # f"SCRAPED DATA:\n{scraped_data}\n\n"
         f"WEB SEARCH:\n{web_results}\n"
+        f"{lang_instruction}\n"
 
     )
     payload = {
