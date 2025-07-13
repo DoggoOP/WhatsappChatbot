@@ -646,9 +646,7 @@ def handle_text_query(user_text):
         If details are missing, offer any related information you have instead of
         simply saying you don't know. Do not mention any concierge phone number.
         Avoid using tables. Format each venue with its name, address, business
-        hour and D2 Place page, separated by blank lines. Reply in Chinese if the
-        user's message contains Chinese characters or is mixed chinese with English; otherwise reply
-        in English. Maintain a warm tone.
+        hour and D2 Place page, separated by blank lines. Maintain a warm tone.
         """
     )
 
