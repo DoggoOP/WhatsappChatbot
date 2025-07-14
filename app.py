@@ -3,7 +3,7 @@ import json
 import base64
 import logging
 import requests
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from dotenv import load_dotenv
 from rapidfuzz import fuzz  # Added for fuzzy matching
 import re
@@ -19,6 +19,24 @@ from concurrent.futures import ThreadPoolExecutor
 import time
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
+
+PHONE_REGEX = re.compile(r"(?:\+?852[-\s]?)?\d{4}[-\s]?\d{4}")
+EMAIL_REGEX = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
+
+def remove_contact_info(text: str) -> str:
+    """Return ``text`` with phone numbers and emails removed."""
+    text = PHONE_REGEX.sub("", text)
+    return EMAIL_REGEX.sub("", text)
+
+def strip_contact_info(obj):
+    """Recursively remove phone numbers and emails from all string values in ``obj``."""
+    if isinstance(obj, dict):
+        return {k: strip_contact_info(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [strip_contact_info(x) for x in obj]
+    if isinstance(obj, str):
+        return remove_contact_info(obj)
+    return obj
 
 load_dotenv()
 
@@ -80,7 +98,13 @@ wa_handler.setLevel(logging.WARNING)
 wa_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
 logger.addHandler(wa_handler)
 
-app = Flask(__name__, static_url_path='/assets', static_folder='Assets')
+app = Flask(__name__)
+
+
+@app.route('/assets/<path:filename>')
+def serve_asset(filename):
+    """Serve files from the Assets folder."""
+    return send_from_directory('Assets', filename)
 
 _scraped_data_cache = None
 _processed_messages = {}  # Store processed message IDs
@@ -91,7 +115,8 @@ _executor = ThreadPoolExecutor(max_workers=20)
 
 try:
     with open("d2place_data.json", "r", encoding="utf-8") as f:
-        CACHED_DATA = json.load(f)
+        raw_data = json.load(f)
+    CACHED_DATA = strip_contact_info(raw_data)
     logger.info("Loaded scraped data into CACHED_DATA")
 except Exception as e:
     logger.error("Failed to load d2place_data.json into cache: %s", e)
@@ -567,7 +592,7 @@ def should_send_image(text: str) -> bool:
 def is_parking_query(text: str) -> bool:
     """Return True if the user is asking about parking."""
     lowered = text.lower()
-    keywords = ["parking", "car park", "泊車", "停車", "車位"]
+    keywords = ["parking", "car park", "carpark", "car-park", "泊車", "停車", "停車場", "車位"]
     return any(k in lowered for k in keywords)
 
 
@@ -674,7 +699,9 @@ def handle_text_query(user_text):
         Keep all answers focused on D2 Place or the LAWSGROUP community only.
 
         If details are missing, offer any related information you have instead of
-        simply saying you don't know. Do not mention any concierge phone number.
+        simply saying you don't know. Do not mention any concierge phone number
+        and do not share or provide any phone numbers or email addresses in your
+        replies.
         Avoid using tables. Format each venue with its name, address, business
         hour and D2 Place page, separated by blank lines. Maintain a warm tone.
         """
@@ -738,6 +765,7 @@ def handle_text_query(user_text):
     promo = follow_up_promotion(user_text)
     if promo:
         final_reply += "\n\n" + promo
+    final_reply = remove_contact_info(final_reply)
     return final_reply, social_image
 
 def handle_image_query(image_b64, caption=""):
@@ -1062,7 +1090,7 @@ def process_message(msg):
         )
         send_whatsapp_message(from_user, note)
 
-        if msg_type == 'text' and is_parking_query(inbound_text) and not is_parking_promotion_query(inbound_text):
+        if msg_type == 'text' and is_parking_query(inbound_text):
             send_parking_images(from_user)
 
         if msg_type == 'text':
@@ -1077,6 +1105,7 @@ def process_message(msg):
         else:
             bot_reply, image_url = "Sorry, I only handle text and audio messages for now.", None
 
+        bot_reply = remove_contact_info(bot_reply)
         send_whatsapp_message(LOG_RECIPIENT, f"📤 To   {from_user}: {bot_reply}")
         send_whatsapp_message(from_user, bot_reply)
         if image_url:
