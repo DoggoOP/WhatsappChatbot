@@ -36,6 +36,7 @@ def strip_contact_info(obj):
         return [strip_contact_info(x) for x in obj]
     if isinstance(obj, str):
         return remove_contact_info(obj)
+
     return obj
 
 load_dotenv()
@@ -47,7 +48,7 @@ VERIFY_TOKEN = os.environ.get('VERIFY_TOKEN')
 WHATSAPP_TOKEN = os.environ.get('WHATSAPP_TOKEN')
 PHONE_NUMBER_ID = os.environ.get('PHONE_NUMBER_ID')
 LOG_RECIPIENT = os.environ.get('LOG_RECIPIENT')
-PUBLIC_URL = os.environ.get('PUBLIC_URL', 'http://localhost:4040')
+PUBLIC_URL = "https://chatbot.d2place.com"
 BASE_URL = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
 # Use a fixed model so the chatbot always calls the same Qwen version
 QWEN_MODEL = "qwen-plus"
@@ -699,8 +700,7 @@ def handle_text_query(user_text):
         Keep all answers focused on D2 Place or the LAWSGROUP community only.
 
         If details are missing, offer any related information you have instead of
-        simply saying you don't know. Do not mention any concierge phone number
-        and do not share or provide any phone numbers or email addresses in your
+        simply saying you don't know. Do not share or provide any phone numbers or email addresses in your
         replies.
         Avoid using tables. Format each venue with its name, address, business
         hour and D2 Place page, separated by blank lines. Maintain a warm tone.
@@ -762,6 +762,7 @@ def handle_text_query(user_text):
     }
     response = call_qwen_api(payload)
     final_reply = maybe_replace_unknown(postprocess_text(response))
+    final_reply = remove_phone_numbers(final_reply)
     promo = follow_up_promotion(user_text)
     if promo:
         final_reply += "\n\n" + promo
