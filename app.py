@@ -48,7 +48,7 @@ VERIFY_TOKEN = os.environ.get('VERIFY_TOKEN')
 WHATSAPP_TOKEN = os.environ.get('WHATSAPP_TOKEN')
 PHONE_NUMBER_ID = os.environ.get('PHONE_NUMBER_ID')
 LOG_RECIPIENT = os.environ.get('LOG_RECIPIENT')
-PUBLIC_URL = "https://chatbot.d2place.com"
+PUBLIC_URL = os.environ.get("PUBLIC_URL", "https://chatbot.d2place.com")
 BASE_URL = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
 # Use a fixed model so the chatbot always calls the same Qwen version
 QWEN_MODEL = "qwen-plus"
@@ -594,7 +594,10 @@ def is_parking_query(text: str) -> bool:
     """Return True if the user is asking about parking."""
     lowered = text.lower()
     keywords = ["parking", "car park", "carpark", "car-park", "泊車", "停車", "停車場", "車位"]
-    return any(k in lowered for k in keywords)
+    for k in keywords:
+        if k in lowered or fuzz.partial_ratio(lowered, k) >= FUZZY_THRESHOLD:
+            return True
+    return False
 
 
 def is_parking_promotion_query(text: str) -> bool:
