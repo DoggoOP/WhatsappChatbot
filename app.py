@@ -610,7 +610,7 @@ def send_parking_images(recipient):
     """Send the parking images stored locally."""
     files = ["parking1.jpg", "parking2.jpg", "parking3.jpg", "parking4.png"]
     for f in files:
-        url = urljoin(PUBLIC_URL + '/', f"assets/{f}")
+        url = urljoin(PUBLIC_URL + '/', f"Assets/{f}")
         send_whatsapp_image(recipient, url)
 
 
