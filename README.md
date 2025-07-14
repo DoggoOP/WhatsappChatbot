@@ -24,9 +24,10 @@ This repository contains a Flask application that powers a WhatsApp chatbot for 
    - `LOG_RECIPIENT` – phone number where log messages should be sent
   - `PUBLIC_URL` – base URL of your Flask server used for serving images.
     This must be a publicly reachable URL (e.g. an ngrok tunnel) so WhatsApp
-    can download files from the `/assets` path. The app exposes this route
-    using `@app.route('/assets/<filename>')`, serving files from the local
-    `Assets` folder.
+    can download files from the `/Assets` path. The app exposes this route
+    using `@app.route('/Assets/<path:filename>')`, serving files from the local
+    `Assets` folder. Set this to the public domain of your server (for example
+    `https://chatbot.d2place.com`).
 
 ## Running the bot
 
