@@ -762,7 +762,6 @@ def handle_text_query(user_text):
     }
     response = call_qwen_api(payload)
     final_reply = maybe_replace_unknown(postprocess_text(response))
-    final_reply = remove_phone_numbers(final_reply)
     promo = follow_up_promotion(user_text)
     if promo:
         final_reply += "\n\n" + promo
