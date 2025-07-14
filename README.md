@@ -22,7 +22,9 @@ This repository contains a Flask application that powers a WhatsApp chatbot for 
    - `WHATSAPP_TOKEN` – WhatsApp Cloud API access token
    - `PHONE_NUMBER_ID` – your WhatsApp phone number ID
    - `LOG_RECIPIENT` – phone number where log messages should be sent
-   - `PUBLIC_URL` – base URL of your Flask server used for serving images
+   - `PUBLIC_URL` – base URL of your Flask server used for serving images.
+     This must be a publicly reachable URL (e.g. an ngrok tunnel) so WhatsApp
+     can download files from the `/assets` path.
 
 ## Running the bot
 
