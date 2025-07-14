@@ -29,6 +29,7 @@ VERIFY_TOKEN = os.environ.get('VERIFY_TOKEN')
 WHATSAPP_TOKEN = os.environ.get('WHATSAPP_TOKEN')
 PHONE_NUMBER_ID = os.environ.get('PHONE_NUMBER_ID')
 LOG_RECIPIENT = os.environ.get('LOG_RECIPIENT')
+PUBLIC_URL = os.environ.get('PUBLIC_URL', 'http://localhost:4040')
 BASE_URL = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
 # Use a fixed model so the chatbot always calls the same Qwen version
 QWEN_MODEL = "qwen-plus"
@@ -79,7 +80,7 @@ wa_handler.setLevel(logging.WARNING)
 wa_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
 logger.addHandler(wa_handler)
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/assets', static_folder='Assets')
 
 _scraped_data_cache = None
 _processed_messages = {}  # Store processed message IDs
@@ -570,6 +571,23 @@ def is_parking_query(text: str) -> bool:
     return any(k in lowered for k in keywords)
 
 
+def is_parking_promotion_query(text: str) -> bool:
+    """Return True if the query is about parking promotions or discounts."""
+    lowered = text.lower()
+    if not is_parking_query(text):
+        return False
+    promo_keywords = ["promo", "promotion", "discount", "優惠", "折扣"]
+    return any(k in lowered for k in promo_keywords)
+
+
+def send_parking_images(recipient):
+    """Send the parking images stored locally."""
+    files = ["parking1.jpg", "parking2.jpg", "parking3.jpg", "parking4.png"]
+    for f in files:
+        url = urljoin(PUBLIC_URL + '/', f"assets/{f}")
+        send_whatsapp_image(recipient, url)
+
+
 @lru_cache(maxsize=1)
 def get_parking_image_urls() -> list[str]:
     """Fetch parking page and return all image URLs."""
@@ -626,7 +644,7 @@ def call_qwen_api(payload, retries: int = 2):
     for attempt in range(retries + 1):
         try:
             start = time.monotonic()
-            resp = requests.post(url, headers=headers, json=payload, timeout=30)
+            resp = requests.post(url, headers=headers, json=payload, timeout=60)
             resp.raise_for_status()
             logger.info("Qwen API call took %.2f seconds", time.monotonic() - start)
             result = resp.json()
@@ -874,7 +892,7 @@ def transcribe_audio(audio_bytes: bytes, content_type: str) -> str:
 
     try:
         logger.info("Sending request to Qwen transcription API...")
-        resp = requests.post(url, headers=headers, files=files, data=data, timeout=30)
+        resp = requests.post(url, headers=headers, files=files, data=data, timeout=60)
         logger.info("Qwen transcription status: %s", resp.status_code)
         if resp.status_code == 404:
             logger.warning("Transcription endpoint returned 404, falling back to chat completions")
@@ -1044,9 +1062,8 @@ def process_message(msg):
         )
         send_whatsapp_message(from_user, note)
 
-        if msg_type == 'text' and is_parking_query(inbound_text):
-            for img in get_parking_image_urls():
-                send_whatsapp_image(from_user, img)
+        if msg_type == 'text' and is_parking_query(inbound_text) and not is_parking_promotion_query(inbound_text):
+            send_parking_images(from_user)
 
         if msg_type == 'text':
             bot_reply, image_url = handle_text_query(inbound_text)
