@@ -102,7 +102,7 @@ logger.addHandler(wa_handler)
 app = Flask(__name__)
 
 
-@app.route('/assets/<path:filename>')
+@app.route('/Assets/<path:filename>')
 def serve_asset(filename):
     """Serve files from the Assets folder."""
     return send_from_directory('Assets', filename)
