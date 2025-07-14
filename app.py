@@ -45,7 +45,7 @@ VERIFY_TOKEN = os.environ.get('VERIFY_TOKEN')
 WHATSAPP_TOKEN = os.environ.get('WHATSAPP_TOKEN')
 PHONE_NUMBER_ID = os.environ.get('PHONE_NUMBER_ID')
 LOG_RECIPIENT = os.environ.get('LOG_RECIPIENT')
-PUBLIC_URL = os.environ.get('PUBLIC_URL', 'http://localhost:4040')
+PUBLIC_URL = os.environ.get('PUBLIC_URL', 'http://chatbot.d2place.com')
 BASE_URL = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
 # Use a fixed model so the chatbot always calls the same Qwen version
 QWEN_MODEL = "qwen-plus"
