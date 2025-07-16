@@ -726,7 +726,7 @@ def call_qwen_api(payload, retries: int = 2):
     for attempt in range(retries + 1):
         try:
             start = time.monotonic()
-            resp = requests.post(url, headers=headers, json=payload, timeout=60)
+            resp = requests.post(url, headers=headers, json=payload, timeout=75)
             resp.raise_for_status()
             logger.info("Qwen API call took %.2f seconds", time.monotonic() - start)
             result = resp.json()
@@ -975,7 +975,7 @@ def transcribe_audio(audio_bytes: bytes, content_type: str) -> str:
 
     try:
         logger.info("Sending request to Qwen transcription API...")
-        resp = requests.post(url, headers=headers, files=files, data=data, timeout=60)
+        resp = requests.post(url, headers=headers, files=files, data=data, timeout=75)
         logger.info("Qwen transcription status: %s", resp.status_code)
         if resp.status_code == 404:
             logger.warning("Transcription endpoint returned 404, falling back to chat completions")
