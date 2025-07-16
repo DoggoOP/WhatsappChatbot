@@ -814,7 +814,8 @@ def handle_text_query(user_text):
         ],
         "temperature": 0.5,
         "max_tokens": 1500,
-        "enable_thinking": True
+        "enable_thinking": True,
+        "stream": False
     }
     response = call_qwen_api(payload)
     final_reply = maybe_replace_unknown(postprocess_text(response))
