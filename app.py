@@ -51,7 +51,7 @@ LOG_RECIPIENT = os.environ.get('LOG_RECIPIENT')
 PUBLIC_URL = os.environ.get("PUBLIC_URL", "https://chatbot.d2place.com")
 BASE_URL = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
 # Use a fixed model so the chatbot always calls the same Qwen version
-QWEN_MODEL = "qwen3-30b-a3b"
+QWEN_MODEL = "qwen-plus-latest"
 
 # Small-talk phrases used to mimic Festival Walk style responses
 GREETINGS = {
@@ -726,7 +726,7 @@ def call_qwen_api(payload, retries: int = 2):
     for attempt in range(retries + 1):
         try:
             start = time.monotonic()
-            resp = requests.post(url, headers=headers, json=payload, timeout=75)
+            resp = requests.post(url, headers=headers, json=payload, extra_body={"enable_thinking": True}, timeout=75)
             resp.raise_for_status()
             logger.info("Qwen API call took %.2f seconds", time.monotonic() - start)
             result = resp.json()
