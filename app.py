@@ -1141,7 +1141,7 @@ def process_message(msg):
         note = (
             "Good day. This is D2 Place AI Customer Service Assistant. Processing your request, please wait……"
             if lang == 'en'
-            else "系統正在處理，請稍等……"
+            else "您好，我係D2 Place AI顧客助理 ☺️ 系統正在處理您的請求，請稍等……"
         )
         send_whatsapp_message(from_user, note)
 
