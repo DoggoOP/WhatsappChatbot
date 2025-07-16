@@ -726,7 +726,7 @@ def call_qwen_api(payload, retries: int = 2):
     for attempt in range(retries + 1):
         try:
             start = time.monotonic()
-            resp = requests.post(url, headers=headers, json=payload, extra_body={"enable_thinking": True}, timeout=75)
+            resp = requests.post(url, headers=headers, json=payload, timeout=75)
             resp.raise_for_status()
             logger.info("Qwen API call took %.2f seconds", time.monotonic() - start)
             result = resp.json()
