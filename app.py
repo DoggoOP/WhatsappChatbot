@@ -299,6 +299,51 @@ def extract_openrice_link(venue: dict) -> str:
     return ""
 
 
+def parse_event_date(date_str: str):
+    """Return (start_date, end_date) parsed from ``date_str`` if possible."""
+    if not date_str:
+        return None, None
+    date_str = date_str.strip()
+
+    # Pattern: "26 - 27 July, 2025" or "26-27 July 2025"
+    m = re.match(r"(\d{1,2})\s*[-–to]+\s*(\d{1,2})\s*([A-Za-z]+),?\s*(\d{4})", date_str)
+    if m:
+        d1, d2, month, year = m.groups()
+        try:
+            start = datetime.strptime(f"{d1} {month} {year}", "%d %B %Y").date()
+            end = datetime.strptime(f"{d2} {month} {year}", "%d %B %Y").date()
+            return start, end
+        except Exception:
+            pass
+
+    # Pattern: "July 12 - 13, 2025"
+    m = re.match(r"([A-Za-z]+)\s*(\d{1,2})\s*[-–to]+\s*(\d{1,2}),?\s*(\d{4})", date_str)
+    if m:
+        month, d1, d2, year = m.groups()
+        try:
+            start = datetime.strptime(f"{d1} {month} {year}", "%d %B %Y").date()
+            end = datetime.strptime(f"{d2} {month} {year}", "%d %B %Y").date()
+            return start, end
+        except Exception:
+            pass
+
+    # Pattern: "12 July 2025" or "12 July, 2025" or "July 12, 2025"
+    m = re.match(r"(\d{1,2})\s*([A-Za-z]+),?\s*(\d{4})", date_str)
+    if not m:
+        m = re.match(r"([A-Za-z]+)\s*(\d{1,2}),?\s*(\d{4})", date_str)
+        if m:
+            month, day, year = m.groups()
+        else:
+            return None, None
+    else:
+        day, month, year = m.groups()
+    try:
+        dt = datetime.strptime(f"{day} {month} {year}", "%d %B %Y").date()
+        return dt, dt
+    except Exception:
+        return None, None
+
+
 def format_venue_details(venue: dict) -> str:
     """Return name, address, hours and D2 Place link for the venue."""
 
@@ -419,13 +464,21 @@ def retrieve_relevant_data(query):
 
     # Events
     matched_events = []
+    today = datetime.now().date()
     for ev in data.get("events", []):
+        start, end = parse_event_date(ev.get("date", ""))
+        if start and end and end < today:
+            continue
         event_name = ev.get("name") or ev.get("title", "")
         combined = f"{event_name} {ev.get('description','')}"
         if fuzz.partial_ratio(query_lower, combined.lower()) >= threshold:
             matched_events.append(ev)
     if not matched_events and is_market_event_query(query):
-        matched_events.extend(data.get("events", []))
+        for ev in data.get("events", []):
+            start, end = parse_event_date(ev.get("date", ""))
+            if start and end and end < today:
+                continue
+            matched_events.append(ev)
     if matched_events:
         s = "🎉 Events:\n"
         for ev in matched_events[:3]:
@@ -692,9 +745,9 @@ def call_qwen_api(payload, retries: int = 2):
             )
 
 def handle_text_query(user_text):
-    system_prompt = (
-       """
-        You are a friendly assistant for D2 Place mall in Hong Kong. Answer user
+    today_str = datetime.now().strftime("%B %d, %Y")
+    system_prompt = f"""
+        You are a friendly assistant for D2 Place mall in Hong Kong. Today is {today_str}. Answer user
         questions using the provided scraped data. You may enrich replies with
         web search results **only if** the restaurant, shop or event mentioned is
         confirmed to exist in the scraped JSON data. Otherwise politely indicate
@@ -708,7 +761,6 @@ def handle_text_query(user_text):
         Avoid using tables. Format each venue with its name, address, business
         hour and D2 Place page, separated by blank lines. Maintain a warm tone.
         """
-    )
 
     user_lang = detect_language(user_text)
     reply_lang = "en" if user_lang == "en" else "zh"
