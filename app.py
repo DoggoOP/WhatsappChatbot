@@ -761,67 +761,6 @@ def handle_text_query(user_text):
         Avoid using tables. Format each venue with its name, address, business
         hour and D2 Place page, separated by blank lines. Maintain a warm tone.
         """
-
-    example_answers = f"""
-    Here are some example questions and answers for your reference:
-    User: 怕車rate?
-    Response:
-    D2 Place ONE、D2 Place TWO 同荔枝角道822號都有提供泊車服務：
-    時租收費（逢星期一至日，8:00am – 11:00pm）：
-    私家車：每小時 $25
-    貨車：每小時 $40
-    日泊服務（8:00am – 7:00pm）：
-    D2 Place TWO
-    　- 地點：四樓停車場
-    　- 收費：$120 一日
-    荔枝角道822號
-    　- 地點：荔枝角道822號停車場
-    　- 收費：$150 一日
-    如果喺 D2 Place ONE 或 D2 Place TWO 嘅指定商戶消費滿指定金額，仲可以享有免費泊車優惠㗎！
-    如果你有興趣，我可以再提供多啲詳情。要唔要我幫你睇睇？
-    
-    User: parking rate?
-    Response:
-    Parking is available at D2 Place ONE, D2 Place TWO, and 822 Lai Chi Kok Road.
-    Hourly Rates (Monday to Sunday, 8:00am – 11:00pm):
-    Private car: HK$25 per hour
-    Truck: HK$40 per hour
-    Day Parking (8:00am – 7:00pm):
-    D2 Place TWO
-    　- Location: 4/F Car Park
-    　- Fee: HK$120 per day
-    822 Lai Chi Kok Road
-    　- Location: Car park at 822 Lai Chi Kok Road
-    　- Fee: HK$150 per day
-    You can also enjoy free parking by spending a designated amount at selected merchants in D2 Place ONE or D2 Place TWO.
-    Would you like me to share more details about the free parking offer?
-
-    User: 泊車優惠?
-    Response:
-    凡於 D2 PLACE ONE 或 D2 PLACE TWO 指定商戶使用電子支付，累積消費滿：
-        - HK$300（最多2張單據） 可享 1小時免費泊車
-        - HK$500（最多2張單據） 可享 2小時免費泊車
-    🌙 夜繽紛·平日夜泊 Night Vibes · Weekday Night Parking
-    逢星期一至星期五（公眾假期除外），晚上 6:00PM – 11:00PM，於指定商戶以電子支付方式消費，並出示符合條件的單據，即可享以下泊車優惠：
-        - 1張滿 HK$100 單據 ➜ 1小時免費泊車
-        - 最多2張，每張不少於 HK$100，合共滿 HK$200 ➜ 2小時免費泊車
-        - 最多3張，每張不少於 HK$100，合共滿 HK$300 ➜ 3小時免費泊車
-    🚙多架泊 Multiple Vehicles
-    如有多於一輛汽車欲申請免費泊車優惠：
-        - 第二輛車起，每輛需累積電子消費滿 HK$1,000（最多2張單據），可享 2小時免費泊車
-        - 所有車輛需同時辦理優惠
-        📌 例子：週末兩架車申請2小時免費泊車，消費總額需滿 HK$1,500。
-    條款及細則 
-        1. 不包括市集、Pop-up Stores 或其他商場推廣活動之消費
-        2. 優惠適用於 D2 Place ONE、D2 Place TWO 及荔枝角道822號
-        3. 所有車輛需於 同一時間入場及離場，超出免費時段將收費
-        4. 只接受商戶開出的 即日機印發票 及 相符電子支付存根（如信用卡、八達通、支付寶等）
-        5. 僅適用於 私家車及客貨車類別
-        6. 發票可同時用作參與其他商場優惠
-        7. 商戶及職員恕不適用；D2 PLACE 保留最終決定權
-
-    
-    """
     
     user_lang = detect_language(user_text)
     reply_lang = "en" if user_lang == "en" else "zh"
@@ -861,8 +800,6 @@ def handle_text_query(user_text):
 
     full_prompt = (
         f"{system_prompt}\n\n"
-        f"Full Mall Data JSON:\n{FULL_JSON_TEXT}\n\n"
-        f"Example Answers:\n{example_answers}\n\n"
         # f"User Question: {user_text}\n\n"
         # f"SCRAPED DATA:\n{scraped_data}\n\n"
         f"WEB SEARCH:\n{web_results}\n"
@@ -872,10 +809,11 @@ def handle_text_query(user_text):
     payload = {
         "messages": [
             {"role": "system", "content": full_prompt},
+            {"role": "system", "content": f"Full Mall Data JSON:\n{FULL_JSON_TEXT}\n\n"},
             {"role": "user", "content": user_text}
         ],
         "temperature": 0.5,
-        "max_tokens": 1000
+        "max_tokens": 1500
     }
     response = call_qwen_api(payload)
     final_reply = maybe_replace_unknown(postprocess_text(response))
