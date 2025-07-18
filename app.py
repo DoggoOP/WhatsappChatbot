@@ -769,6 +769,113 @@ def handle_text_query(user_text):
         Avoid using tables. Format each venue with its name, address, business
         hour and D2 Place page, separated by blank lines. Maintain a warm tone.
         """
+        
+    example_responses = """
+    User:有咩餐廳？
+    You: D2 Place 匯聚多間風格各異的餐廳，無論您想歎亞洲菜、日式料理、歐陸風味定係輕食小酌，都可以滿足味蕾！以下為您推介幾間人氣餐廳：
+        🍜 亞洲風味｜Asian Delights
+        阿木台灣麵 Mu Taiwan Noodles
+        　- 📍 地點：D2 Place TWO 1樓 102號舖
+        　- 🕒 營業時間：星期一至日 11:30 - 22:00
+        　- ⭐ 主打：芝士肉鬆蛋餅、炸排骨便當
+        　- 🔗 查詢詳情
+        栢檔極品海南雞飯 Pak Dong Hainan Chicken Rice
+        　- 📍 地點：D2 Place ONE 1樓 101號舖
+        　- 🕒 營業時間：星期一至日 11:00 - 22:00
+        　- ⭐ 主打：海南雞飯、滷水元蹄等經濟美食
+        　- 🔗 查詢詳情
+        🍣 日式料理｜Japanese Cuisine
+        杉玉 Sugidama（荔枝角）
+        　- 📍 地點：D2 Place TWO 地下 G01號舖
+        　- 🕒 營業時間：星期一至日 11:00 - 23:00
+        　- ⭐ 主打：壽司、刺身、居酒屋小食
+        　- 🔗 查詢詳情
+        繼 TSUGU Teppanyaki & Sushi
+        　- 📍 地點：D2 Place TWO 3樓 309–310號舖
+        　- 🕒 營業時間：12:00 - 15:00 & 18:00 - 23:00（星期一至日）
+        　- ⭐ 主打：高級鐵板燒與精緻壽司
+        🍕 西式／歐陸料理｜Western & European Cuisine
+        The Pizza Pig
+        　- 📍 地點：D2 Place TWO 地下 G02號舖
+        　- 🕒 營業時間：平日 11:30 - 23:30；週末及假期 11:00 - 23:30
+        　- ⭐ 主打：意式薄餅與西式家常菜
+        　- 🔗 查詢詳情
+        Pici Pasta Bar
+        　- 📍 地點：D2 Place TWO 地下 G03號舖
+        　- 🕒 營業時間：
+        　　．星期一至四 12:00 - 22:30
+        　　．星期五 12:00 - 23:00
+        　　．星期六 11:30 - 23:00
+        　　．星期日 11:30 - 22:30
+        　- ⭐ 主打：新鮮手工意粉與意大利家常菜
+        　- 🔗 查詢詳情
+        Rustico Spanish Restaurant
+        　- 📍 地點：D2 Place ONE 地下 G01號舖
+        　- 🕒 營業時間：星期一至日 12:00 - 22:00
+        　- ⭐ 主打：西班牙海鮮飯、黑毛豬料理
+        　- 🔗 查詢詳情
+        🌶 東南亞風味｜Southeast Asian Taste
+        Chill Vietnam Cuisine & Bar
+        　- 📍 地點：D2 Place ONE 3樓 301號舖
+        　- 🕒 營業時間：星期一至日 12:00 - 22:00
+        　- ⭐ 主打：越南牛肉粉、芋圓椰汁凍等甜品
+        　- 🔗 查詢詳情
+        📩 想搵更多心水美食？歡迎告訴我您的口味喜好，我可以再推薦！
+
+        User:What’s the parking rate?
+        You: D2 Place offers flexible parking options tailored to your needs. See below for full details:
+        🕒 Hourly Parking（Mon to Sun, 8:00 AM – 11:00 PM）
+        Private Cars: $25/hour
+        Goods Vehicles: $40/hour
+        📅 Full Day Parking（8:00 AM – 7:00 PM）
+        D2 Place TWO 4/F Carpark
+        　- Rate: $120/day
+        822 Lai Chi Kok Road Carpark
+        　- Rate: $150/day
+        🎁 Free Parking Offer
+        Enjoy complimentary parking when you shop at designated merchants in D2 Place ONE or TWO with same-day electronic payment:
+        Spend HK$300+ (max. 2 receipts) → 1 Hour Free Parking
+        Spend HK$500+ (max. 2 receipts) → 2 Hours Free Parking
+        📍 Offer applicable at:
+        D2 Place ONE
+        D2 Place TWO
+        822 Lai Chi Kok Road
+        📝 Terms & Highlights:
+        Does not include purchases from markets, pop-up stores or mall promotions
+        Register at G/F Shroff Office (D2 Place ONE / TWO / 822 Lai Chi Kok Road)
+        Vehicles must enter and exit at the same time
+        Valid receipts must be machine-printed on the same day, with matching e-payment record
+        Only applicable to private cars and light goods vehicles
+        Receipts can be used for other promotions concurrently
+        🔗 Learn more: https://www.d2place.com/parking or the images attached.
+
+        User: 停車場優惠?
+        You: D2 Place 為顧客提供多種泊車優惠，無論日間定夜晚消費，都可賺取免費泊車時數，輕鬆又方便！
+        🅿️ 基本泊車優惠
+        凡於 D2 PLACE ONE 或 TWO 指定商戶以電子貨幣即日消費：
+        滿 HK$300（最多2張單據）可享 1小時免費泊車
+        滿 HK$500（最多2張單據）可享 2小時免費泊車
+        🌃 夜繽紛・平日夜泊優惠（逢星期一至五，公眾假期除外，晚上6點至11點）
+        滿 HK$100（單據需不少於$100）→ 1小時免費泊車
+        滿 HK$200（最多2張單據，單張不少於$100）→ 2小時免費泊車
+        滿 HK$300（最多3張單據，單張不少於$100）→ 3小時免費泊車
+        🚗 多車優惠（Multiple Vehicles）
+        如有超過1輛車需享免費泊車：
+        由第二輛車起，每輛需額外消費 HK$1,000（最多2張單據）方可享 2小時免費泊車
+        所有車輛必須同時辦理泊車優惠登記
+        📍 優惠適用地點：
+        D2 Place ONE
+        D2 Place TWO
+        荔枝角道822號停車場
+        📌 重要條款簡述：
+        不包括市集、Pop-up Stores及其他推廣活動消費
+        所有車輛必須同時進出停車場
+        僅接受即日機印發票及相符電子付款證明（八達通、信用卡、支付寶、微信支付等）
+        優惠僅適用於私家車及客貨車
+        商戶及員工不適用此優惠
+        詳情及條款以 D2 PLACE 公布為準
+        🔗 查閱完整條款：https://www.d2place.com/parking 或圖片內容
+    """
     
     user_lang = detect_language(user_text)
     reply_lang = "en" if user_lang == "en" else "zh"
@@ -817,7 +924,8 @@ def handle_text_query(user_text):
     payload = {
         "messages": [
             {"role": "system", "content": full_prompt},
-            {"role": "system", "content": f"Full Mall Data JSON:\n{FULL_JSON_TEXT}\n\n"},
+            {"role": "system", "content": example_responses},
+            {"role": "system", "content": f"Full Mall Data JSON: \n{FULL_JSON_TEXT}\n\n"},
             {"role": "user", "content": user_text}
         ],
         "temperature": 0.5,
