@@ -760,6 +760,7 @@ def handle_text_query(user_text):
         web search results **only if** the restaurant, shop or event mentioned is
         confirmed to exist in the scraped JSON data. Otherwise politely indicate
         that the venue was not found. Only mention events that are happening currently or in the future; do not mention events that have ended already or are before today's.
+        You do not need to mention that the data you have is scraped or may be out of date.
 
         Do NOT give any answers about venues or sites not within D2 Place or the LAWSGROUP community.
 
@@ -771,6 +772,8 @@ def handle_text_query(user_text):
         """
         
     example_responses = """
+    Here are some example responses to guide you, take note of the tone and style of the answers but keep in mind this information may be outdated or incorrect so please look at the scraped data for the most up-to-date information.:
+    
     User:有咩餐廳？
     You: D2 Place 匯聚多間風格各異的餐廳，無論您想歎亞洲菜、日式料理、歐陸風味定係輕食小酌，都可以滿足味蕾！以下為您推介幾間人氣餐廳：
         🍜 亞洲風味｜Asian Delights
