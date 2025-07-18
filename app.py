@@ -68,8 +68,16 @@ def fuzzy_match(text: str, phrases: list[str] | set[str], threshold: int = FUZZY
     """Return True if ``text`` fuzzily matches any phrase in ``phrases``."""
     lowered = text.lower()
     for p in phrases:
-        pl = p.lower()
-        if pl in lowered or fuzz.partial_ratio(lowered, pl) >= threshold:
+        pl = p.lower().strip()
+        # If the phrase is ASCII letters/numbers, require whole word match to
+        # avoid matching "hi" inside words like "fashion".
+        if re.search(r"^[a-zA-Z0-9]+$", pl):
+            if re.search(rf"\b{re.escape(pl)}\b", lowered):
+                return True
+        else:
+            if pl in lowered:
+                return True
+        if fuzz.partial_ratio(lowered, pl) >= threshold:
             return True
     return False
 
