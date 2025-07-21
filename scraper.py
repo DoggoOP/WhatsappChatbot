@@ -665,7 +665,7 @@ class D2PlaceScraper:
         slug = re.sub(r"\W+", "-", text, flags=re.UNICODE).strip("-")
         slug = re.sub(r"-+", "-", slug)
         return slug
-
+      
     def _lookup_alias(self, shop: dict) -> dict:
         """Query GraphQL to find a shop's alias and passcode by name."""
         name_en = shop.get("nameEn") or ""
