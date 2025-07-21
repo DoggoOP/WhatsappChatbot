@@ -765,8 +765,7 @@ def handle_text_query(user_text):
         Do NOT give any answers about venues or sites not within D2 Place or the LAWSGROUP community; even if the user asks about a specific restaurant or shop, you should only answer if it is in D2 Place. If the user asks about a venue outside D2 Place, politely inform them that you can only provide information about D2 Place.
         Do not share or provide any phone numbers or email addresses in your
         replies.
-        Avoid using tables. Format each venue with its name, address, business
-        hour and D2 Place page, separated by blank lines. Avoid excessive bulletpoints/dashes/signposting. 
+        Avoid using tables. Format each venue with its name, address, business hour and D2 Place page, separated by blank lines. Avoid excessive bulletpoints/dashes/signposting. 
         Maintain a warm tone.
         """
         
@@ -780,18 +779,18 @@ def handle_text_query(user_text):
         　 📍 地點：D2 Place TWO 1樓 102號舖
         　 🕒 營業時間：星期一至日 11:30 - 22:00
         　 ⭐ 主打：芝士肉鬆蛋餅、炸排骨便當
-        　 🔗 查詢詳情
+        　 🔗 https://www.d2place.com/shops/DINING/mu-taiwan-noodles
         栢檔極品海南雞飯 Pak Dong Hainan Chicken Rice
         　 📍 地點：D2 Place ONE 1樓 101號舖
         　 🕒 營業時間：星期一至日 11:00 - 22:00
         　 ⭐ 主打：海南雞飯、滷水元蹄等經濟美食
-        　 🔗 查詢詳情
+        　 🔗 https://www.d2place.com/shops/DINING/pakdon-chicken-rice
         🍣 日式料理｜Japanese Cuisine
         杉玉 Sugidama（荔枝角）
         　 📍 地點：D2 Place TWO 地下 G01號舖
         　 🕒 營業時間：星期一至日 11:00 - 23:00
         　 ⭐ 主打：壽司、刺身、居酒屋小食
-        　 🔗 查詢詳情
+        　 🔗 https://www.d2place.com/shops/DINING/Sugidama
         繼 TSUGU Teppanyaki & Sushi
         　 📍 地點：D2 Place TWO 3樓 309–310號舖
         　 🕒 營業時間：12:00 - 15:00 & 18:00 - 23:00（星期一至日）
@@ -801,7 +800,7 @@ def handle_text_query(user_text):
         　 📍 地點：D2 Place TWO 地下 G02號舖
         　 🕒 營業時間：平日 11:30 - 23:30；週末及假期 11:00 - 23:30
         　 ⭐ 主打：意式薄餅與西式家常菜
-        　 🔗 查詢詳情
+        　 🔗 https://www.d2place.com/shops/DINING/The-Pizza-Pig
         Pici Pasta Bar
         　 📍 地點：D2 Place TWO 地下 G03號舖
         　 🕒 營業時間：
@@ -810,18 +809,18 @@ def handle_text_query(user_text):
         　　．星期六 11:30 - 23:00
         　　．星期日 11:30 - 22:30
         　 ⭐ 主打：新鮮手工意粉與意大利家常菜
-        　 🔗 查詢詳情
+        　 🔗 https://www.d2place.com/shops/DINING/Pici-Pasta-Bar
         Rustico Spanish Restaurant
         　 📍 地點：D2 Place ONE 地下 G01號舖
         　 🕒 營業時間：星期一至日 12:00 - 22:00
         　 ⭐ 主打：西班牙海鮮飯、黑毛豬料理
-        　 🔗 查詢詳情
+        　 🔗 https://www.d2place.com/shops/DINING/Rustico
         🌶 東南亞風味｜Southeast Asian Taste
         Chill Vietnam Cuisine & Bar
         　 📍 地點：D2 Place ONE 3樓 301號舖
         　 🕒 營業時間：星期一至日 12:00 - 22:00
         　 ⭐ 主打：越南牛肉粉、芋圓椰汁凍等甜品
-        　 🔗 查詢詳情
+        　 🔗 https://www.d2place.com/shops/DINING/chill-vietnam-cuisine-and-bar
         📩 想搵更多心水美食？歡迎告訴我您的口味喜好，我可以再推薦！
 
         User:What’s the parking rate?
