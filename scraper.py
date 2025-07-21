@@ -666,10 +666,43 @@ class D2PlaceScraper:
         slug = re.sub(r"-+", "-", slug)
         return slug
 
+    def _lookup_passcode(self, shop: dict) -> str:
+        """Query GraphQL to find a shop's passcode by name."""
+        name_en = shop.get("nameEn") or ""
+        name_tc = shop.get("nameTc") or ""
+        key = (name_en, name_tc)
+        if key in getattr(self, "_passcode_cache", {}):
+            return self._passcode_cache[key]
+
+        query = """
+        query($en:String,$tc:String){
+            findFirstShop(where:{OR:[{nameEn:{equals:$en}},{nameTc:{equals:$tc}}]}){
+                passcode
+            }
+        }
+        """
+        try:
+            data = gql(query, {"en": name_en, "tc": name_tc}, headers=self.headers)
+            passcode = data.get("findFirstShop", {}).get("passcode", "")
+        except Exception:
+            passcode = ""
+
+        if not hasattr(self, "_passcode_cache"):
+            self._passcode_cache = {}
+        self._passcode_cache[key] = passcode
+        return passcode
+
     def shop_slug(self, shop: dict) -> str:
         """Return the slug for a shop using its passcode when available."""
-        slug_src = shop.get("passcode") or shop.get("nameEn") or shop.get("nameTc", "")
-        return slug_src if slug_src == shop.get("passcode") else self.slugify(slug_src)
+        if shop.get("passcode"):
+            return shop["passcode"]
+
+        passcode = self._lookup_passcode(shop)
+        if passcode:
+            return passcode
+
+        slug_src = shop.get("nameEn") or shop.get("nameTc", "")
+        return self.slugify(slug_src)
 
     def scrape_dining(self):
         cats = gql("{findManyShopCategory(where:{categoryType:{equals:DINING}}){id}}")
