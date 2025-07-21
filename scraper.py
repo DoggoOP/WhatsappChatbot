@@ -665,11 +665,59 @@ class D2PlaceScraper:
         slug = re.sub(r"\W+", "-", text, flags=re.UNICODE).strip("-")
         slug = re.sub(r"-+", "-", slug)
         return slug
+      
+    def _lookup_alias(self, shop: dict) -> dict:
+        """Query GraphQL to find a shop's alias and passcode by name."""
+        name_en = shop.get("nameEn") or ""
+        name_tc = shop.get("nameTc") or ""
+        key = (name_en, name_tc)
+        if key in getattr(self, "_alias_cache", {}):
+            return self._alias_cache[key]
+
+        query = """
+        query($en:String,$tc:String){
+            findFirstShop(where:{OR:[{nameEn:{equals:$en}},{nameTc:{equals:$tc}}]}){
+                alias
+                passcode
+            }
+        }
+        """
+        try:
+            data = gql(query, {"en": name_en, "tc": name_tc}, headers=self.headers)
+            node = data.get("findFirstShop") or {}
+            alias = node.get("alias", "")
+            passcode = node.get("passcode", "")
+        except Exception:
+            alias = passcode = ""
+
+        if not hasattr(self, "_alias_cache"):
+            self._alias_cache = {}
+        self._alias_cache[key] = {"alias": alias, "passcode": passcode}
+        return self._alias_cache[key]
 
     def shop_slug(self, shop: dict) -> str:
-        """Return the slug for a shop using its passcode when available."""
-        slug_src = shop.get("passcode") or shop.get("nameEn") or shop.get("nameTc", "")
-        return slug_src if slug_src == shop.get("passcode") else self.slugify(slug_src)
+        """Return the best slug for a shop using alias or passcode when possible."""
+        alias = shop.get("alias")
+        passcode = shop.get("passcode")
+
+        if alias:
+            return alias
+
+        extra = self._lookup_alias(shop)
+        alias = extra.get("alias")
+        if alias:
+            return alias
+
+        if passcode and not str(passcode).isdigit():
+            return str(passcode)
+
+        if not passcode:
+            passcode = extra.get("passcode")
+            if passcode and not str(passcode).isdigit():
+                return str(passcode)
+
+        slug_src = shop.get("nameEn") or shop.get("nameTc", "")
+        return self.slugify(slug_src)
 
     def scrape_dining(self):
         cats = gql("{findManyShopCategory(where:{categoryType:{equals:DINING}}){id}}")
@@ -678,7 +726,7 @@ class D2PlaceScraper:
                 """
                 query($cid:Int!){
                     findManyShop(where:{shopCategoryId:{equals:$cid}}, take:1000){
-                        nameEn nameTc addressEn addressTc phoneNumber
+                        nameEn nameTc alias addressEn addressTc phoneNumber
                         displayOpeningHoursEn displayOpeningHoursTc
                         facebookUrl instagramUrl websiteUrl passcode
                     }
@@ -713,7 +761,7 @@ class D2PlaceScraper:
                 """
                 query($cid:Int!){
                     findManyShop(where:{shopCategoryId:{equals:$cid}}, take:1000){
-                        nameEn nameTc addressEn addressTc phoneNumber
+                        nameEn nameTc alias addressEn addressTc phoneNumber
                         displayOpeningHoursEn displayOpeningHoursTc
                         facebookUrl instagramUrl websiteUrl passcode
                     }
@@ -791,7 +839,7 @@ class D2PlaceScraper:
                 """
                 query($cid:Int!){
                     findManyShop(where:{shopCategoryId:{equals:$cid}}, take:1000){
-                        nameEn nameTc addressEn addressTc phoneNumber
+                        nameEn nameTc alias addressEn addressTc phoneNumber
                         displayOpeningHoursEn displayOpeningHoursTc
                         facebookUrl instagramUrl websiteUrl passcode
                     }
