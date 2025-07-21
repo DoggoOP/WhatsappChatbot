@@ -763,11 +763,11 @@ def handle_text_query(user_text):
         You do not need to mention that the data you have is scraped or may be out of date.
         Ensure all responses are fact checked against the scraped data.
         Do NOT give any answers about venues or sites not within D2 Place or the LAWSGROUP community; even if the user asks about a specific restaurant or shop, you should only answer if it is in D2 Place. If the user asks about a venue outside D2 Place, politely inform them that you can only provide information about D2 Place.
-
         Do not share or provide any phone numbers or email addresses in your
         replies.
         Avoid using tables. Format each venue with its name, address, business
-        hour and D2 Place page, separated by blank lines. Maintain a warm tone.
+        hour and D2 Place page, separated by blank lines. Avoid excessive bulletpoints/dashes/signposting. 
+        Maintain a warm tone.
         """
         
     example_responses = """

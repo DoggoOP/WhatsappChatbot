@@ -273,7 +273,7 @@ class D2PlaceScraper:
         if not url or not re.search(r"/shops/\d+", url):
             return url
         try:
-            resp = requests.get(url, headers=self.headers, timeout=10, allow_redirects=True)
+            resp = requests.get(url, headers=self.headers, timeout=20, allow_redirects=True)
             if resp.status_code == 200 and resp.url:
                 return resp.url
             soup = BeautifulSoup(resp.text, "html.parser")
@@ -549,7 +549,7 @@ class D2PlaceScraper:
                 try:
                     card_element.click()
                     time.sleep(2)
-                    modal = self.wait_for_element("div.modal-content", timeout=10)
+                    modal = self.wait_for_element("div.modal-content", timeout=20)
                     if modal:
                         # Description
                         try:
@@ -870,7 +870,7 @@ class D2PlaceScraper:
     def scrape_facebook_page(self, shop, fb_url):
         logger.info(f"Attempting to load Facebook page for {shop['name']}: {fb_url}")
         try:
-            r = requests.get(fb_url, timeout=10)
+            r = requests.get(fb_url, timeout=20)
             if r.status_code == 200:
                 fb_soup = BeautifulSoup(r.text, "html.parser")
                 fb_title = fb_soup.title.get_text(strip=True) if fb_soup.title else ""
