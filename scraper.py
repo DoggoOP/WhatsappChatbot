@@ -644,12 +644,32 @@ class D2PlaceScraper:
             return None
 
     def slugify(self, text: str) -> str:
-        """Return *text* converted to a URL slug."""
+        """Return *text* converted to a URL slug.
+
+        The original implementation stripped any non\-ASCII characters which
+        meant Chinese shop names resulted in empty slugs.  This version keeps
+        the simple replacement logic for ASCII strings but if the resulting slug
+        is empty it falls back to keeping the original characters and only
+        replacing whitespace with hyphens.  This still yields a usable slug for
+        URLs that already expect the shop's passcode or alias.
+        """
         if not text:
             return ""
+
         slug = re.sub(r"[^A-Za-z0-9]+", "-", text).strip("-")
         slug = re.sub(r"-+", "-", slug)
+        if slug:
+            return slug
+
+        # Fallback: allow any word characters (e.g. Chinese) and hyphenate
+        slug = re.sub(r"\W+", "-", text, flags=re.UNICODE).strip("-")
+        slug = re.sub(r"-+", "-", slug)
         return slug
+
+    def shop_slug(self, shop: dict) -> str:
+        """Return the slug for a shop using its passcode when available."""
+        slug_src = shop.get("passcode") or shop.get("nameEn") or shop.get("nameTc", "")
+        return slug_src if slug_src == shop.get("passcode") else self.slugify(slug_src)
 
     def scrape_dining(self):
         cats = gql("{findManyShopCategory(where:{categoryType:{equals:DINING}}){id}}")
@@ -670,10 +690,11 @@ class D2PlaceScraper:
 
         for shop in shops:
             name_en = shop.get("nameEn") or shop.get("nameTc", "")
+            slug = self.shop_slug(shop)
             item = {
                 "name": name_en,
                 "location": shop.get("addressEn") or shop.get("addressTc", ""),
-                "detail_url": f"{self.base_url}/shops/DINING/{self.slugify(name_en)}",
+                "detail_url": f"{self.base_url}/shops/DINING/{slug}",
                 "phone": shop.get("phoneNumber", ""),
                 "opening_hours": shop.get("displayOpeningHoursEn") or shop.get("displayOpeningHoursTc", ""),
                 "facebook": shop.get("facebookUrl", ""),
@@ -704,10 +725,11 @@ class D2PlaceScraper:
 
         for shop in shops:
             name_en = shop.get("nameEn") or shop.get("nameTc", "")
+            slug = self.shop_slug(shop)
             item = {
                 "name": name_en,
                 "location": shop.get("addressEn") or shop.get("addressTc", ""),
-                "detail_url": f"{self.base_url}/shops/SHOP/{self.slugify(name_en)}",
+                "detail_url": f"{self.base_url}/shops/SHOP/{slug}",
                 "phone": shop.get("phoneNumber", ""),
                 "opening_hours": shop.get("displayOpeningHoursEn") or shop.get("displayOpeningHoursTc", ""),
                 "facebook": shop.get("facebookUrl", ""),
@@ -781,10 +803,11 @@ class D2PlaceScraper:
 
             for shop in shops:
                 name_en = shop.get("nameEn") or shop.get("nameTc", "")
+                slug = self.shop_slug(shop)
                 item = {
                     "name": name_en,
                     "location": shop.get("addressEn") or shop.get("addressTc", ""),
-                    "detail_url": f"{self.base_url}/shops/PLAY/{self.slugify(name_en)}",
+                    "detail_url": f"{self.base_url}/shops/PLAY/{slug}",
                     "phone": shop.get("phoneNumber", ""),
                     "opening_hours": shop.get("displayOpeningHoursEn") or shop.get("displayOpeningHoursTc", ""),
                     "facebook": shop.get("facebookUrl", ""),
