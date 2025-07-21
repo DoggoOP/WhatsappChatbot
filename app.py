@@ -777,51 +777,51 @@ def handle_text_query(user_text):
     You: D2 Place 匯聚多間風格各異的餐廳，無論您想歎亞洲菜、日式料理、歐陸風味定係輕食小酌，都可以滿足味蕾！以下為您推介幾間人氣餐廳：
         🍜 亞洲風味｜Asian Delights
         阿木台灣麵 Mu Taiwan Noodles
-        　- 📍 地點：D2 Place TWO 1樓 102號舖
-        　- 🕒 營業時間：星期一至日 11:30 - 22:00
-        　- ⭐ 主打：芝士肉鬆蛋餅、炸排骨便當
-        　- 🔗 查詢詳情
+        　 📍 地點：D2 Place TWO 1樓 102號舖
+        　 🕒 營業時間：星期一至日 11:30 - 22:00
+        　 ⭐ 主打：芝士肉鬆蛋餅、炸排骨便當
+        　 🔗 查詢詳情
         栢檔極品海南雞飯 Pak Dong Hainan Chicken Rice
-        　- 📍 地點：D2 Place ONE 1樓 101號舖
-        　- 🕒 營業時間：星期一至日 11:00 - 22:00
-        　- ⭐ 主打：海南雞飯、滷水元蹄等經濟美食
-        　- 🔗 查詢詳情
+        　 📍 地點：D2 Place ONE 1樓 101號舖
+        　 🕒 營業時間：星期一至日 11:00 - 22:00
+        　 ⭐ 主打：海南雞飯、滷水元蹄等經濟美食
+        　 🔗 查詢詳情
         🍣 日式料理｜Japanese Cuisine
         杉玉 Sugidama（荔枝角）
-        　- 📍 地點：D2 Place TWO 地下 G01號舖
-        　- 🕒 營業時間：星期一至日 11:00 - 23:00
-        　- ⭐ 主打：壽司、刺身、居酒屋小食
-        　- 🔗 查詢詳情
+        　 📍 地點：D2 Place TWO 地下 G01號舖
+        　 🕒 營業時間：星期一至日 11:00 - 23:00
+        　 ⭐ 主打：壽司、刺身、居酒屋小食
+        　 🔗 查詢詳情
         繼 TSUGU Teppanyaki & Sushi
-        　- 📍 地點：D2 Place TWO 3樓 309–310號舖
-        　- 🕒 營業時間：12:00 - 15:00 & 18:00 - 23:00（星期一至日）
-        　- ⭐ 主打：高級鐵板燒與精緻壽司
+        　 📍 地點：D2 Place TWO 3樓 309–310號舖
+        　 🕒 營業時間：12:00 - 15:00 & 18:00 - 23:00（星期一至日）
+        　 ⭐ 主打：高級鐵板燒與精緻壽司
         🍕 西式／歐陸料理｜Western & European Cuisine
         The Pizza Pig
-        　- 📍 地點：D2 Place TWO 地下 G02號舖
-        　- 🕒 營業時間：平日 11:30 - 23:30；週末及假期 11:00 - 23:30
-        　- ⭐ 主打：意式薄餅與西式家常菜
-        　- 🔗 查詢詳情
+        　 📍 地點：D2 Place TWO 地下 G02號舖
+        　 🕒 營業時間：平日 11:30 - 23:30；週末及假期 11:00 - 23:30
+        　 ⭐ 主打：意式薄餅與西式家常菜
+        　 🔗 查詢詳情
         Pici Pasta Bar
-        　- 📍 地點：D2 Place TWO 地下 G03號舖
-        　- 🕒 營業時間：
+        　 📍 地點：D2 Place TWO 地下 G03號舖
+        　 🕒 營業時間：
         　　．星期一至四 12:00 - 22:30
         　　．星期五 12:00 - 23:00
         　　．星期六 11:30 - 23:00
         　　．星期日 11:30 - 22:30
-        　- ⭐ 主打：新鮮手工意粉與意大利家常菜
-        　- 🔗 查詢詳情
+        　 ⭐ 主打：新鮮手工意粉與意大利家常菜
+        　 🔗 查詢詳情
         Rustico Spanish Restaurant
-        　- 📍 地點：D2 Place ONE 地下 G01號舖
-        　- 🕒 營業時間：星期一至日 12:00 - 22:00
-        　- ⭐ 主打：西班牙海鮮飯、黑毛豬料理
-        　- 🔗 查詢詳情
+        　 📍 地點：D2 Place ONE 地下 G01號舖
+        　 🕒 營業時間：星期一至日 12:00 - 22:00
+        　 ⭐ 主打：西班牙海鮮飯、黑毛豬料理
+        　 🔗 查詢詳情
         🌶 東南亞風味｜Southeast Asian Taste
         Chill Vietnam Cuisine & Bar
-        　- 📍 地點：D2 Place ONE 3樓 301號舖
-        　- 🕒 營業時間：星期一至日 12:00 - 22:00
-        　- ⭐ 主打：越南牛肉粉、芋圓椰汁凍等甜品
-        　- 🔗 查詢詳情
+        　 📍 地點：D2 Place ONE 3樓 301號舖
+        　 🕒 營業時間：星期一至日 12:00 - 22:00
+        　 ⭐ 主打：越南牛肉粉、芋圓椰汁凍等甜品
+        　 🔗 查詢詳情
         📩 想搵更多心水美食？歡迎告訴我您的口味喜好，我可以再推薦！
 
         User:What’s the parking rate?
@@ -831,9 +831,9 @@ def handle_text_query(user_text):
         Goods Vehicles: $40/hour
         📅 Full Day Parking（8:00 AM – 7:00 PM）
         D2 Place TWO 4/F Carpark
-        　- Rate: $120/day
+        　 Rate: $120/day
         822 Lai Chi Kok Road Carpark
-        　- Rate: $150/day
+        　 Rate: $150/day
         🎁 Free Parking Offer
         Enjoy complimentary parking when you shop at designated merchants in D2 Place ONE or TWO with same-day electronic payment:
         Spend HK$300+ (max. 2 receipts) → 1 Hour Free Parking
@@ -881,68 +881,97 @@ def handle_text_query(user_text):
         User: 點去cgv
         You: 
         🎬 前往 CGV Cinemas @ D2 Place 的交通指引
-        📍 地址：11樓，D2 Place TWO，長順街15號，荔枝角，九龍
-        🕒 營業時間：星期一至星期日｜11:30 – 22:30
+            📍 地址：11樓，D2 Place TWO，長順街15號，荔枝角，九龍
+            🕒 營業時間：星期一至星期日｜11:30 – 22:30
         🚇 地鐵（MTR）前往
-        請搭乘 荃灣線 至 荔枝角站（Lai Chi Kok Station）
-        從 D2出口 出站
-        出站後過馬路，沿行人路步行約 2–3 分鐘 即可抵達 D2 Place TWO
-        您可選擇從 地面入口 或使用 連接橋 進入商場
+            請搭乘 荃灣線 至 荔枝角站（Lai Chi Kok Station）
+            從 D2出口 出站
+            出站後過馬路，沿行人路步行約 2–3 分鐘 即可抵達 D2 Place TWO
+            您可選擇從 地面入口 或使用 連接橋 進入商場
         🚌 巴士路線
-        以下巴士途經荔枝角站，並於附近設有站點：
-        2E、6C、11X、32H、35A、36A、42A、44M、49X、70X、81C、86C、88X、98C、213D、260C、268C、270C、296C
-        🧭 下車後步行約 3–5 分鐘 可達 D2 Place TWO
+            以下巴士途經荔枝角站，並於附近設有站點：
+                2E、6C、11X、32H、35A、36A、42A、44M、49X、70X、81C、86C、88X、98C、213D、260C、268C、270C、296C
+            🧭 下車後步行約 3–5 分鐘 可達 D2 Place TWO
         🚗 自駕 / 的士 / 租車前往
-        導航建議設定至 D2 Place ONE 或 TWO，兩棟大樓相連，可自由穿梭
-        停車場選擇：
-        D2 Place TWO 4樓車場
-        荔枝角道 822 號車場
-        泊車優惠：凡於 D2 Place 商戶消費滿指定金額，即可享免費泊車時數（詳情請向店舖查詢）
+            導航建議設定至 D2 Place ONE 或 TWO，兩棟大樓相連，可自由穿梭
+            停車場選擇：
+                D2 Place TWO 4樓車場
+                荔枝角道 822 號車場
+            泊車優惠：凡於 D2 Place 商戶消費滿指定金額，即可享免費泊車時數（詳情請向店舖查詢）
         🎟 更多資訊 / 電影訂票：
-        👉 CGV Hong Kong 官方網站
-        📍 亦可使用 Google Maps 搜尋「CGV Cinemas D2 Place」獲取即時導航
+            👉 CGV Hong Kong 官方網站
+            📍 亦可使用 Google Maps 搜尋「CGV Cinemas D2 Place」獲取即時導航
         祝您觀影愉快！如需更多協助，歡迎隨時查詢！🍿
         
         User: any pet shops
         You: Sure! There are several pet-related shops at D2 Place. Here's a quick guide:
         🐾 Petkoikoi
-        Address: 1/F, Shop 104, 106-111, D2 Place ONE
-        Business Hours: 12:30 – 20:00 (Daily)
-        Link: https://www.d2place.com/shops/SHOP/PetKoikoi
-        Description: A cozy pet lifestyle shop with products, treats, and photo-friendly corners for pets and owners.
+            Address: 1/F, Shop 104, 106-111, D2 Place ONE
+            Business Hours: 12:30 – 20:00 (Daily)
+            Link: https://www.d2place.com/shops/SHOP/PetKoikoi
+            Description: A cozy pet lifestyle shop with products, treats, and photo-friendly corners for pets and owners.
         🐶 meet pet pet
-        Address: 2/F, Shop 208, D2 Place TWO
-        Business Hours: 13:00 – 20:00 (Closed on Tuesdays)
-        Link: https://www.d2place.com/shops/SHOP/Q-PETS
-        Description: Handmade pet goods and natural care items with a stylish aesthetic.
+            Address: 2/F, Shop 208, D2 Place TWO
+            Business Hours: 13:00 – 20:00 (Closed on Tuesdays)
+            Link: https://www.d2place.com/shops/SHOP/Q-PETS
+            Description: Handmade pet goods and natural care items with a stylish aesthetic.
         🐕 SHIBAINC
-        Address: 2/F, Shop 215, D2 Place TWO
-        Business Hours: 14:00 – 20:00 (Closed on Wednesdays)
-        Link: https://www.d2place.com/shops/SHOP/SHIBAINC
-        Description: A must-visit for Shiba Inu fans, featuring themed gifts and pet fashion.
+            Address: 2/F, Shop 215, D2 Place TWO
+            Business Hours: 14:00 – 20:00 (Closed on Wednesdays)
+            Link: https://www.d2place.com/shops/SHOP/SHIBAINC
+            Description: A must-visit for Shiba Inu fans, featuring themed gifts and pet fashion.
         🐾 Q-PETS
-        Address: G/F, Shop G01A, D2 Place ONE
-        Business Hours: 11:00 – 21:00 (Daily)
-        Link: https://www.d2place.com/shops/SHOP/meet-pet-pet
-        Description: One of Hong Kong's most well-known pet chains — a one-stop shop for food, care, and toys.
+            Address: G/F, Shop G01A, D2 Place ONE
+            Business Hours: 11:00 – 21:00 (Daily)
+            Link: https://www.d2place.com/shops/SHOP/meet-pet-pet
+            Description: One of Hong Kong's most well-known pet chains — a one-stop shop for food, care, and toys.
         🛋️ Goos Living Dots
-        Address: 3/F, Shop 309, D2 Place ONE
-        Business Hours: 14:00 – 20:00 (Closed on Wednesdays)
-        Link: https://www.d2place.com/shops/SHOP/Goos-Living-Dots
-        Description: Pet-friendly lifestyle brand combining design furniture with pet living essentials.
+            Address: 3/F, Shop 309, D2 Place ONE
+            Business Hours: 14:00 – 20:00 (Closed on Wednesdays)
+            Link: https://www.d2place.com/shops/SHOP/Goos-Living-Dots
+            Description: Pet-friendly lifestyle brand combining design furniture with pet living essentials.
         🐾 osmosis
-        Address: 3/F, Shop 310, D2 Place ONE
-        Business Hours: 14:00 – 20:00 (Closed on Wednesdays)
-        Link: https://www.d2place.com/shops/SHOP/osmosis
-        Description: Curated pet lifestyle items with a design-forward and minimalist vibe.
+            Address: 3/F, Shop 310, D2 Place ONE
+            Business Hours: 14:00 – 20:00 (Closed on Wednesdays)
+            Link: https://www.d2place.com/shops/SHOP/osmosis
+            Description: Curated pet lifestyle items with a design-forward and minimalist vibe.
         🐾 Ms. Friday
-        Address: 2/F, Shop 210, D2 Place TWO
-        Business Hours: 14:00 – 20:00 (Closed on Mondays)
-        Link: https://www.d2place.com/shops/SHOP/msfriday
-        Description: A creative boutique featuring pet-themed handcrafted goods and art.
+            Address: 2/F, Shop 210, D2 Place TWO
+            Business Hours: 14:00 – 20:00 (Closed on Mondays)
+            Link: https://www.d2place.com/shops/SHOP/msfriday
+            Description: A creative boutique featuring pet-themed handcrafted goods and art.
         Would you like recommendations based on cat or dog supplies? Or maybe pet-friendly cafés? Let me know! 🐕🐈
 
-
+        User: Family friendly places
+        You: 👨‍👩‍👧‍👦 Family-Friendly Spots at D2 Place
+        D2 Place is the perfect destination for a family day out! With a variety of kid-friendly restaurants and exciting play zones, both adults and children can relax, dine, and have fun in a welcoming environment. Here are some top picks:
+        🍽 Family-Friendly Dining
+        Mr. Tree (大樹先生的家)
+            📍 1/F, Shops 103–107 & 120–121, D2 Place TWO
+            🕒 Mon, Wed–Sun: 09:30 – 21:00
+            🔗 https://www.d2place.com/shops/PLAY/mr-tree 
+            A cozy, homey café that blends Taiwanese and Western flavors in a playful setting. It’s thoughtfully designed for families with kids, making dining a comfortable and joyful experience.
+        The Pizza Pig
+            📍 G/F, Shop G02, D2 Place TWO
+            🕒 Mon–Fri: 11:30 – 23:30 | Sat, Sun & PH: 11:00 – 23:30
+            🔗 https://www.d2place.com/shops/DINING/The-Pizza-Pig
+            Enjoy hearty Western favorites in a laid-back setting. With its open layout and relaxed vibe, this pizza joint is great for families looking for a stress-free meal together.
+        Chill Vietnam Cuisine & Bar
+            📍 3/F, Shop 301, D2 Place ONE
+            🕒 Daily: 12:00 – 22:00
+            🔗 https://www.d2place.com/shops/DINING/Chill-Vietnam-Cuisine-Bar 
+            Craving something different? This modern Vietnamese eatery balances flavor and comfort, making it approachable for families of all ages.
+        🎠 Play & Entertainment for Kids (and Grown-Ups Too!)
+            Mr. Tree’s Kids Play Area (大樹先生的家)
+            📍 1/F, D2 Place TWO
+            🕒 Mon, Wed–Sun: 09:30 – 21:00
+            🔗 https://www.d2place.com/shops/PLAY/mr-tree 
+            Alongside the café, this engaging play area offers safe, supervised fun—ideal for parents looking to relax while their kids explore and play.
+        PowerPlay Arena
+            📍 2/F & 3/F, D2 Place TWO
+            🕒 Daily: 12:00 – 21:30
+            🔗 https://www.d2place.com/shops/PLAY/PowerPlay-Arena 
+            An action-packed arcade and VR game zone that's sure to thrill older kids and teens. A great place for families to bond over a little friendly competition.
     """
     
     user_lang = detect_language(user_text)
