@@ -10,7 +10,7 @@
     {
       "name": "Rustico",
       "location": "G/F, Shop G01, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/DINING/708027",
+      "detail_url": "https://www.d2place.com/shops/DINING/Rustico",
       "phone": "2743 4511",
       "opening_hours": "Monday - Sunday: 12:00 - 22:00",
       "facebook": "https://www.facebook.com/rustico.hk?fref=ts",
@@ -38,7 +38,7 @@
     {
       "name": "Umai 鵜舞",
       "location": "G/F, Shop G02, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/DINING/108299",
+      "detail_url": "https://www.d2place.com/shops/DINING/Umai",
       "phone": "2743 8011",
       "opening_hours": "Monday - Sunday: 12:00 - 22:30",
       "facebook": "https://www.facebook.com/umai.hk?fref=ts",
@@ -61,7 +61,7 @@
     {
       "name": "LUCULLUS CACAO",
       "location": "G/F, Shop V1, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/DINING/762184",
+      "detail_url": "https://www.d2place.com/shops/DINING/LUCULLUS-CACAO",
       "phone": "3481 7750",
       "opening_hours": "Monday - Sunday: 10:00 - 21:00",
       "facebook": "https://www.facebook.com/LucullusHongKong",
@@ -82,7 +82,7 @@
     {
       "name": "我想和你無所事事",
       "location": "G/F, Shop V2, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/DINING/558671",
+      "detail_url": "https://www.d2place.com/shops/DINING/idle-awhile",
       "phone": "",
       "opening_hours": "Mon-Sun: 17:00-23:00",
       "facebook": "https://www.facebook.com/idle.awhile.hk/",
@@ -98,7 +98,7 @@
     {
       "name": "FoodBox",
       "location": "1/F, Shop 102, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/DINING/858003",
+      "detail_url": "https://www.d2place.com/shops/DINING/FoodBox",
       "phone": "2680 9099",
       "opening_hours": "Monday - Sunday: 12:00 - 20:00",
       "facebook": "https://www.facebook.com/foodboxhk/",
@@ -121,7 +121,7 @@
     {
       "name": "PICK A BOWL",
       "location": "1/F, Shop 112, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/DINING/769608",
+      "detail_url": "https://www.d2place.com/shops/DINING/PICK-A-BOWL",
       "phone": "2590 9606",
       "opening_hours": "Monday - Sunday: 11:30 - 21:00",
       "facebook": "",
@@ -149,7 +149,7 @@
     {
       "name": "MOS Burger",
       "location": "3/F, Shop 304, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/DINING/484524",
+      "detail_url": "https://www.d2place.com/shops/DINING/MOS-Burger",
       "phone": "3709 8249",
       "opening_hours": "Mon-Sun: 11:00-22:00",
       "facebook": "https://www.facebook.com/mosburger.hk/",
@@ -177,7 +177,7 @@
     {
       "name": "BUGIS @ 叻沙‧海南雞飯",
       "location": "3/F, Shop 305, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/DINING/982546",
+      "detail_url": "https://www.d2place.com/shops/DINING/BUGIS",
       "phone": "2116 0160",
       "opening_hours": "Monday - Sunday: 11:30 - 21:00",
       "facebook": "",
@@ -200,7 +200,7 @@
     {
       "name": "捌捌陸",
       "location": "3/F, Shop 306, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/DINING/693623",
+      "detail_url": "https://www.d2place.com/shops/DINING/Seeyalater",
       "phone": "2217 8866",
       "opening_hours": "Monday - Sunday: 12:00 - Late Night",
       "facebook": "https://www.facebook.com/profile.php?id=100088354156575",
@@ -216,7 +216,7 @@
     {
       "name": "譚仔三哥米線",
       "location": "3/F, Shop 309, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/DINING/046228",
+      "detail_url": "https://www.d2place.com/shops/DINING/TamJai-SamGor",
       "phone": "2827 4788",
       "opening_hours": "Monday - Sunday: 12:00 - 21:00",
       "facebook": "https://www.facebook.com/tamsnoodle/",
@@ -244,7 +244,7 @@
     {
       "name": "Coffee Galaxy",
       "location": "4/F, Kiosk 9, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/DINING/666539",
+      "detail_url": "https://www.d2place.com/shops/DINING/Coffee-Galaxy",
       "phone": "6992 0893",
       "opening_hours": "Mon-Sun: 10:00-19:00",
       "facebook": "https://www.facebook.com/CoffeeGalaxy.HK",
@@ -272,7 +272,7 @@
     {
       "name": "大公館",
       "location": "10/F, Unit A, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/DINING/194012",
+      "detail_url": "https://www.d2place.com/shops/DINING/Greater-China-Club ",
       "phone": "2743 8055",
       "opening_hours": "Mon – Thu: 12:00-00:00; Fri: 12:00-01:00; Sat, Sun & PH: 11:00-01:00",
       "facebook": "",
@@ -288,7 +288,7 @@
     {
       "name": "The Pizza Pig",
       "location": "G/F, Shop G02, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/DINING/439539",
+      "detail_url": "https://www.d2place.com/shops/DINING/The-Pizza-Pig",
       "phone": "2806 1681",
       "opening_hours": "Monday - Friday: 11:30 - 23:30; Saturday, Sunday & Public Holiday: 11:00 - 23:30",
       "facebook": "https://www.facebook.com/thepizzapighk",
@@ -316,7 +316,7 @@
     {
       "name": "Pici Pasta Bar",
       "location": "G/F, Shop G03, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/DINING/387177",
+      "detail_url": "https://www.d2place.com/shops/DINING/Pici-Pasta-Bar",
       "phone": "2557 7227",
       "opening_hours": "Monday - Thursday: 12:00 - 22:30; Friday: 12:00 - 23:00; Saturday: 11:30 - 23:00; Sunday: 11:30 - 22:30",
       "facebook": "https://www.facebook.com/picihk/",
@@ -344,7 +344,7 @@
     {
       "name": "牛火火",
       "location": "1/F, 109, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/DINING/086883",
+      "detail_url": "https://www.d2place.com/shops/DINING/Hot-Fire-Hotpot",
       "phone": "",
       "opening_hours": "Mon-Sun: 11:00-23:00",
       "facebook": "",
@@ -360,7 +360,7 @@
     {
       "name": "紅葉茶屋",
       "location": "1/F, Shop 110-111, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/DINING/117620",
+      "detail_url": "https://www.d2place.com/shops/DINING/momiji-chaya",
       "phone": "3705 1725",
       "opening_hours": "Monday - Sunday: 11:30 - 21:30",
       "facebook": "https://www.facebook.com/momijichayahk",
@@ -383,7 +383,7 @@
     {
       "name": "JOYSTICK",
       "location": "2/F, inside PowerPlay Arena, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/DINING/284392",
+      "detail_url": "https://www.d2place.com/shops/DINING/JOYSTICK",
       "phone": "6618 7012",
       "opening_hours": "Monday - Sunday: 11:00 - 19:00",
       "facebook": "https://www.facebook.com/hk.joystick",
@@ -404,7 +404,7 @@
     {
       "name": "繼 TSUGU",
       "location": "3/F, Shop 309-310, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/DINING/993240",
+      "detail_url": "https://www.d2place.com/shops/DINING/TSUGU-TEPPANYAKI&SUSHI",
       "phone": "3706 7703",
       "opening_hours": "Monday - Sunday: 12 PM - 3 PM & 6 PM - 11 PM",
       "facebook": "",
@@ -432,7 +432,7 @@
     {
       "name": "金鳳大餐廳",
       "location": "3/F, Shop 312, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/DINING/749468",
+      "detail_url": "https://www.d2place.com/shops/DINING/golden-phoenix-restaurant",
       "phone": "",
       "opening_hours": "Monday - Sunday: 11:00 - 23:00",
       "facebook": "",
@@ -455,7 +455,7 @@
     {
       "name": "九龍玖記",
       "location": "3/F, Shop 313, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/DINING/767621",
+      "detail_url": "https://www.d2place.com/shops/DINING/Kowloon-Nine",
       "phone": "",
       "opening_hours": "Monday - Sunday",
       "facebook": "",
@@ -476,7 +476,7 @@
     {
       "name": "大叔拉麵",
       "location": "3/F, Shop 314, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/DINING/589700",
+      "detail_url": "https://www.d2place.com/shops/DINING/OJISAN-RAMEN",
       "phone": "5368 6323",
       "opening_hours": "Monday - Sunday: 11:00 - 22:00",
       "facebook": "",
@@ -499,7 +499,7 @@
     {
       "name": "米青蛋包飯公司 ",
       "location": "3/F, Shop 303, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/DINING/634192",
+      "detail_url": "https://www.d2place.com/shops/DINING/miching-omurice-co.",
       "phone": "6925 3677",
       "opening_hours": "Monday - Sunday: 12:00 - 21:00",
       "facebook": "",
@@ -522,7 +522,7 @@
     {
       "name": "銀座炎蔵燒肉",
       "location": "3/F, Shop 302, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/DINING/317273",
+      "detail_url": "https://www.d2place.com/shops/DINING/GINZA-ENZO-YAKINIYU",
       "phone": "3709 8150",
       "opening_hours": "Mon-Sun: 11:30-22:00",
       "facebook": "https://www.facebook.com/ginzaenzohk",
@@ -545,7 +545,7 @@
     {
       "name": "鮨樂",
       "location": "4/F, Shop 406, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/DINING/765400",
+      "detail_url": "https://www.d2place.com/shops/DINING/Sushi-Raku ",
       "phone": "2367 1628",
       "opening_hours": "Mon-Sun: 11:30 – 22:00",
       "facebook": "https://www.facebook.com/SushiRakuHK",
@@ -568,7 +568,7 @@
     {
       "name": "百芳池上便當",
       "location": "3/F, Shop 307, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/DINING/875182",
+      "detail_url": "https://www.d2place.com/shops/DINING/baifung",
       "phone": "3709 8575",
       "opening_hours": "Monday - Sunday: 12:00 - 21:00",
       "facebook": "",
@@ -589,7 +589,7 @@
     {
       "name": "Chill Vietnam Cuisine & Bar",
       "location": "3/F, Shop 301, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/DINING/184429",
+      "detail_url": "https://www.d2place.com/shops/DINING/chill-vietnam-cuisine-and-bar",
       "phone": "6536 2686",
       "opening_hours": "Monday - Sunday: 12:00 - 22:00",
       "facebook": "https://www.facebook.com/profile.php?id=100090410035585&sk=about",
@@ -617,7 +617,7 @@
     {
       "name": "Yoake  夜明け",
       "location": "3/F, Shop 311, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/DINING/497865",
+      "detail_url": "https://www.d2place.com/shops/DINING/yoake",
       "phone": "57347800",
       "opening_hours": "Mon-Sun: 12 PM - 3 PM & 6 PM - 11 PM",
       "facebook": "https://www.facebook.com/profile.php?id=100095228082703&mibextid=ZbWKwL",
@@ -640,7 +640,7 @@
     {
       "name": "十二味",
       "location": "2/F, Shop 212B, 213 & 216A, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/DINING/573136",
+      "detail_url": "https://www.d2place.com/shops/DINING/twelve-flavorsd2",
       "phone": "6502 3560",
       "opening_hours": "Monday - Sunday: 11: 30 - 22:00",
       "facebook": "https://www.facebook.com/twelveflavor",
@@ -668,7 +668,7 @@
     {
       "name": "番茄師兄",
       "location": "2/F, shop 211B, 212A &215, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/DINING/671539",
+      "detail_url": "https://www.d2place.com/shops/DINING/tomato-ching",
       "phone": "",
       "opening_hours": "Monday - Sunday: 12: 00 - 22:00",
       "facebook": "",
@@ -684,7 +684,7 @@
     {
       "name": "阿木台灣麵 Mu Taiwan Noodles",
       "location": "1/F, Shop 102, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/DINING/116731",
+      "detail_url": "https://www.d2place.com/shops/DINING/mu-taiwan-noodles",
       "phone": "",
       "opening_hours": "Monday - Sunday: 11:30 - 22:00",
       "facebook": "https://www.mutaiwanstore.com",
@@ -712,7 +712,7 @@
     {
       "name": "大街小館 Big Sweet House ",
       "location": "1/F, Kiosk 18, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/DINING/226031",
+      "detail_url": "https://www.d2place.com/shops/DINING/Big-Sweet-House ",
       "phone": "",
       "opening_hours": "Monday - Sunday: 12:00 - 21:30",
       "facebook": "https://www.facebook.com/bigsweethouse/?locale=zh_HK",
@@ -735,7 +735,7 @@
     {
       "name": "BAKINGHAM",
       "location": "2/F, Shop 224, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/DINING/950139",
+      "detail_url": "https://www.d2place.com/shops/DINING/BAKINGHAM",
       "phone": "",
       "opening_hours": " Monday - Friday  :12:00 - 20:00; Saturday - Sunday :11:30- 20:30",
       "facebook": "",
@@ -756,7 +756,7 @@
     {
       "name": "Thai-ger",
       "location": "G/F, Shop G03, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/DINING/504010",
+      "detail_url": "https://www.d2place.com/shops/DINING/Thai_ger",
       "phone": "2311 1520",
       "opening_hours": "Monday - Sunday: 12:00 - 21:30",
       "facebook": "https://www.facebook.com/thaigerhk",
@@ -784,7 +784,7 @@
     {
       "name": "栢檔極品海南雞飯",
       "location": "1/F, Shop 101, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/DINING/29384",
+      "detail_url": "https://www.d2place.com/shops/DINING/pakdon-chicken-rice",
       "phone": "",
       "opening_hours": "Mon-Sun: 11:00-22:00",
       "facebook": "https://www.facebook.com/PakDonChickenRice/",
@@ -807,7 +807,7 @@
     {
       "name": "Sugidama 杉玉",
       "location": "G/F, Shop G01, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/DINING/726389",
+      "detail_url": "https://www.d2place.com/shops/DINING/Sugidama",
       "phone": "2698 0688",
       "opening_hours": "Monday - Sunday: 11:00 - 23:00",
       "facebook": "https://www.instagram.com/sugidama.hk/",
@@ -832,7 +832,7 @@
     {
       "name": "Jennymadrose",
       "location": "1/F, Kiosk 3, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/SHOP/616213",
+      "detail_url": "https://www.d2place.com/shops/SHOP/Jennymadrose",
       "phone": "9124 0325",
       "opening_hours": "Monday - Sunday : 11:00 - 20:00",
       "facebook": "https://www.facebook.com/jennymadrose",
@@ -842,7 +842,7 @@
     {
       "name": "KINDANATURALS",
       "location": "1/F, Shop 114, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/SHOP/316965",
+      "detail_url": "https://www.d2place.com/shops/SHOP/KINDANATURALS",
       "phone": "9226 7062",
       "opening_hours": "Monday - Sunday: 12:00 - 20:00",
       "facebook": "",
@@ -852,7 +852,7 @@
     {
       "name": "OUD",
       "location": "1/F, Shop 117, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/SHOP/207637",
+      "detail_url": "https://www.d2place.com/shops/SHOP/OUD",
       "phone": "",
       "opening_hours": "Monday - Sunday: 12:30 - 21:00",
       "facebook": "",
@@ -862,7 +862,7 @@
     {
       "name": "Incoco",
       "location": "1/F, Kiosk 1, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/SHOP/087289",
+      "detail_url": "https://www.d2place.com/shops/SHOP/Incoco",
       "phone": "3709 2679",
       "opening_hours": "Monday - Sunday: 12:00 - 20:00",
       "facebook": "https://www.facebook.com/IncocoHK/?fref=ts",
@@ -872,7 +872,7 @@
     {
       "name": "MUSEE PLATINUM TOKYO",
       "location": "6/F, Unit D, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/SHOP/356114",
+      "detail_url": "https://www.d2place.com/shops/SHOP/MUSEE-PLATINUM-TOKYO",
       "phone": "2169 4888",
       "opening_hours": "Monday - Sunday: 11:00 - 20:00",
       "facebook": "",
@@ -882,7 +882,7 @@
     {
       "name": "Be Good To Life",
       "location": "1/F, Shop 105, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/SHOP/440070",
+      "detail_url": "https://www.d2place.com/shops/SHOP/Be Good To Life",
       "phone": "5200 0323",
       "opening_hours": "Monday - Sunday: 12:00 - 20:00",
       "facebook": "https://www.facebook.com/begoodtolife/",
@@ -892,7 +892,7 @@
     {
       "name": "Something about Happiness",
       "location": "2/F, Shop 213 A2, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/SHOP/962865",
+      "detail_url": "https://www.d2place.com/shops/SHOP/something-about-happiness",
       "phone": "6579 3715",
       "opening_hours": "Mon-Sun: 12:30 PM - 7:30 PM",
       "facebook": "https://www.facebook.com/something.about.happiness",
@@ -902,7 +902,7 @@
     {
       "name": " FIRM Cosmo by i-FIRM",
       "location": "7/F, Unit B, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/SHOP/32193",
+      "detail_url": "https://www.d2place.com/shops/SHOP/ FIRM-Cosmo-by-i-FIRM",
       "phone": "2148 4889",
       "opening_hours": "Mon – Fri : 11:30am - 8:30pm / Sat: 10:30am – 7:00pm / Sun:10:30am – 6:00pm",
       "facebook": "https://www.facebook.com/firmcosmo/",
@@ -922,7 +922,7 @@
     {
       "name": "CGV Cinemas D2 Place",
       "location": "11/F, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/PLAY/974154",
+      "detail_url": "https://www.d2place.com/shops/PLAY/CGV-Cinemas-D2-Place",
       "phone": "2863 4100",
       "opening_hours": "Monday - Sunday: 11:30 - 22:30",
       "facebook": "https://www.facebook.com/cgvcinemashongkong",
@@ -932,7 +932,7 @@
     {
       "name": "大樹先生的家",
       "location": "1/F, Shop 103-107, 120-121, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/PLAY/772265",
+      "detail_url": "https://www.d2place.com/shops/PLAY/mr-tree",
       "phone": "3184 0033",
       "opening_hours": "Monday, Wednesday - Sunday: 09:30 - 21:00",
       "facebook": "https://www.facebook.com/mr.tree38/?fref=ts",
@@ -942,7 +942,7 @@
     {
       "name": "Golfzon GreenLive",
       "location": "1/F, Shop 114-127, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/PLAY/813535",
+      "detail_url": "https://www.d2place.com/shops/PLAY/Golfzon-GreenLive",
       "phone": "2593 6888",
       "opening_hours": "Monday - Sunday: 11:00 - 02:00",
       "facebook": "https://www.facebook.com/GreenLiveClub",
@@ -952,7 +952,7 @@
     {
       "name": "VAR LIVE",
       "location": "1/F, Shop 114-127, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/PLAY/805811",
+      "detail_url": "https://www.d2place.com/shops/PLAY/VAR-LIVE",
       "phone": "6239 2699",
       "opening_hours": "Sunday - Thursday: 12:30 - 21:30",
       "facebook": "https://www.facebook.com/VARLIVEHK/",
@@ -962,7 +962,7 @@
     {
       "name": "寰宇家庭俱樂部 World Family Club",
       "location": "4/F, Shop 401, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/PLAY/588448",
+      "detail_url": "https://www.d2place.com/shops/PLAY/World-Family-Club",
       "phone": "2268 1300",
       "opening_hours": "Monday - Sunday: 09:30 - 18:00",
       "facebook": "",
@@ -972,7 +972,7 @@
     {
       "name": "GO24 Fitness",
       "location": "6/F, Unit B, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/PLAY/524806",
+      "detail_url": "https://www.d2place.com/shops/PLAY/GO24-Fitness",
       "phone": "6778 5553",
       "opening_hours": "Monday - Sunday: 00:00 - 24:00",
       "facebook": "https://www.go24fitness.com/zh/look-inside/lai-chi-kok",
@@ -982,7 +982,7 @@
     {
       "name": "黑暗中對話體驗館 Dialogue Experience Place",
       "location": "7/F, Unit B, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/PLAY/858689",
+      "detail_url": "https://www.d2place.com/shops/PLAY/dialogue-experience-place",
       "phone": "2310 0833",
       "opening_hours": "Mon-Sun: 10:00-19:00",
       "facebook": "",
@@ -992,7 +992,7 @@
     {
       "name": "名將桌球城",
       "location": "9/F, Unit A, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/PLAY/719028",
+      "detail_url": "https://www.d2place.com/shops/PLAY/General-Snooker-Club",
       "phone": "3996 8993",
       "opening_hours": "Monday - Sunday: 10:00 - 06:00",
       "facebook": "",
@@ -1002,7 +1002,7 @@
     {
       "name": "PowerPlay Arena",
       "location": "2/F & 3/F, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/PLAY/019073",
+      "detail_url": "https://www.d2place.com/shops/PLAY/PowerPlay-Arena",
       "phone": "3165 1628",
       "opening_hours": "Mon-Sun 12:00-21:30",
       "facebook": "",
@@ -1012,7 +1012,7 @@
     {
       "name": "LOST JUNIOR",
       "location": "3/F, Shop 304, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/PLAY/938282",
+      "detail_url": "https://www.d2place.com/shops/PLAY/LOST-JUNIOR",
       "phone": "2890 2093",
       "opening_hours": "Monday - Friday: 13:00 - 21:00 ; Saturday, Sunday & Public Holiday: 11:00 - 21:00",
       "facebook": "https://www.facebook.com/lostjuniorhk/",
@@ -1022,7 +1022,7 @@
     {
       "name": "SKATE SPADE CO. LTD.",
       "location": "5/F, Unit B, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/PLAY/877994",
+      "detail_url": "https://www.d2place.com/shops/PLAY/SKATE-SPADE-CO.LTD.",
       "phone": "3556 8600",
       "opening_hours": "Monday - Friday: 10:00 - 19:00",
       "facebook": "https://www.facebook.com/HKSK8ACADEMY",
@@ -1032,7 +1032,7 @@
     {
       "name": "Bun's 2020 Roller Training Center ",
       "location": "5/F, Unit A, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/PLAY/773000",
+      "detail_url": "https://www.d2place.com/shops/PLAY/Buns-2020-Roller-Training-Center ",
       "phone": "2727 1100",
       "opening_hours": "Mon-Fri: 13:00-22:00 / Sat & Sun, Public Holiday: 10:00-22:00",
       "facebook": "https://www.facebook.com/Buns2020hk/",
@@ -1042,7 +1042,7 @@
     {
       "name": "M48 WELLNESS LAB ",
       "location": "7/F, Unit C, D2 Place TWO",
-      "detail_url": "https://www.d2place.com/shops/PLAY/067985",
+      "detail_url": "https://www.d2place.com/shops/PLAY/m48-wellness-lab",
       "phone": "5388 2525 ",
       "opening_hours": "Monday - Sunday: 10:00 - 22:00",
       "facebook": "https://www.facebook.com/m48wellnesslab",
@@ -1052,7 +1052,7 @@
     {
       "name": "Resalaser Lasertag",
       "location": "5/F, Unit B, D2 Place ONE",
-      "detail_url": "https://www.d2place.com/shops/PLAY/307007",
+      "detail_url": "https://www.d2place.com/shops/PLAY/resalaser-lasertag",
       "phone": "3580 0030",
       "opening_hours": "Monday - Friday: 12:00 - 22:00  /  Saturday - Sunday: 10:00 - 22:00",
       "facebook": "https://www.facebook.com/ResaLaserhk",
