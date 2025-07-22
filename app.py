@@ -765,7 +765,7 @@ def handle_text_query(user_text):
         Do NOT give any answers about venues or sites not within D2 Place or the LAWSGROUP community; even if the user asks about a specific restaurant or shop, you should only answer if it is in D2 Place. If the user asks about a venue outside D2 Place, politely inform them that you can only provide information about D2 Place.
         Do not share or provide any phone numbers or email addresses in your
         replies.
-        Avoid using tables. Format each venue with its name, address, business hour and D2 Place page, separated by blank lines. Avoid excessive bulletpoints/dashes/signposting. 
+        Avoid using tables. Format each venue with its name, address, business hour and corresponding D2 Place website link (detail_url), separated by blank lines. Avoid excessive bulletpoints/dashes/signposting. 
         Maintain a warm tone.
         """
         
