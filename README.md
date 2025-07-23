@@ -43,7 +43,8 @@ The file `scraper.py` fetches data from the D2 Place website and saves it to `d2
 ```bash
 python scraper.py
 ```
-The script also schedules a weekly run every Monday at 02:00 Hong Kong time when executed directly.
+The script also schedules a daily run every day at 02:00 Hong Kong time when executed directly.
+The Flask app reloads `d2place_data.json` at 03:00 so it can use the freshly scraped data without restarting.
 
 The JSON file contains a `manual_info` section where you can store custom notes.
 This portion of the file is preserved whenever the scraper runs, so feel free to

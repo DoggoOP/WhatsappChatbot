@@ -19,6 +19,7 @@ from concurrent.futures import ThreadPoolExecutor
 import time
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
+from apscheduler.schedulers.background import BackgroundScheduler
 
 PHONE_REGEX = re.compile(r"(?:\+?852[-\s]?)?\d{4}[-\s]?\d{4}")
 EMAIL_REGEX = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
@@ -122,18 +123,35 @@ _CLEANUP_INTERVAL = timedelta(hours=1)  # Clean up old messages every hour
 # Allow more concurrent message processing to reduce queue delays
 _executor = ThreadPoolExecutor(max_workers=20)
 
-try:
-    with open("d2place_data.json", "r", encoding="utf-8") as f:
-        raw_data = json.load(f)
-    CACHED_DATA = strip_contact_info(raw_data)
-    logger.info("Loaded scraped data into CACHED_DATA")
-except Exception as e:
-    logger.error("Failed to load d2place_data.json into cache: %s", e)
-    CACHED_DATA = {}
+
+def load_scraped_data():
+    """Load d2place_data.json into the global cache."""
+    global CACHED_DATA, FULL_JSON_TEXT
+    try:
+        with open("d2place_data.json", "r", encoding="utf-8") as f:
+            raw_data = json.load(f)
+        CACHED_DATA = strip_contact_info(raw_data)
+        FULL_JSON_TEXT = json.dumps(CACHED_DATA, ensure_ascii=False)
+        logger.info("Reloaded scraped data into cache")
+    except Exception as e:
+        logger.error("Failed to load d2place_data.json into cache: %s", e)
+        CACHED_DATA = {}
+        FULL_JSON_TEXT = "{}"
 
 
-# Pre-serialize the full JSON once for LLM context
-FULL_JSON_TEXT = json.dumps(CACHED_DATA, ensure_ascii=False)
+# Initial load
+load_scraped_data()
+
+# Reload the scraped data daily at 03:00 HK time
+_reload_scheduler = BackgroundScheduler(timezone="Asia/Hong_Kong")
+_reload_scheduler.add_job(
+    load_scraped_data,
+    trigger="cron",
+    hour=3,
+    minute=0,
+    id="reload_scraped_data",
+)
+_reload_scheduler.start()
 
 
 def async_worker(fn):

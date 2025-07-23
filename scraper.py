@@ -1053,17 +1053,16 @@ if __name__ == "__main__":
     
     scraper.scrape_all()
     
-    # run once a week: every Monday at 02:00
+    # run once a day at 02:00
     scheduler.add_job(
         scraper.scrape_all,
         trigger='cron',
-        day_of_week='mon',
         hour=2,
         minute=0,
-        id='weekly_d2_scrape'
+        id='daily_d2_scrape'
     )
 
-    logger.info("Starting weekly scraper job (every Monday at 02:00 HK time)")
+    logger.info("Starting daily scraper job (every day at 02:00 HK time)")
     try:
         scheduler.start()
     except (KeyboardInterrupt, SystemExit):
