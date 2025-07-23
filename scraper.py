@@ -122,6 +122,7 @@ class D2PlaceScraper:
             "instagram": "",
             "website": "",
             "tags": "",
+            "page_text": "",
         }
         
         def _find(blob, wanted):
@@ -141,13 +142,34 @@ class D2PlaceScraper:
             return ""
 
         def _find_tags(blob):
-            """Return a list of tag-like strings from *blob*."""
+            """Return a list of tag-like strings from *blob*.
+
+            The site is inconsistent in how it labels these values. In some
+            places they may appear under keys like ``tags`` or ``category`` but
+            others use ``kindOfGoods`` or ``type``. This helper walks the
+            entire structure and collects anything that looks relevant.  A few
+            more keys such as ``keyword`` or ``categoryName`` are also scanned
+            since the site sometimes stores labels there.
+            """
             tags = []
+
             def rec(obj):
                 if isinstance(obj, dict):
                     for k, v in obj.items():
                         lk = k.lower()
-                        if any(t in lk for t in ("tag", "cuisine", "category")):
+                        if any(
+                            t in lk
+                            for t in (
+                                "tag",
+                                "cuisine",
+                                "category",
+                                "kind",
+                                "goods",
+                                "type",
+                                "keyword",
+                                "categoryname",
+                            )
+                        ):
                             if isinstance(v, str) and v.strip():
                                 tags.extend(re.split(r",|;", v))
                             elif isinstance(v, list):
@@ -156,6 +178,7 @@ class D2PlaceScraper:
                 elif isinstance(obj, list):
                     for item in obj:
                         rec(item)
+
             rec(blob)
             return [t.strip() for t in tags if t and str(t).strip()]
 
@@ -187,9 +210,9 @@ class D2PlaceScraper:
                     "website":       meta.get("website",      "").strip(),
                     "tags":          tag_value,
                 }
-                # only return if *any* real data was found
-                if any(extracted.values()):
-                    return extracted
+                for k, v in extracted.items():
+                    if v:
+                        blank[k] = v
             except (KeyError, TypeError):
                 pass
             
@@ -203,23 +226,15 @@ class D2PlaceScraper:
                 "website":       _find(blob, {"website", "site"}),
             })
             tags = _find_tags(blob)
-            if tags:
+            if tags and not blank.get("tags"):
                 blank["tags"] = ", ".join({t.strip() for t in tags if t.strip()})
-            # if we found at least one piece of data we can already return
-            if any(blank.values()):
-                return blank
 
 
-        try:
-            resp = requests.get(url, headers=self.headers, timeout=15)
-            resp.raise_for_status()
-        except Exception:
-            return blank
-
-        # 2) fallback – parse the HTML
+        # 2) fallback – parse the HTML using the response we already fetched
         soup = BeautifulSoup(resp.text, "html.parser")
 
         txt = soup.get_text(" ", strip=True)
+        blank["page_text"] = re.sub(r"\s+", " ", txt)
 
         m_phone = re.search(r"\+?852[-\s]?\d{4}[-\s]?\d{4}", txt)
         if m_phone:
@@ -252,6 +267,12 @@ class D2PlaceScraper:
 
         tags_list = []
 
+        meta_kw = soup.find("meta", attrs={"name": "keywords"})
+        if meta_kw and meta_kw.get("content"):
+            tags_list.extend(
+                [t.strip() for t in meta_kw["content"].split(",") if t.strip()]
+            )
+
         ck_elems = soup.select("p.ck-content.text-gold-primary, div.ck-content.text-gold-primary")
         for wrapper in ck_elems:
             inner_ps = wrapper.select("p")
@@ -263,7 +284,9 @@ class D2PlaceScraper:
                     [t.strip() for t in re.split(r"[\n,;/]+", text) if t.strip()]
                 )
 
-        tag_elems = soup.select("div[class*=tag] p, p[class*=tag], [class*=tag]")
+        tag_elems = soup.select(
+            "div[class*=tag] p, p[class*=tag], [class*=tag], [class*=kind], [class*=type]"
+        )
         if tag_elems:
             tags_list.extend([t.get_text(strip=True) for t in tag_elems])
 
@@ -321,41 +344,6 @@ class D2PlaceScraper:
             logger.warning(f"Timeout waiting for element: {selector}")
             return None
 
-    def resolve_detail_url(self, url: str) -> str:
-        """Follow redirects for numeric shop URLs and return the final URL."""
-        if not url or not re.search(r"/shops/\d+", url):
-            return url
-        try:
-            resp = requests.get(url, headers=self.headers, timeout=20, allow_redirects=True)
-            if resp.status_code == 200 and resp.url:
-                return resp.url
-            soup = BeautifulSoup(resp.text, "html.parser")
-            link = soup.find("link", rel="canonical")
-            if link and link.get("href"):
-                return link["href"]
-        except Exception as e:
-            logger.warning(f"resolve_detail_url failed for {url}: {e}")
-        return url
-        
-    def extract_next_data(html_text: str) -> dict | None:
-        """
-        Pull the JSON sitting inside <script id="__NEXT_DATA__">…</script>
-        and turn it into a Python dict.
-        """
-        m = re.search(
-            r'<script[^>]+id="__NEXT_DATA__"[^>]*>(.*?)</script>',
-            html_text,
-            flags=re.S,
-        )
-        if not m:
-            return None
-        raw = html.unescape(m.group(1).strip())
-        try:
-            return json.loads(raw)
-        except json.JSONDecodeError:
-            return None
-        
-    
 
     def load_page(self, url, wait_selector=None, wait_time=20):
         """Load a page and wait for content to be ready."""
@@ -539,162 +527,6 @@ class D2PlaceScraper:
 
         return {"name": name, "location": location, "detail_url": detail_url}
 
-    # ================== DINING (Example) ==================
-    def extract_card_details(self, card_element, mode="auto"):
-        """Extract detailed information from a card element. Mode: 'auto', 'modal', or 'page'."""
-        details = {}
-        try:
-            # Get basic info
-            name = card_element.find_element(By.CSS_SELECTOR, "p.shop_shopName___oote").text.strip()
-            location = card_element.find_element(By.CSS_SELECTOR, "p.shop_shopLocationContainer__JwLEp span").text.strip()
-            detail_url = None
-            try:
-                link = card_element.find_element(By.TAG_NAME, "a")
-                detail_url = link.get_attribute("href")
-            except NoSuchElementException:
-                pass
-
-            # Decide extraction mode
-            if mode == "auto":
-                if detail_url:
-                    mode = "page"
-                else:
-                    mode = "modal"
-
-            if mode == "page" and detail_url:
-                # Save current URL to return after extraction
-                main_url = self.driver.current_url
-                try:
-                    self.driver.get(detail_url)
-                    time.sleep(2)
-                    # Extract details from detail page
-                    page_source = self.driver.page_source
-                    soup = BeautifulSoup(page_source, "html.parser")
-                    # Description
-                    desc_elem = soup.select_one(".shopDescription__container, .shop_shopDescription__container")
-                    if desc_elem:
-                        details["description"] = desc_elem.get_text(strip=True)
-                    # Opening hours
-                    hours_elem = (
-                        soup.select_one("div.shop_shopHours__text")
-                        or soup.select_one("div[class*='shopHours']")
-                        or soup.find(string=re.compile(r"(Mon|星期).*:\d{2}"))
-                    )
-                    if hours_elem:
-                        details["opening_hours"] = hours_elem.get_text(strip=True)
-                    # Phone number
-                    phone_elem = soup.find("a", href=lambda h: h and h.startswith("tel:"))
-                    if phone_elem:
-                        details["phone"] = phone_elem.get_text(strip=True)
-                    # Social links
-                    for a in soup.find_all("a", href=True):
-                        href = a["href"]
-                    if "facebook.com" in href and not details["facebook"]:
-                        details["facebook"] = href
-                    elif "instagram.com" in href and not details["instagram"]:
-                        details["instagram"] = href
-                except Exception as e:
-                    logger.error(f"Error extracting details from detail page for {name}: {e}")
-                finally:
-                    self.driver.get(main_url)
-                    time.sleep(1)
-            elif mode == "modal":
-                try:
-                    card_element.click()
-                    time.sleep(2)
-                    modal = self.wait_for_element("div.modal-content", timeout=20)
-                    if modal:
-                        # Description
-                        try:
-                            desc_elem = modal.find_element(By.CSS_SELECTOR, "div.shop_shopDescription__container")
-                            if desc_elem:
-                                details["description"] = desc_elem.text.strip()
-                        except NoSuchElementException:
-                            pass
-                        # Social links
-                        try:
-                            social_links = modal.find_elements(By.CSS_SELECTOR, "a[href*='instagram.com'], a[href*='facebook.com']")
-                            for link in social_links:
-                                href = link.get_attribute("href")
-                                if "instagram.com" in href:
-                                    details["instagram"] = href
-                                elif "facebook.com" in href:
-                                    details["facebook"] = href
-                        except NoSuchElementException:
-                            pass
-                        # Opening hours
-                        try:
-                            hours_text = None
-                            hours_selectors = [
-                                "div.shop_shopHours__container",
-                                "div.shop_shopHours__text",
-                                "div.shop_shopHours",
-                                "div[class*='shopHours']",
-                                "div[class*='opening-hours']"
-                            ]
-                            for selector in hours_selectors:
-                                try:
-                                    hours_elem = modal.find_element(By.CSS_SELECTOR, selector)
-                                    if hours_elem and hours_elem.text.strip():
-                                        hours_text = hours_elem.text.strip()
-                                        break
-                                except NoSuchElementException:
-                                    continue
-                            if not hours_text:
-                                try:
-                                    all_text = modal.text
-                                    import re
-                                    match = re.search(r'(Monday[^\n]+\d{2}:\d{2}[^\n]*)', all_text)
-                                    if match:
-                                        hours_text = match.group(1)
-                                except Exception as e:
-                                    logger.error(f"Regex fallback for opening hours failed: {e}")
-                            if hours_text:
-                                details["opening_hours"] = hours_text
-                                logger.info(f"Found opening hours for {name}: {hours_text}")
-                            else:
-                                logger.warning(f"No opening hours found for {name} using any selector or pattern")
-                        except Exception as e:
-                            logger.error(f"Error extracting opening hours for {name}: {e}")
-                        # Phone number
-                        try:
-                            phone = None
-                            try:
-                                tel_link = modal.find_element(By.CSS_SELECTOR, "a[href^='tel']")
-                                phone = tel_link.text.strip()
-                            except NoSuchElementException:
-                                import re
-                                all_text = modal.text
-                                match = re.search(r'(\d{4} \d{4})', all_text)
-                                if match:
-                                    phone = match.group(1)
-                            if phone:
-                                details["phone"] = phone
-                                logger.info(f"Found phone for {name}: {phone}")
-                            else:
-                                logger.warning(f"No phone found for {name}")
-                        except Exception as e:
-                            logger.error(f"Error extracting phone for {name}: {e}")
-                        # Close modal
-                        try:
-                            close_btn = modal.find_element(By.CSS_SELECTOR, "button.close")
-                            if close_btn:
-                                close_btn.click()
-                                time.sleep(1)
-                        except NoSuchElementException:
-                            pass
-                except Exception as e:
-                    logger.error(f"Error extracting details from modal for {name}: {e}")
-            # Always return the basic info plus any additional details we found
-            return {
-                "name": name,
-                "location": location,
-                "detail_url": detail_url,
-                **details
-            }
-        except Exception as e:
-            logger.error(f"Error extracting card details: {e}")
-            return None
 
     def slugify(self, text: str) -> str:
         """Return *text* converted to a URL slug.
