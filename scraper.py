@@ -121,7 +121,7 @@ class D2PlaceScraper:
             "facebook": "",
             "instagram": "",
             "website": "",
-            "tags": [],
+            "tags": "",
         }
         
         def _find(blob, wanted):
@@ -172,13 +172,20 @@ class D2PlaceScraper:
         if blob:
             try:
                 meta = blob["props"]["pageProps"].get("meta", {})
+                tag_value = meta.get("tags") or meta.get("tag") or []
+                if isinstance(tag_value, list):
+                    tag_value = ", ".join(t.strip() for t in tag_value if str(t).strip())
+                elif isinstance(tag_value, str):
+                    tag_value = tag_value.strip()
+                else:
+                    tag_value = ""
                 extracted = {
                     "phone":         meta.get("tel",          "").strip(),
                     "opening_hours": meta.get("openingHours", "").strip(),
                     "facebook":      meta.get("facebook",     "").strip(),
                     "instagram":     meta.get("instagram",    "").strip(),
                     "website":       meta.get("website",      "").strip(),
-                    "tags":          meta.get("tags") or meta.get("tag") or [],
+                    "tags":          tag_value,
                 }
                 # only return if *any* real data was found
                 if any(extracted.values()):
@@ -197,7 +204,7 @@ class D2PlaceScraper:
             })
             tags = _find_tags(blob)
             if tags:
-                blank["tags"] = tags
+                blank["tags"] = ", ".join({t.strip() for t in tags if t.strip()})
             # if we found at least one piece of data we can already return
             if any(blank.values()):
                 return blank
@@ -243,22 +250,25 @@ class D2PlaceScraper:
                 blank["website"] = href
 
 
+        tags_list = []
+
         ck_elems = soup.select("p.ck-content.text-gold-primary, div.ck-content.text-gold-primary")
-        if ck_elems:
-            blank.setdefault("tags", [])
-            for el in ck_elems:
-                text = el.get_text(" ", strip=True)
-                blank["tags"].extend(
+        for wrapper in ck_elems:
+            inner_ps = wrapper.select("p")
+            if inner_ps:
+                tags_list.extend(p_el.get_text(strip=True) for p_el in inner_ps)
+            else:
+                text = wrapper.get_text(" ", strip=True)
+                tags_list.extend(
                     [t.strip() for t in re.split(r"[\n,;/]+", text) if t.strip()]
                 )
 
-        tag_elems = soup.select("[class*=tag]")
+        tag_elems = soup.select("div[class*=tag] p, p[class*=tag], [class*=tag]")
         if tag_elems:
-            blank.setdefault("tags", [])
-            blank["tags"].extend([t.get_text(strip=True) for t in tag_elems])
+            tags_list.extend([t.get_text(strip=True) for t in tag_elems])
 
-        if "tags" in blank:
-            blank["tags"] = list({t for t in blank["tags"] if t})
+        if tags_list:
+            blank["tags"] = ", ".join(sorted({t for t in tags_list if t}))
 
         return blank
 
