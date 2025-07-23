@@ -1,8 +1,23 @@
 {
   "home_happenings": [
     {
-      "title": "廢青漫遊世界市集",
-      "date": "26 - 27 July, 2025",
+      "title": "D2 Place Bubble PO...",
+      "date": "2, 3, 9, 10, 23, 24, 30,31 August 2025",
+      "venue": "D2 Place"
+    },
+    {
+      "title": "KOLOR FEST 2025",
+      "date": "30 - 31 August, 2025",
+      "venue": "THE SPACE & THE UPPER STA..."
+    },
+    {
+      "title": "PureCos2 夏日祭",
+      "date": "16 - 17 August, 2025",
+      "venue": "THE UPPER STAGE / Rooftop..."
+    },
+    {
+      "title": "第二屆香港國際模型大賽2025",
+      "date": "8 - 10 August, 2025",
       "venue": "THE SPACE"
     }
   ],
@@ -32,7 +47,7 @@
         "kg_website": "https://www.rustico.com.hk/",
         "kg_reviews": null,
         "kg_cuisines": null,
-        "top_snippet": "Rustico 的餐廳地址、網上訂座、電話、食評、相片及餐牌，餐廳位於荔枝角長義街9號D2 Place ONE地下G01號舖。主要菜式包括招牌西班牙黑毛豬海鮮飯, 西班牙海鮮飯, ..."
+        "top_snippet": "A rustic Spanish tapas and wine bar, serving traditional Catalan favourites with a modern twist. · About Rustico · Menu · Tapas · Sangría."
       }
     },
     {
@@ -76,7 +91,7 @@
         "serpapi_link": "https://www.google.com.hk/maps/search/LUCULLUS+CACAOD2+Place+HK?hl=en"
       },
       "extra_google_info": {
-        "top_snippet": "龍島(D2 Place ONE) LUCULLUS CACAO (D2 Place ONE)的餐牌，餐廳位於荔枝角長義街9號D2 Place ONE地下V1號舖。"
+        "top_snippet": "龍島 (D2 Place ONE)LUCULLUS CACAO (D2 Place ONE)'s Menu, located at Shop V1, G/F, D2 Place ONE, 9 Cheung Yee Street Lai Chi Kok."
       }
     },
     {
@@ -105,7 +120,7 @@
       "instagram": "",
       "website": "",
       "google_review_data": {
-        "error": "0"
+        "message": "(No place_results found)"
       },
       "extra_google_info": {
         "kg_title": "FOODBOX Lai Chi Kok",
@@ -115,7 +130,7 @@
         "kg_website": "http://www.foodbox.hk/",
         "kg_reviews": null,
         "kg_cuisines": null,
-        "top_snippet": "FOODBOX is the best salad, sandwich and hot food takeaway concept that helps you live a healthier and more sustainable lifestyle in the hustle and bustle of ..."
+        "top_snippet": "荔枝角長義街9號D2 Place ONE 1樓102號舖. 港鐵荔枝角站D1 出口, 港鐵荔枝角站D2 出口 繼續閱讀. 26809099. 西式/ 三文治/ 漢堡包/ 沙律. $51-100. 所有分店(3) ..."
       }
     },
     {
@@ -164,8 +179,8 @@
         "serpapi_link": "https://www.google.com.hk/maps/search/MOS+BurgerD2+Place+HK?hl=en"
       },
       "extra_google_info": {
-        "kg_title": null,
-        "kg_type": null,
+        "kg_title": "摩斯漢堡",
+        "kg_type": "漢堡餐廳",
         "kg_description": null,
         "kg_menu_link": null,
         "kg_website": "http://mosburger-hk.com/",
@@ -194,7 +209,7 @@
         "kg_website": null,
         "kg_reviews": null,
         "kg_cuisines": null,
-        "top_snippet": "Bugis@叻沙・海南雞飯的餐牌，餐廳位於荔枝角長義街9號D2 Place ONE 3樓305號舖。"
+        "top_snippet": "Bugis@叻沙・海南雞飯(D2 Place). HK$ 39運費. 最低消費HK$ 120. 4.9/5(500+)4.9 ／5 ... 從HK$ 127. 配健康唐生菜、靚湯(1碗)及飲品(1款). 0. 慢煮新加坡無骨海南雞乾撈油麵."
       }
     },
     {
@@ -324,7 +339,7 @@
       "website": "",
       "google_review_data": {
         "rating": 4.5,
-        "reviews_count": 930,
+        "reviews_count": 943,
         "address": "地下G03號舖, D2 Place二期, Shop G03, G/F, D2 Place TWO, 15, 15號 Cheung Shun St, Lai Chi Kok, Hong Kong",
         "phone": "+852 2557 7009",
         "website": "http://www.pici.hk/",
@@ -338,7 +353,7 @@
         "kg_website": "http://www.pici.hk/",
         "kg_reviews": null,
         "kg_cuisines": null,
-        "top_snippet": "我們的餐單每月更新，此餐單僅供參考. 由2024 年2 月15 日起，集團旗下餐廳將只接受非現金付款方式。我們接受信用卡及非接觸式支付。我們非常感謝您的諒解及一直以来的 ..."
+        "top_snippet": "星期一至五11:30-15:00 · 午餐餐單. 星期一至五11:30 - 15:00 · 午餐餐單. 星期一至五11:30 - 14:30 · 午餐餐單. 每日12PM 至3:00PM · 午餐餐單. 星期一至五11AM 至3PM ..."
       }
     },
     {
@@ -398,7 +413,7 @@
         "serpapi_link": "https://www.google.com.hk/maps/search/JOYSTICKD2+Place+HK?hl=en"
       },
       "extra_google_info": {
-        "top_snippet": "多國菜/ 漢堡包/ 沙律/ 快餐店. $50以下. 其他資料. 不準攜帶外來食品及飲品. 星期一至六. 12:00 - 19:45. Visa Master AlipayHK 支付寶 現金 八達通 AE 銀聯 JCB ..."
+        "top_snippet": "多國菜/ 漢堡包/ 沙律/ 快餐店. $50以下. 其他資料. 不準攜帶外來食品及飲品. 今日營業. 12:00 - 19:45. 星期一至六. 12:00 - 19:45. Visa Master AlipayHK 支付寶 ..."
       }
     },
     {
@@ -449,7 +464,7 @@
         "kg_website": null,
         "kg_reviews": null,
         "kg_cuisines": null,
-        "top_snippet": "複製餐廳資料. 複製到剪貼簿. 返回. 金鳳大餐廳(D2 Place TWO) (荔枝角) 網址: https://s.openrice.com/QrbS0p8u800 地址: 香港荔枝角長順街15號D2 Place TWO 3樓312號舖 ..."
+        "top_snippet": "金鳳大餐廳GOLDEN PHOENIX RESTAURANT的餐廳地址、電話、食評、相片及餐牌，餐廳位於荔枝角長順街15號D2 Place TWO 3樓312號舖。主要菜式包括美式雜扒餐, 羅宋湯, ..."
       }
     },
     {
@@ -462,8 +477,8 @@
       "instagram": "",
       "website": "",
       "google_review_data": {
-        "rating": 2.6,
-        "reviews_count": 5,
+        "rating": 3,
+        "reviews_count": 6,
         "address": "Hong Kong, Lai Chi Kok, D2 place, two 3/F, shop313",
         "phone": "",
         "website": "",
@@ -532,8 +547,8 @@
         "error": "0"
       },
       "extra_google_info": {
-        "kg_title": "銀座炎蔵燒肉 - 香港",
-        "kg_type": "日式燒肉餐廳",
+        "kg_title": null,
+        "kg_type": null,
         "kg_description": null,
         "kg_menu_link": null,
         "kg_website": "https://www.facebook.com/ginzaenzohk",
@@ -576,10 +591,10 @@
       "website": "",
       "google_review_data": {
         "rating": 3.9,
-        "reviews_count": 33,
-        "address": "Hong Kong, San Po Kong, Prince Edward Rd E, 638號, MIKIKI地下低層LG7號",
-        "phone": "+852 2856 5858",
-        "website": "https://www.facebook.com/baifung.hk/",
+        "reviews_count": 3671,
+        "address": "9 Cheung Yee St, Lai Chi Kok, Hong Kong",
+        "phone": "+852 3620 3098",
+        "website": "http://www.d2place.com/",
         "serpapi_link": "https://www.google.com.hk/maps/search/%E7%99%BE%E8%8A%B3%E6%B1%A0%E4%B8%8A%E4%BE%BF%E7%95%B6D2+Place+HK?hl=en"
       },
       "extra_google_info": {
@@ -597,7 +612,7 @@
       "website": "https://chill-vietnam.business.site/",
       "google_review_data": {
         "rating": 4.5,
-        "reviews_count": 196,
+        "reviews_count": 198,
         "address": "Hong Kong, Lai Chi Kok, Cheung Yee St, 9號, D2廣場一期, 3/F, 301號鋪",
         "phone": "+852 6536 2686",
         "website": "",
@@ -648,7 +663,7 @@
       "website": "https://www.12flavors.com",
       "google_review_data": {
         "rating": 4.8,
-        "reviews_count": 225,
+        "reviews_count": 241,
         "address": "Shops 212B, 213, 216A, D2 Place 2期2樓, 15號 Cheung Yee St, Lai Chi Kok, Hong Kong",
         "phone": "+852 6502 3560",
         "website": "https://www.12flavors.com/",
@@ -750,6 +765,13 @@
         "serpapi_link": "https://www.google.com.hk/maps/search/BAKINGHAMD2+Place+HK?hl=en"
       },
       "extra_google_info": {
+        "kg_title": "Bakingham",
+        "kg_type": "麵包西餅店",
+        "kg_description": null,
+        "kg_menu_link": null,
+        "kg_website": null,
+        "kg_reviews": null,
+        "kg_cuisines": null,
         "top_snippet": "BAKINGHAM's Address, Telephone Number, Ratings, Reviews, Photos and Menu, located at Shop 224, 2/F, D2 Place ONE, 9 Cheung Yee Street Lai Chi Kok."
       }
     },
@@ -912,6 +934,36 @@
   ],
   "events": [
     {
+      "title": "D2 Place Bubble POP Party",
+      "date": "2, 3, 9, 10, 23, 24, 30,31 August 2025",
+      "venue": "D2 Place",
+      "detail_url": "https://www.d2place.com/events/d2-place-bubble-pop-party-2025"
+    },
+    {
+      "title": "KOLOR FEST 2025",
+      "date": "30 - 31 August, 2025",
+      "venue": "THE SPACE & THE UPPER STAGE",
+      "detail_url": "https://www.d2place.com/events/kolorfest-0830-31"
+    },
+    {
+      "title": "PureCos2 夏日祭",
+      "date": "16 - 17 August, 2025",
+      "venue": "THE UPPER STAGE / Rooftop Garden",
+      "detail_url": "https://www.d2place.com/events/purecos2-0816-17"
+    },
+    {
+      "title": "第二屆香港國際模型大賽2025",
+      "date": "8 - 10 August, 2025",
+      "venue": "THE SPACE",
+      "detail_url": "https://www.d2place.com/events/toyscollectormarket-0808-10"
+    },
+    {
+      "title": "攰就唞唞主題市集",
+      "date": "2 - 3 August, 2025",
+      "venue": "THE SPACE",
+      "detail_url": "https://www.d2place.com/events/marketoo-0802-03"
+    },
+    {
       "title": "廢青漫遊世界市集",
       "date": "26 - 27 July, 2025",
       "venue": "THE SPACE",
@@ -1063,7 +1115,7 @@
   "mall_info": {
     "about": "Login / Register\nAbout Us\nConcept\nA NEW ARTISTIC-CULTURAL LANDMARK AT WEST KOWLOON\nD2 Place, the Cultural & Creativity Hub in West Kowloon, is the first Industrial Building Revitalization Project developed by Lawsgroup. Complete with 100,000 sq ft of retail space, 140,000 sq ft of commercial office space, the complex houses stylish fashion boutiques, creative markets, international F&B and lifestyle stores all under one roof. At D2 Place, we redefine the experience of shopping, dining and entertainment.\nFeaturing over 20,000 sqft. of event space and fascinating rooftop garden, D2 Place serves as a social hub to promote local culture and breed creativity.\nPartner\nFASHION FARM FOUNDATION\nD2 Place strongly supports local creativity and serves as a platform to gather creative people and organizations which share the same passion for local culture and design. One of the sponsored entities is Fashion Farm Foundation (FFF) – an NGO founded by a group of enthusiastic entrepreneurs from the fashion and cultural creative industry – where its headquarters is located on the 9/F of D2 Place ONE with studios, co-working space and offices for individual designers.\nWe constantly collaborates with FFF on different events which support young local fashion designers to develop their own products, brand and business. Besides, the mall works closely with different organizers on various creative events and workshops.\nElevation\nLAYOUT\nA multifunctional complex comprising shops, showrooms, offices, studio workshops, specialty restaurant, sky garden and carparks, fulfils every desire of the turly discerning.\nCONTACT US\nMARKETING ENQUIRY\nEmail:\nmarketing@d2place.com\nTel: 2371 1876\nFollow and stay in the know\nSite Map\nVisit Us\nAbout Us\nOur Awards\nTerm of Use\nPrivacy Policy\nCopyright © 2022 D2 Place.\nAll Rights Reserved.\nEvents\nShops\nDine\nPlay",
     "location": "Location\nD2 Place ONE\nAddress\n9 Cheung Yee Street, Lai Chi Kok, Kowloon, Hong Kong\nBusiness Hours\nMonday - Sunday & Public Holiday: 10:00 - 22:00\nD2 Place TWO\nAddress\n15 Cheung Shun Street, Lai Chi Kok, Kowloon, Hong Kong\nBusiness Hours\nMonday - Sunday & Public Holiday: 10:00 - 22:00",
-    "parking": "D2 Place Parking\nD2 Place Parking\nLogin / Register\nD2 Place Parking\n泊車優惠 Free Parking\n基本泊：\n顧客凡於 D2 PLACE ONE 或 D2 PLACE TWO 指定商戶累積電子消費滿港幣300元或以上（以最多2張單據計算），可享1小時免費泊車優惠；滿港幣500元或以上（以最多2張單據計算），則可享2小時免費泊車優惠。\nBasic Parking:\nShoppers could enjoy 1 Hour of Free Parking for electronic spending of HK$300 or more, OR 2 Hours of Free Parking for electronic spending of HK$500 or more at designated merchants in D2 PLACE ONE or D2 PLACE TWO. The total spending amount could be accumulated by a maximum of 2 receipts.\n夜繽紛·平日夜泊：\n逢星期一至星期五（公眾假期除外），晚上6點至11點，累積電子消費滿港幣100元或以上（以1張金額不少於$100單據計算），可享1小時免費泊車優惠；滿港幣200元或以上（以最多2張金額不少於$100單據計算），可享2小時免費泊車優惠；滿港幣300元或以上（以最多3張金額不少於$100單據計算），可享3小時免費泊車。\nNight Vibes·Weekday Night Parking:\nFrom Monday to Friday (excluding public holidays), between 6 PM and 11 PM, shoppers who accumulate electronic spending of:\nHK$100 or more (using 1 receipt of at least HK$100) can enjoy 1 Hour of Free Parking;\nHK$200 or more (using a maximum of 2 receipts, each at least HK$100) can enjoy 2 Hours of Free Parking;\nHK$300 or more (using a maximum of 3 receipts, each at least HK$100) can enjoy 3 Hours of Free Parking.\n多架泊：\n顧客如有多於一輛汽車需享有免費泊車優惠，由第二輛汽車起，每輛汽車需要累積電子消費滿港幣1,000元或以上（以最多2張單據計算），則可享2小時免費泊車優惠，以及所有車輛需同時辦理泊車優惠。\n(例子：假如顧客於週末，有兩輛汽車需享2小時免費泊車優惠，電子消費需滿港幣1,500元。)\nMultiple Vehicles:\nIf a customer has more than one vehicle, starting from the second vehicle, each additional vehicle requires an accumulated electronic spending of HK$1,000 or more (using a maximum of 2 receipts) to enjoy 2 Hours of Free Parking. All vehicles must process the parking discount at the same time.\n(Example: If a customer has two vehicles requesting 2 hours of free parking on a weekend, the total electronic spending must reach HKD 1,500 or more.)\n條款及細則 Terms and Conditions:\n1.指定商戶不包括於市集，POP-UP Stores或其他商場推廣活動之消費。\nDesignated merchants do not include spending at markets, pop-up stores, or other mall promotional activities;\n2. D2 Place ONE / D2 Place TWO 及荔枝角道822號均可使用泊車優惠。\nFree Parking is applicable at D2 Place ONE, D2 Place TWO, and 822 Lai Chi Kok Road;\n3. 顧客需要於一期、二期商場及荔枝角道822號地面泊車收費站登記。所有參與免費泊車優惠的車輛需要同一時間進入及離開泊車場。免費時段以外之泊車時間將以正常收費計算；\nShoppers must register at the G/F Shroff Office of D2 Place ONE or D2 Place TWO, or 822 Lai Chi Kok Road. All vehicles participating in the free parking promotion must enter and exit the parking lot at the same time. Any additional parking time outside of the free period will be charged with regular fares;\n4. 只接受在D2 Place一期或二期商戶發出附有屬本商場店名、購買日期及金額之\n即日機印發票及相符之電子貨幣付款存根\n(信用卡/易辦事/八達通/銀聯卡/ Apple Pay/Android Pay/Samsung Pay/微信支付/支付寶支付)或受《支付系統及儲值支付工具條例》(第584章)規管的其他儲值支付工具（包括但不限於八達通、八達通「好易畀」、Tap & Go拍住賞）。所持之發票只計算實際簽賬金額，使用優惠碼、現金券、任何形式的優惠作支付貨品價格之部份/全部將不予計算。任何單據影印本、複印本、已被損毀或經塗改之單據、手寫單據及信用咭收據存根等，恕不接受；\nOnly original, same-day machine-printed receipts issued by D2 Place ONE or D2 Place TWO merchants - clearly displaying the store name (registered under the mall), purchase date and transaction amount - along with matching electronic payment proof (credit card/EPS/Octopus/UnionPay/Apple Pay/Google Pay/Samsung Pay/WeChat Pay/Alipay) or other stored value facilities regulated under the Payment Systems and Stored Value Facilities Ordinance (Cap. 584) (including Octopus, Octopus O! ePay and Tap & Go) will be accepted, with only the actual charged amount counting toward the offer (discount codes, cash vouchers or any promotional payments will not be eligible); copies, scanned receipts, damaged/altered documents, handwritten receipts or credit card slips are strictly excluded from this parking promotion;\n5. 此優惠只適用於私家車及客貨車類別；\nThis offer is applicable to private cars and light goods vehicle only;\n6. 已用作泊車優惠之單據仍可用作參與其他商場推廣活動；\nReceipts redeemed for Free Parking can be used for other redemption or promotional offer by D2 Place;\n7. D2 PLACE 商戶及其職員均不能享用此項免費泊車優惠。D2 PLACE 保留隨時更改優惠條款及細則之權利。如有任何爭議，D2 PLACE 保留最終決定權。\nD2 PLACE tenants and their staff are not eligible to participate in this offer. D2 PLACE reserves the rights to alter or amend the terms and conditions at any time without prior notice. In case of any dispute, the decision by D2 PLACE shall be final.\nFollow and stay in the know\nSite Map\nVisit Us\nAbout Us\nOur Awards\nTerm of Use\nPrivacy Policy\nCopyright © 2022 D2 Place.\nAll Rights Reserved.\nEvents\nShops\nDine\nPlay",
+    "parking": "D2 Place Parking\nD2 Place Parking\nLogin / Register\nD2 Place Parking\n泊車優惠 Free Parking\n基本泊：\n顧客凡於 D2 PLACE ONE 或 D2 PLACE TWO 指定商戶累積電子消費滿港幣300元或以上（以最多2張單據計算），可享1小時免費泊車優惠；滿港幣500元或以上（以最多2張單據計算），則可享2小時免費泊車優惠。\nBasic Parking:\nShoppers could enjoy 1 Hour of Free Parking for electronic spending of HK$300 or more, OR 2 Hours of Free Parking for electronic spending of HK$500 or more at designated merchants in D2 PLACE ONE or D2 PLACE TWO. The total spending amount could be accumulated by a maximum of 2 receipts.\n夜繽紛·平日夜泊：\n逢星期一至星期五（公眾假期除外），晚上6點至11點，累積電子消費滿港幣100元或以上（以1張金額不少於$100單據計算），可享1小時免費泊車優惠；滿港幣200元或以上（以最多2張金額不少於$100單據計算），可享2小時免費泊車優惠；滿港幣300元或以上（以最多3張金額不少於$100單據計算），可享3小時免費泊車。\nNight Vibes·Weekday Night Parking:\nFrom Monday to Friday (excluding public holidays), between 6 PM and 11 PM, shoppers who accumulate electronic spending of:\nHK$100 or more (using 1 receipt of at least HK$100) can enjoy 1 Hour of Free Parking;\nHK$200 or more (using a maximum of 2 receipts, each at least HK$100) can enjoy 2 Hours of Free Parking;\nHK$300 or more (using a maximum of 3 receipts, each at least HK$100) can enjoy 3 Hours of Free Parking.\n多架泊：\n顧客如有多於一輛汽車需享有免費泊車優惠，由第二輛汽車起，每輛汽車需要額外累積電子消費滿港幣500元或以上（以最多2張單據計算，最多六輛汽車），則可享2小時免費泊車優惠，以及所有車輛需同時辦理泊車優惠。\n(例子：假如顧客於週末，有六輛汽車需享2小時免費泊車優惠，電子消費需滿港幣3,000元或以上（以最多2張單據計算）。)\nMultiple Vehicles:\nIf a shopper has more than one vehicle eligible for free parking, starting from the second vehicle, each additional vehicle must accumulate an additional electronic spending of HKD 500 or more (calculated based on a maximum of 2 receipts, up to six vehicles) to enjoy a 2-hour free parking benefit. All vehicles must also be registered for the parking promotion at the same time.\n(Example: If a customer has six vehicles eligible for a 2-hour free parking on a weekend, the total electronic spending must reach HKD 3,000 or more, calculated based on a maximum of 2 receipts.)\n條款及細則 Terms and Conditions:\n1.指定商戶不包括於市集，POP-UP Stores或其他商場推廣活動之消費。\nDesignated merchants do not include spending at markets, pop-up stores, or other mall promotional activities;\n2. D2 Place ONE / D2 Place TWO 及荔枝角道822號均可使用泊車優惠。\nFree Parking is applicable at D2 Place ONE, D2 Place TWO, and 822 Lai Chi Kok Road;\n3. 顧客需要於一期、二期商場及荔枝角道822號地面泊車收費站登記。所有參與免費泊車優惠的車輛需要同一時間進入及離開泊車場。免費時段以外之泊車時間將以正常收費計算；\nShoppers must register at the G/F Shroff Office of D2 Place ONE or D2 Place TWO, or 822 Lai Chi Kok Road. All vehicles participating in the free parking promotion must enter and exit the parking lot at the same time. Any additional parking time outside of the free period will be charged with regular fares;\n4. 只接受在D2 Place一期或二期商戶發出附有屬本商場店名、購買日期及金額之\n即日機印發票及相符之電子貨幣付款存根\n(信用卡/易辦事/八達通/銀聯卡/ Apple Pay/Android Pay/Samsung Pay/微信支付/支付寶支付)或受《支付系統及儲值支付工具條例》(第584章)規管的其他儲值支付工具（包括但不限於八達通、八達通「好易畀」、Tap & Go拍住賞）。所持之發票只計算實際簽賬金額，使用優惠碼、現金券、任何形式的優惠作支付貨品價格之部份/全部將不予計算。任何單據影印本、複印本、已被損毀或經塗改之單據、手寫單據及信用咭收據存根等，恕不接受；\nOnly original, same-day machine-printed receipts issued by D2 Place ONE or D2 Place TWO merchants - clearly displaying the store name (registered under the mall), purchase date and transaction amount - along with matching electronic payment proof (credit card/EPS/Octopus/UnionPay/Apple Pay/Google Pay/Samsung Pay/WeChat Pay/Alipay) or other stored value facilities regulated under the Payment Systems and Stored Value Facilities Ordinance (Cap. 584) (including Octopus, Octopus O! ePay and Tap & Go) will be accepted, with only the actual charged amount counting toward the offer (discount codes, cash vouchers or any promotional payments will not be eligible); copies, scanned receipts, damaged/altered documents, handwritten receipts or credit card slips are strictly excluded from this parking promotion;\n5. 此優惠只適用於私家車及客貨車類別；\nThis offer is applicable to private cars and light goods vehicle only;\n6. 已用作泊車優惠之單據仍可用作參與其他商場推廣活動；\nReceipts redeemed for Free Parking can be used for other redemption or promotional offer by D2 Place;\n7. D2 PLACE 商戶及其職員均不能享用此項免費泊車優惠。D2 PLACE 保留隨時更改優惠條款及細則之權利。如有任何爭議，D2 PLACE 保留最終決定權。\nD2 PLACE tenants and their staff are not eligible to participate in this offer. D2 PLACE reserves the rights to alter or amend the terms and conditions at any time without prior notice. In case of any dispute, the decision by D2 PLACE shall be final.\nFollow and stay in the know\nSite Map\nVisit Us\nAbout Us\nOur Awards\nTerm of Use\nPrivacy Policy\nCopyright © 2022 D2 Place.\nAll Rights Reserved.\nEvents\nShops\nDine\nPlay",
     "leasing": "Leasing And Renting\nLogin / Register\nLeasing And Renting\nFOR SHOPS\nUNIQUE MALL EXPERIENCE\nD2 Place locates at the Kowloon west transportation hub, next to Lai Chi Kok MTR Exit D2 which is highly accessible, with parking spaces available for your added convenience. The five-storey mall provides customers with one-stop dining, shopping and enjoyment of life.  Adding the charm, the rooftop garden offers a comfortable and beautiful outdoor environment, exposure to different view of Lai Chi Kok.\nLeasing Department\nTel: 2371 1999\nE-mail: leasing@d2place.com\nFOR VENUES\nEXHIBITION & EVENT VENUES\nThe promotion and exhibition venues are composed of lightings, sound equipments and other facilities , ideal for corporate events, fashion show, product launches, workshops, markets, fashion show, themed parties, photo shoots and more.\nD2 Place ONE\nRooftop Garden\nLocation: Rooftop, D2 Place ONE\nSize: 12,000 sq.ft\nThe Space\nLocation: 2/F, D2 Place ONE\nSize: 6,000 sq.ft\nThe Upper Stage\nLocation: 7/F, D2 Place ONE\nSize: 8,000 sq.ft\nMarketing Department\nE-mail:\nmarketing@d2place.com\nTel: 2371 1876\nFOR POP-UP STORES\n‘Dream it. Do it’\nPop-up Store Anniversary Campaign\nHigh rent has turned most shopping malls in Hong Kong into a cookie-cutter and forced small and individual business operators to either shut down or relocate to suburban areas. In contrary, D2 Place strives to promote local culture through organizing regular creative events, and in 2016, we has successfully launched a Pop-up Store campaign “Dream It, Do It”which received over 100 applications and more than 20 local brands have started their first business here. To celebrate its anniversary, we are now offering a brand new pop-up store campaign for all entrepreneurs and local handcrafters.\nShort-term Lease x Flexible Terms x Local Brands\n“Dream It, Do It! Anniversary Campaign\" offers a total of 15 Pop-up Store spaces, located along high traffic pathways within D2 Place ONE and D2 Place TWO. To differentiate from other in-mall tenants, D2 Pop-up Stores will be only applicable to Local Brands on short-term lease of 1 to 3 months. In addition to flexible terms and rental offers, D2 Place will also provide a list of furniture for shop owners to choose from for an easy startup.\nIn just less-than-a-year time, the Pop-up Store campaign received over 100 applications and is highly welcomed by the local creative industries and young entrepreneurs. 6 of those brands have become our valuable shop tenants from the Pop-up Stores campaign, including:\n「Jennymadrose」－selling own-formulated handmade skincare & lifestyle products;\n「Lisa & Sara」－selling own-formulated perfume, aroma diffuser and handmade soap;\n「Jasoo 자수」－selling Korean style handmade gemstone & simple accessories;\n「Fábula Select Shop」－offering handmade leather products, customization service and DIY workshops;\n「Curate」－selling designer fashion items & accessories;\n「Lost n Found 811」－featuring a wide collection of designer fashion items & lifestyle products.\nPop-up Store Campaign Details\n• 15 Pop-up Stores open for application\n• Short-term lease for 1 - 3 months only\n• D2 Place ONE (1/F - 4/F) and D2 Place TWO (1/F)\n• Free provision of basic furniture & display accessories\n• Promotion & other operation supports\n• Special Rental Offers\nLeasing Department\nTel: 2371 1999\nE-mail:\nleasing@d2place.com\nFOR BOOTHS\n\"D2 Place Weekend Markets\" regularly organizes a variety of local markets, aiming to promote local culture and encourage young people to develop their own business. With the mission of \"Small Shops with Big Ideas\", D2 Place strived to create a new and ideal destination for everyone to spend their weekends.  We are welcome for any handcrafters, designers or artiste joining our big party!\nMarketing Department\nE-mail: weekendmarkets@d2place.com\nAPPLY NOW\nFollow and stay in the know\nSite Map\nVisit Us\nAbout Us\nOur Awards\nTerm of Use\nPrivacy Policy\nCopyright © 2022 D2 Place.\nAll Rights Reserved.\nEvents\nShops\nDine\nPlay",
     "general_information": "Parking Rate\nD2 Place ONE and TWO:\n私家車、客貨車、摩托車：每小時 $25\n貨車及其他車輛：每小時 $40\nMonthly Parking Rental\nD2 Place ONE\n: $3300/month\nD2 Place TWO\n: $3600/month\nLuggage Storage\nLuggage storage service is currently\nunavailable at D2 Place\n.\nATM Services\nATM services are currently\nunavailable at D2 Place\n.\nFor cash withdrawals, please visit the ATMs at\nCheung Sha Wan Plaza\n: HSBC, Hang Seng Bank, or Bank of East Asia.\nConvenience Store\nThere is\nno convenience store\ncurrently available at D2 Place.\nPlease visit\nCircle K\nnear\nLai Chi Kok MTR Station  (\n[google map]\nhttps://maps.app.goo.gl/9WmfRRqcjDjGxD1p7?g_st=ipc\n）\nRecycling Bins\nLocated at:\nG/F Car Park of D2 Place ONE\n3/F Lobby of D2 Place TWO\nContact\nD2 Place ONE\n: 3620 2098\nD2 Place TWO\n: 2557 7988\nBaby Care Room\nLocated\nnext to the men's restroom on 1/F\n, D2 Place TWO.\nStroller Rental Service\nWe currently do not offer stroller rental service. Let me know if there’s anything else I can assist you with!\nPet shops\nPetkoikoi\nAddress: 1/F, Shop 104, 106-111, D2 Place ONE\nBusiness Hours: 12:30 – 20:00 (Daily)\nLink: https://www.d2place.com/shops/SHOP/PetKoikoi\nDescription: A cozy pet lifestyle shop with products, treats, and photo-friendly corners for pets and owners.\nmeet pet pet\nAddress: 2/F, Shop 208, D2 Place TWO\nBusiness Hours: 13:00 – 20:00 (Closed on Tuesdays)\nLink: https://www.d2place.com/shops/SHOP/Q-PETS\nDescription: Handmade pet goods and natural care items with a stylish aesthetic.\nSHIBAINC\nAddress: 2/F, Shop 215, D2 Place TWO\nBusiness Hours: 14:00 – 20:00 (Closed on Wednesdays)\nLink: https://www.d2place.com/shops/SHOP/SHIBAINC\nDescription: A must-visit for Shiba Inu fans, featuring themed gifts and pet fashion.\nQ-PETS\nAddress: G/F, Shop G01A, D2 Place ONE\nBusiness Hours: 11:00 – 21:00 (Daily)\nLink: https://www.d2place.com/shops/SHOP/meet-pet-pet\nDescription: One of Hong Kong's most well-known pet chains — a one-stop shop for food, care, and toys.\nGoos Living Dots\nAddress: 3/F, Shop 309, D2 Place ONE\nBusiness Hours: 14:00 – 20:00 (Closed on Wednesdays)\nLink: https://www.d2place.com/shops/SHOP/Goos-Living-Dots\nDescription: Pet-friendly lifestyle brand combining design furniture with pet living essentials.\nosmosis\nAddress: 3/F, Shop 310, D2 Place ONE\nBusiness Hours: 14:00 – 20:00 (Closed on Wednesdays)\nLink: https://www.d2place.com/shops/SHOP/osmosis\nDescription: Curated pet lifestyle items with a design-forward and minimalist vibe.\nMs. Friday\nAddress: 2/F, Shop 210, D2 Place TWO\nBusiness Hours: 14:00 – 20:00 (Closed on Mondays)\nLink: https://www.d2place.com/shops/SHOP/msfriday\nDescription: A creative boutique featuring pet-themed handcrafted goods and art."
   },
