@@ -122,6 +122,7 @@ class D2PlaceScraper:
             "instagram": "",
             "website": "",
             "tags": "",
+            "page_text": "",
         }
         
         def _find(blob, wanted):
@@ -141,13 +142,34 @@ class D2PlaceScraper:
             return ""
 
         def _find_tags(blob):
-            """Return a list of tag-like strings from *blob*."""
+            """Return a list of tag-like strings from *blob*.
+
+            The site is inconsistent in how it labels these values. In some
+            places they may appear under keys like ``tags`` or ``category`` but
+            others use ``kindOfGoods`` or ``type``. This helper walks the
+            entire structure and collects anything that looks relevant.  A few
+            more keys such as ``keyword`` or ``categoryName`` are also scanned
+            since the site sometimes stores labels there.
+            """
             tags = []
+
             def rec(obj):
                 if isinstance(obj, dict):
                     for k, v in obj.items():
                         lk = k.lower()
-                        if any(t in lk for t in ("tag", "cuisine", "category")):
+                        if any(
+                            t in lk
+                            for t in (
+                                "tag",
+                                "cuisine",
+                                "category",
+                                "kind",
+                                "goods",
+                                "type",
+                                "keyword",
+                                "categoryname",
+                            )
+                        ):
                             if isinstance(v, str) and v.strip():
                                 tags.extend(re.split(r",|;", v))
                             elif isinstance(v, list):
@@ -156,6 +178,7 @@ class D2PlaceScraper:
                 elif isinstance(obj, list):
                     for item in obj:
                         rec(item)
+
             rec(blob)
             return [t.strip() for t in tags if t and str(t).strip()]
 
@@ -210,16 +233,11 @@ class D2PlaceScraper:
                 return blank
 
 
-        try:
-            resp = requests.get(url, headers=self.headers, timeout=15)
-            resp.raise_for_status()
-        except Exception:
-            return blank
-
-        # 2) fallback – parse the HTML
+        # 2) fallback – parse the HTML using the response we already fetched
         soup = BeautifulSoup(resp.text, "html.parser")
 
         txt = soup.get_text(" ", strip=True)
+        blank["page_text"] = re.sub(r"\s+", " ", txt)
 
         m_phone = re.search(r"\+?852[-\s]?\d{4}[-\s]?\d{4}", txt)
         if m_phone:
@@ -252,6 +270,12 @@ class D2PlaceScraper:
 
         tags_list = []
 
+        meta_kw = soup.find("meta", attrs={"name": "keywords"})
+        if meta_kw and meta_kw.get("content"):
+            tags_list.extend(
+                [t.strip() for t in meta_kw["content"].split(",") if t.strip()]
+            )
+
         ck_elems = soup.select("p.ck-content.text-gold-primary, div.ck-content.text-gold-primary")
         for wrapper in ck_elems:
             inner_ps = wrapper.select("p")
@@ -263,7 +287,9 @@ class D2PlaceScraper:
                     [t.strip() for t in re.split(r"[\n,;/]+", text) if t.strip()]
                 )
 
-        tag_elems = soup.select("div[class*=tag] p, p[class*=tag], [class*=tag]")
+        tag_elems = soup.select(
+            "div[class*=tag] p, p[class*=tag], [class*=tag], [class*=kind], [class*=type]"
+        )
         if tag_elems:
             tags_list.extend([t.get_text(strip=True) for t in tag_elems])
 
