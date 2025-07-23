@@ -159,6 +159,7 @@ class D2PlaceScraper:
             rec(blob)
             return [t.strip() for t in tags if t and str(t).strip()]
 
+
         # 1) pull the page
         try:
             resp = requests.get(url, headers=self.headers, timeout=15)
@@ -241,9 +242,15 @@ class D2PlaceScraper:
             elif href.startswith("http") and not blank["website"]:
                 blank["website"] = href
 
-        meta_kw = soup.find("meta", attrs={"name": "keywords"})
-        if meta_kw and meta_kw.get("content"):
-            blank["tags"] = [t.strip() for t in meta_kw["content"].split(',') if t.strip()]
+
+        ck_elems = soup.select("p.ck-content.text-gold-primary, div.ck-content.text-gold-primary")
+        if ck_elems:
+            blank.setdefault("tags", [])
+            for el in ck_elems:
+                text = el.get_text(" ", strip=True)
+                blank["tags"].extend(
+                    [t.strip() for t in re.split(r"[\n,;/]+", text) if t.strip()]
+                )
 
         tag_elems = soup.select("[class*=tag]")
         if tag_elems:
