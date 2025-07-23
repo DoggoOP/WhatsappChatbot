@@ -121,6 +121,7 @@ class D2PlaceScraper:
             "facebook": "",
             "instagram": "",
             "website": "",
+            "tags": [],
         }
         
         def _find(blob, wanted):
@@ -138,6 +139,25 @@ class D2PlaceScraper:
                     if found:
                         return found
             return ""
+
+        def _find_tags(blob):
+            """Return a list of tag-like strings from *blob*."""
+            tags = []
+            def rec(obj):
+                if isinstance(obj, dict):
+                    for k, v in obj.items():
+                        lk = k.lower()
+                        if any(t in lk for t in ("tag", "cuisine", "category")):
+                            if isinstance(v, str) and v.strip():
+                                tags.extend(re.split(r",|;", v))
+                            elif isinstance(v, list):
+                                tags.extend([str(x) for x in v])
+                        rec(v)
+                elif isinstance(obj, list):
+                    for item in obj:
+                        rec(item)
+            rec(blob)
+            return [t.strip() for t in tags if t and str(t).strip()]
 
         # 1) pull the page
         try:
@@ -157,6 +177,7 @@ class D2PlaceScraper:
                     "facebook":      meta.get("facebook",     "").strip(),
                     "instagram":     meta.get("instagram",    "").strip(),
                     "website":       meta.get("website",      "").strip(),
+                    "tags":          meta.get("tags") or meta.get("tag") or [],
                 }
                 # only return if *any* real data was found
                 if any(extracted.values()):
@@ -173,6 +194,9 @@ class D2PlaceScraper:
                 "instagram":     _find(blob, {"instagram", "instagramUrl", "ig"}),
                 "website":       _find(blob, {"website", "site"}),
             })
+            tags = _find_tags(blob)
+            if tags:
+                blank["tags"] = tags
             # if we found at least one piece of data we can already return
             if any(blank.values()):
                 return blank
@@ -216,6 +240,18 @@ class D2PlaceScraper:
                 blank["instagram"] = href
             elif href.startswith("http") and not blank["website"]:
                 blank["website"] = href
+
+        meta_kw = soup.find("meta", attrs={"name": "keywords"})
+        if meta_kw and meta_kw.get("content"):
+            blank["tags"] = [t.strip() for t in meta_kw["content"].split(',') if t.strip()]
+
+        tag_elems = soup.select("[class*=tag]")
+        if tag_elems:
+            blank.setdefault("tags", [])
+            blank["tags"].extend([t.get_text(strip=True) for t in tag_elems])
+
+        if "tags" in blank:
+            blank["tags"] = list({t for t in blank["tags"] if t})
 
         return blank
 
@@ -749,6 +785,12 @@ class D2PlaceScraper:
                 "instagram": shop.get("instagramUrl", ""),
                 "website": shop.get("websiteUrl", ""),
             }
+            extra = self._harvest_detail(item["detail_url"])
+            for k, v in extra.items():
+                if k == "tags" and v:
+                    item["tags"] = v
+                elif v and not item.get(k):
+                    item[k] = v
             self.data["dining"].append(item)
 
         logger.info("Dining scraped via GraphQL → %d entries", len(self.data["dining"]))
@@ -784,6 +826,12 @@ class D2PlaceScraper:
                 "instagram": shop.get("instagramUrl", ""),
                 "website": shop.get("websiteUrl", ""),
             }
+            extra = self._harvest_detail(item["detail_url"])
+            for k, v in extra.items():
+                if k == "tags" and v:
+                    item["tags"] = v
+                elif v and not item.get(k):
+                    item[k] = v
             self.data["shopping"].append(item)
 
         logger.info("Shopping scraped via GraphQL → %d entries", len(self.data["shopping"]))
@@ -862,6 +910,12 @@ class D2PlaceScraper:
                     "instagram": shop.get("instagramUrl", ""),
                     "website": shop.get("websiteUrl", ""),
                 }
+                extra = self._harvest_detail(item["detail_url"])
+                for k, v in extra.items():
+                    if k == "tags" and v:
+                        item["tags"] = v
+                    elif v and not item.get(k):
+                        item[k] = v
                 self.data["play"].append(item)
 
         logger.info("Play scraped via GraphQL → %d entries", len(self.data["play"]))
