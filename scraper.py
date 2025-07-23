@@ -121,8 +121,7 @@ class D2PlaceScraper:
             "facebook": "",
             "instagram": "",
             "website": "",
-            "tags": "",
-            "page_text": "",
+            "tags": ""
         }
         
         def _find(blob, wanted):
@@ -613,7 +612,7 @@ class D2PlaceScraper:
                     findManyShop(where:{shopCategoryId:{equals:$cid}}, take:1000){
                         nameEn nameTc alias addressEn addressTc phoneNumber
                         displayOpeningHoursEn displayOpeningHoursTc
-                        facebookUrl instagramUrl websiteUrl passcode
+                        facebookUrl instagramUrl websiteUrl passcode descriptionEn
                     }
                 }
                 """,
@@ -633,6 +632,7 @@ class D2PlaceScraper:
                 "facebook": shop.get("facebookUrl", ""),
                 "instagram": shop.get("instagramUrl", ""),
                 "website": shop.get("websiteUrl", ""),
+                "tags": shop.get("descriptionEn", ""),
             }
             extra = self._harvest_detail(item["detail_url"])
             for k, v in extra.items():
@@ -654,7 +654,7 @@ class D2PlaceScraper:
                     findManyShop(where:{shopCategoryId:{equals:$cid}}, take:1000){
                         nameEn nameTc alias addressEn addressTc phoneNumber
                         displayOpeningHoursEn displayOpeningHoursTc
-                        facebookUrl instagramUrl websiteUrl passcode
+                        facebookUrl instagramUrl websiteUrl passcode descriptionEn
                     }
                 }
                 """,
@@ -674,6 +674,7 @@ class D2PlaceScraper:
                 "facebook": shop.get("facebookUrl", ""),
                 "instagram": shop.get("instagramUrl", ""),
                 "website": shop.get("websiteUrl", ""),
+                "tags": shop.get("descriptionEn", ""),
             }
             extra = self._harvest_detail(item["detail_url"])
             for k, v in extra.items():
@@ -738,7 +739,7 @@ class D2PlaceScraper:
                     findManyShop(where:{shopCategoryId:{equals:$cid}}, take:1000){
                         nameEn nameTc alias addressEn addressTc phoneNumber
                         displayOpeningHoursEn displayOpeningHoursTc
-                        facebookUrl instagramUrl websiteUrl passcode
+                        facebookUrl instagramUrl websiteUrl passcode descriptionEn
                     }
                 }
                 """,
@@ -758,6 +759,7 @@ class D2PlaceScraper:
                     "facebook": shop.get("facebookUrl", ""),
                     "instagram": shop.get("instagramUrl", ""),
                     "website": shop.get("websiteUrl", ""),
+                    "tags": shop.get("descriptionEn", ""),
                 }
                 extra = self._harvest_detail(item["detail_url"])
                 for k, v in extra.items():
@@ -971,4 +973,3 @@ if __name__ == "__main__":
     except (KeyboardInterrupt, SystemExit):
         logger.info("Shutting down scheduler")
         scheduler.shutdown()
-

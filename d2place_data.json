@@ -31,6 +31,7 @@
       "facebook": "https://www.facebook.com/rustico.hk?fref=ts",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Spanish Restaurant</p>",
       "page_text": "My page",
       "google_review_data": {
         "rating": 4,
@@ -60,13 +61,14 @@
       "facebook": "https://www.facebook.com/umai.hk?fref=ts",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Japanese Restaurant</p>",
       "page_text": "My page",
       "google_review_data": {
         "error": "0"
       },
       "extra_google_info": {
-        "kg_title": "鵜舞",
-        "kg_type": "日本餐廳",
+        "kg_title": null,
+        "kg_type": null,
         "kg_description": null,
         "kg_menu_link": null,
         "kg_website": "http://www.umai.com.hk/",
@@ -84,6 +86,7 @@
       "facebook": "https://www.facebook.com/LucullusHongKong",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Sweets & Confectioneries</p>",
       "page_text": "My page",
       "google_review_data": {
         "rating": 3.8,
@@ -106,6 +109,7 @@
       "facebook": "https://www.facebook.com/idle.awhile.hk/",
       "instagram": "https://www.instagram.com/idle_awhile/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Taiwan Bubble Tea</p>",
       "page_text": "My page",
       "google_review_data": {
         "error": "0"
@@ -123,6 +127,7 @@
       "facebook": "https://www.facebook.com/foodboxhk/",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Grab & Go</p>",
       "page_text": "My page",
       "google_review_data": {
         "error": "0"
@@ -147,6 +152,7 @@
       "facebook": "https://www.facebook.com/D2Place/",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Hawaiian Poke Bowl</p>",
       "page_text": "My page",
       "google_review_data": {
         "rating": 4.1,
@@ -176,6 +182,7 @@
       "facebook": "https://www.facebook.com/mosburger.hk/",
       "instagram": "https://www.instagram.com/mosburger_hk/",
       "website": "http://mosburger-hk.com/index.html",
+      "tags": "<p><span style=\"color:rgb(0,0,0);\">Japanese Burgers</span></p>",
       "page_text": "My page",
       "google_review_data": {
         "rating": 4.1,
@@ -186,8 +193,8 @@
         "serpapi_link": "https://www.google.com.hk/maps/search/MOS+BurgerD2+Place+HK?hl=en"
       },
       "extra_google_info": {
-        "kg_title": "摩斯漢堡",
-        "kg_type": "漢堡餐廳",
+        "kg_title": null,
+        "kg_type": null,
         "kg_description": null,
         "kg_menu_link": null,
         "kg_website": "http://mosburger-hk.com/",
@@ -205,6 +212,7 @@
       "facebook": "https://www.facebook.com/D2Place/",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Singaporean Restaurant</p>",
       "page_text": "My page",
       "google_review_data": {
         "error": "0"
@@ -229,6 +237,7 @@
       "facebook": "https://www.facebook.com/profile.php?id=100088354156575",
       "instagram": "https://www.instagram.com/886seeyalater/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Taiwan Restaurant</p>",
       "page_text": "My page",
       "google_review_data": {
         "error": "0"
@@ -246,6 +255,7 @@
       "facebook": "https://www.facebook.com/tamsnoodle/",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Chinese Restaurant</p>",
       "page_text": "My page",
       "google_review_data": {
         "rating": 2.5,
@@ -256,8 +266,8 @@
         "serpapi_link": "https://www.google.com.hk/maps/search/%E8%AD%9A%E4%BB%94%E4%B8%89%E5%93%A5%E7%B1%B3%E7%B7%9AD2+Place+HK?hl=en"
       },
       "extra_google_info": {
-        "kg_title": "譚仔三哥米線 (荔枝角)",
-        "kg_type": "中式麵食店",
+        "kg_title": null,
+        "kg_type": null,
         "kg_description": null,
         "kg_menu_link": null,
         "kg_website": "https://www.tjsamgor.com/hk/",
@@ -275,6 +285,7 @@
       "facebook": "https://www.facebook.com/CoffeeGalaxy.HK",
       "instagram": "https://www.instagram.com/coffeegalaxy.hk/",
       "website": "https://www.coffeegalaxyhk.com/",
+      "tags": "<p>Cafe</p>",
       "page_text": "My page",
       "google_review_data": {
         "rating": 4.7,
@@ -304,12 +315,13 @@
       "facebook": "https://www.facebook.com/D2Place/",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Cantonese Cuisine / Hotpo</p>",
       "page_text": "My page",
       "google_review_data": {
         "error": "0"
       },
       "extra_google_info": {
-        "top_snippet": "大公館Greater China Club的餐廳地址、網上訂座、電話、食評、相片及餐牌，餐廳位於荔枝角長義街9號D2 Place ONE 10樓A號舖。主要菜式包括川味口水竹絲雞, ..."
+        "top_snippet": "大公館以星級料理最引以為傲，由屢獲殊榮的烹飪團隊率領，以當代烹調手法為傳統粵菜賦予全新形象。 大公館位於西九龍全新創意地標，. 荔枝角活化工廈項目D2 Place ONE最 ..."
       }
     },
     {
@@ -321,6 +333,7 @@
       "facebook": "https://www.facebook.com/thepizzapighk",
       "instagram": "https://www.instagram.com/the_pizza_pig_hk/",
       "website": "https://thepizzapig.com.hk/",
+      "tags": "<p>Pizza Restaurant</p>",
       "page_text": "My page",
       "google_review_data": {
         "rating": 4.1,
@@ -338,7 +351,7 @@
         "kg_website": "https://thepizzapig.com.hk/",
         "kg_reviews": null,
         "kg_cuisines": null,
-        "top_snippet": "Shop G02, G/F, D2 Place TWO, 15 Cheung Shun Street, Lai Chi Kok 荔枝角長順街 ... Italian / Western / Pizza / Meatless Menu / Family Friendly. $101-200."
+        "top_snippet": "我們的薄餅餐牌包括創意薄餅、各種美味的義大利麵、令人垂涎三尺的開胃菜，以及種類繁多的主菜，令人胃口大開。The Pizza Pig 和我們的Shore餐廳一樣，這裡有很多美味豬肉 ..."
       }
     },
     {
@@ -350,6 +363,7 @@
       "facebook": "https://www.facebook.com/picihk/",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Italian Restaurant</p>",
       "page_text": "My page",
       "google_review_data": {
         "rating": 4.5,
@@ -367,7 +381,7 @@
         "kg_website": "http://www.pici.hk/",
         "kg_reviews": null,
         "kg_cuisines": null,
-        "top_snippet": "我們的餐單每月更新，此餐單僅供參考. 由2024 年2 月15 日起，集團旗下餐廳將只接受非現金付款方式。我們接受信用卡及非接觸式支付。我們非常感謝您的諒解及一直以来的 ..."
+        "top_snippet": "星期一至五11:30-15:00 · 午餐餐單. 星期一至五11:30 - 15:00 · 午餐餐單. 星期一至五11:30 - 14:30 · 午餐餐單. 每日12PM 至3:00PM · 午餐餐單. 星期一至五11AM 至3PM ..."
       }
     },
     {
@@ -379,6 +393,7 @@
       "facebook": "https://www.facebook.com/D2Place/",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Hotpot</p>",
       "page_text": "My page",
       "google_review_data": {
         "error": "0"
@@ -396,6 +411,7 @@
       "facebook": "https://www.facebook.com/momijichayahk",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Japanese Restaurant</p>",
       "page_text": "My page",
       "google_review_data": {
         "error": "0"
@@ -420,6 +436,7 @@
       "facebook": "https://www.facebook.com/hk.joystick",
       "instagram": "https://www.instagram.com/hk.joystick/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Healthy Light Bites With Keto Options</p>",
       "page_text": "My page",
       "google_review_data": {
         "rating": 3.8,
@@ -442,6 +459,7 @@
       "facebook": "https://www.facebook.com/D2Place/",
       "instagram": "https://www.instagram.com/tsuguhk/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p><span style=\"color:rgb(144,135,108);\">Teppanyaki &amp; Sushi</span></p>",
       "page_text": "My page",
       "google_review_data": {
         "rating": 4.5,
@@ -471,6 +489,7 @@
       "facebook": "https://www.facebook.com/D2Place/",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Local Steak House</p>",
       "page_text": "My page",
       "google_review_data": {
         "error": "0"
@@ -483,7 +502,7 @@
         "kg_website": null,
         "kg_reviews": null,
         "kg_cuisines": null,
-        "top_snippet": "複製餐廳資料. 複製到剪貼簿. 返回. 金鳳大餐廳(D2 Place TWO) (荔枝角) 網址: https://s.openrice.com/QrbS0p8u800 地址: 香港荔枝角長順街15號D2 Place TWO 3樓312號舖 ..."
+        "top_snippet": "金鳳大餐廳GOLDEN PHOENIX RESTAURANT的餐廳地址、電話、食評、相片及餐牌，餐廳位於荔枝角長順街15號D2 Place TWO 3樓312號舖。主要菜式包括美式雜扒餐, 羅宋湯, ..."
       }
     },
     {
@@ -495,6 +514,7 @@
       "facebook": "https://www.facebook.com/D2Place/",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Hong Kong Style Food</p>",
       "page_text": "My page",
       "google_review_data": {
         "rating": 3,
@@ -517,6 +537,7 @@
       "facebook": "https://www.facebook.com/D2Place/",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Ramen</p>",
       "page_text": "My page",
       "google_review_data": {
         "error": "0"
@@ -541,6 +562,7 @@
       "facebook": "https://www.facebook.com/D2Place/",
       "instagram": "https://www.instagram.com/miching_omurice_co/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Restaurant</p>",
       "page_text": "My page",
       "google_review_data": {
         "error": "0"
@@ -565,6 +587,7 @@
       "facebook": "https://www.facebook.com/ginzaenzohk",
       "instagram": "https://www.instagram.com/ginzaenzohk/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Japanese YAKINIKU from Tokyo</p>",
       "page_text": "My page",
       "google_review_data": {
         "error": "0"
@@ -589,13 +612,14 @@
       "facebook": "https://www.facebook.com/SushiRakuHK",
       "instagram": "https://www.instagram.com/sushi_raku_hk/",
       "website": "https://sushiraku.oddle.me/zh_HK",
+      "tags": "<p>Japanese Restaurant</p>",
       "page_text": "My page",
       "google_review_data": {
         "error": "0"
       },
       "extra_google_info": {
-        "kg_title": null,
-        "kg_type": null,
+        "kg_title": "Sushi Raku 鮨樂 - D2 Place",
+        "kg_type": "日本餐廳",
         "kg_description": null,
         "kg_menu_link": null,
         "kg_website": "https://linktr.ee/sushiraku",
@@ -613,13 +637,14 @@
       "facebook": "https://www.facebook.com/D2Place/",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>百芳池上便當為大家送上來自台灣最溫暖的問候，以多款超人氣台灣美食和飲料治癒大家的心靈。</p><p>&nbsp;</p><p><span style=\"color:rgb(0,0,0);\">Taiwanese Bento, Noodles and Drink</span></p>",
       "page_text": "My page",
       "google_review_data": {
-        "rating": 3.6,
-        "reviews_count": 69,
-        "address": "11/F, Hysan Place, 500 Hennessy Rd, Causeway Bay, Hong Kong",
-        "phone": "+852 2109 1338",
-        "website": "https://www.instagram.com/baifung.hk/",
+        "rating": 3.9,
+        "reviews_count": 3672,
+        "address": "9 Cheung Yee St, Lai Chi Kok, Hong Kong",
+        "phone": "+852 3620 3098",
+        "website": "http://www.d2place.com/",
         "serpapi_link": "https://www.google.com.hk/maps/search/%E7%99%BE%E8%8A%B3%E6%B1%A0%E4%B8%8A%E4%BE%BF%E7%95%B6D2+Place+HK?hl=en"
       },
       "extra_google_info": {
@@ -635,6 +660,7 @@
       "facebook": "https://www.facebook.com/profile.php?id=100090410035585&sk=about",
       "instagram": "https://www.instagram.com/chill_vietnamcuisine_bar/",
       "website": "https://chill-vietnam.business.site/",
+      "tags": "<p>Fusion French Vietnamese Cuisine &amp; Bar&nbsp;</p>",
       "page_text": "My page",
       "google_review_data": {
         "rating": 4.5,
@@ -664,19 +690,20 @@
       "facebook": "https://www.facebook.com/profile.php?id=100095228082703&mibextid=ZbWKwL",
       "instagram": "https://instagram.com/yoake.tempura.sukiyaki?igshid=MzRlODBiNWFlZA==",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Tempura &amp; Sukiyaki</p>",
       "page_text": "My page",
       "google_review_data": {
         "error": "0"
       },
       "extra_google_info": {
-        "kg_title": null,
-        "kg_type": null,
+        "kg_title": "Yoake 夜明け 天婦羅壽喜燒",
+        "kg_type": "日本餐廳",
         "kg_description": null,
         "kg_menu_link": null,
         "kg_website": "https://www.facebook.com/profile.php?id=100095228082703&mibextid=ZbWKwL",
         "kg_reviews": null,
         "kg_cuisines": null,
-        "top_snippet": "com/QrbS0Qs4C00 地址: 香港荔枝角長順街15號D2 Place TWO 3樓311號舖電話: +852 57347800. 返回. 語言/ 语言/ Language - 繁中, 語言/ 语言/ Language - 简中, 語言/ 语言 ..."
+        "top_snippet": "活鰻魚經過精心挑選，確保新鮮度和品質，然後製成長度適中的小塊，再沾裹上特製的麵粉糊，輕輕放入熱油中炸至金黃酥脆。一口咬下去，鰻魚的鮮甜與天婦羅的香脆完 美融合， ..."
       }
     },
     {
@@ -688,6 +715,7 @@
       "facebook": "https://www.facebook.com/twelveflavor",
       "instagram": "https://www.instagram.com/twelveflavors/",
       "website": "https://www.12flavors.com",
+      "tags": "<p>Chinese Traditonal Spicy Food</p>",
       "page_text": "My page",
       "google_review_data": {
         "rating": 4.8,
@@ -717,6 +745,7 @@
       "facebook": "https://www.facebook.com/D2Place/",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>HONG KONG STYLE RESTAURANT</p>",
       "page_text": "My page",
       "google_review_data": {
         "error": "0"
@@ -734,6 +763,7 @@
       "facebook": "https://www.mutaiwanstore.com",
       "instagram": "https://www.instagram.com/mu_taiwan_noodle/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p><span style=\"color:black;\">六十年傳承</span></p>",
       "page_text": "My page",
       "google_review_data": {
         "rating": 4.7,
@@ -763,6 +793,7 @@
       "facebook": "https://www.facebook.com/bigsweethouse/?locale=zh_HK",
       "instagram": "https://www.instagram.com/big_sweet_house/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>甜品 中式糖水 新式甜品</p>",
       "page_text": "My page",
       "google_review_data": {
         "error": "0"
@@ -787,6 +818,7 @@
       "facebook": "https://www.facebook.com/D2Place/",
       "instagram": "https://www.instagram.com/bakingham.bakery/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p><br>Bakery</p>",
       "page_text": "My page",
       "google_review_data": {
         "rating": 4.4,
@@ -816,6 +848,7 @@
       "facebook": "https://www.facebook.com/thaigerhk",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Thai Restaurant</p>",
       "page_text": "My page",
       "google_review_data": {
         "rating": 3.8,
@@ -845,6 +878,7 @@
       "facebook": "https://www.facebook.com/PakDonChickenRice/",
       "instagram": "https://www.instagram.com/pakdonchickenrice/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Hainan chicken rice specialty store</p>",
       "page_text": "My page",
       "google_review_data": {
         "error": "0"
@@ -869,6 +903,7 @@
       "facebook": "https://www.instagram.com/sugidama.hk/",
       "instagram": "https://www.facebook.com/sugidamahongkong",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>杉玉為日本飲食集團 FOOD &amp; LIFE COMPANIES旗下品牌，為大眾帶來融合傳統與創新的<br>新派居酒屋，呈獻與別不同的居酒屋體驗。</p>",
       "page_text": "My page",
       "google_review_data": {
         "error": "0"
@@ -895,6 +930,7 @@
       "facebook": "https://www.facebook.com/jennymadrose",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Handmade & Organic Skincare</p>",
       "page_text": "My page"
     },
     {
@@ -906,6 +942,7 @@
       "facebook": "https://www.facebook.com/D2Place/",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Eco Beauty & Lifestyle</p>",
       "page_text": "My page"
     },
     {
@@ -917,6 +954,7 @@
       "facebook": "https://www.facebook.com/D2Place/",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Beauty & Accessories</p>",
       "page_text": "My page"
     },
     {
@@ -928,6 +966,7 @@
       "facebook": "https://www.facebook.com/IncocoHK/?fref=ts",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Instant Nail Bar</p>",
       "page_text": "My page"
     },
     {
@@ -939,6 +978,7 @@
       "facebook": "https://www.facebook.com/D2Place/",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "http://www.musee-hk.com/en/",
+      "tags": "<p>Hair Removal Salon</p>",
       "page_text": "My page"
     },
     {
@@ -950,6 +990,7 @@
       "facebook": "https://www.facebook.com/begoodtolife/",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.begoodtolife.com/",
+      "tags": "<p>Skin Care</p>",
       "page_text": "My page"
     },
     {
@@ -961,6 +1002,7 @@
       "facebook": "https://www.facebook.com/something.about.happiness",
       "instagram": "https://www.instagram.com/something.about.happiness/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Scented little things</p>",
       "page_text": "My page"
     },
     {
@@ -972,6 +1014,7 @@
       "facebook": "https://www.facebook.com/firmcosmo/",
       "instagram": "https://www.instagram.com/firmcosmo/",
       "website": "https://firmcosmo.com.hk/",
+      "tags": "<p>Med Spa,<br>Skin products,<br>Health &amp; Wellness<br>&nbsp;</p>",
       "page_text": "My page"
     }
   ],
@@ -1023,6 +1066,7 @@
       "facebook": "https://www.facebook.com/cgvcinemashongkong",
       "instagram": "https://www.instagram.com/cgvcinemashk/",
       "website": "https://cgv.com.hk/zh/",
+      "tags": "<p>Cinema</p>",
       "page_text": "My page"
     },
     {
@@ -1034,6 +1078,7 @@
       "facebook": "https://www.facebook.com/mr.tree38/?fref=ts",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Family Restaurant & Play House</p>",
       "page_text": "My page"
     },
     {
@@ -1045,6 +1090,7 @@
       "facebook": "https://www.facebook.com/GreenLiveClub",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Indoor Golf Club</p>",
       "page_text": "My page"
     },
     {
@@ -1056,6 +1102,7 @@
       "facebook": "https://www.facebook.com/VARLIVEHK/",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>VR e-Sports Restaurant & Bar</p>",
       "page_text": "My page"
     },
     {
@@ -1067,6 +1114,7 @@
       "facebook": "https://www.facebook.com/D2Place/",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>World Family Parent and Kids Club</p>",
       "page_text": "My page"
     },
     {
@@ -1078,6 +1126,7 @@
       "facebook": "https://www.go24fitness.com/zh/look-inside/lai-chi-kok",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Fitness Center</p>",
       "page_text": "My page"
     },
     {
@@ -1089,6 +1138,7 @@
       "facebook": "https://www.facebook.com/D2Place/",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Sense Experience</p>",
       "page_text": "My page"
     },
     {
@@ -1100,6 +1150,7 @@
       "facebook": "https://www.facebook.com/D2Place/",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p><span style=\"color:rgb(144,135,108);\">Snooker Club</span></p>",
       "page_text": "My page"
     },
     {
@@ -1111,6 +1162,7 @@
       "facebook": "https://www.facebook.com/D2Place/",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Indoor Drift Racing and Game Centre</p>",
       "page_text": "My page"
     },
     {
@@ -1122,6 +1174,7 @@
       "facebook": "https://www.facebook.com/lostjuniorhk/",
       "instagram": "https://www.instagram.com/d2place/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Escape Room</p>",
       "page_text": "My page"
     },
     {
@@ -1133,6 +1186,7 @@
       "facebook": "https://www.facebook.com/HKSK8ACADEMY",
       "instagram": "https://www.instagram.com/skate.academy.hk/",
       "website": "https://www.youtube.com/channel/UC26AH8mghf38iHYaNLqkbjQ",
+      "tags": "<p>Skateboarding Academy</p>",
       "page_text": "My page"
     },
     {
@@ -1144,6 +1198,7 @@
       "facebook": "https://www.facebook.com/Buns2020hk/",
       "instagram": "https://www.instagram.com/buns2020.hk/",
       "website": "https://buns2020.com.hk/",
+      "tags": "<p>Training Center</p>",
       "page_text": "My page"
     },
     {
@@ -1155,6 +1210,7 @@
       "facebook": "https://www.facebook.com/m48wellnesslab",
       "instagram": "https://www.instagram.com/m48wellnesslab/",
       "website": "https://www.m48wellnesslab.org/",
+      "tags": "<p>Health Management and Rehabilitation</p>",
       "page_text": "My page"
     },
     {
@@ -1166,6 +1222,7 @@
       "facebook": "https://www.facebook.com/ResaLaserhk",
       "instagram": "https://www.instagram.com/resalaserhk",
       "website": "https://www.resalaserhk.com",
+      "tags": "<p><span style=\"color:#000066;\">Lasertag war game&nbsp;</span></p>",
       "page_text": "My page"
     }
   ],
