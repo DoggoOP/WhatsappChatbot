@@ -11,6 +11,39 @@ This repository contains a Flask application that powers a WhatsApp chatbot for 
 - Performs lightweight web searches through **SerpAPI** to enrich responses.
 - Includes a Selenium based **scraper** (`scraper.py`) that gathers shop, event and venue details into `d2place_data.json`.
 
+## Architecture Overview
+The bot runs on an Alibaba Cloud ECS instance (Ubuntu 22.04) listening on `localhost:4040`. An ngrok tunnel exposes the `/webhook` endpoint publicly at `https://chatbot.d2place.com/webhook`.
+
+### Message flow
+1. A shopper sends a WhatsApp message.
+2. The WhatsApp Cloud API POSTs the event to the webhook through ngrok.
+3. `app.py` receives the JSON, queries **Qwen** for language output and **SerpApi** for Google snippets, merges them with mall data from `d2place_data.json` and formats the reply.
+4. The formatted text is POSTed back to WhatsApp via the Meta API, which delivers it to the user.
+
+### Scheduled scraping
+`scraper.py` re-scrapes d2place.com every Monday to refresh `d2place_data.json`. The job runs as a systemd service using the `schedule` library.
+
+### Services and infrastructure
+- `d2place-app.service` – runs `app.py`
+- `d2place-scraper.service` – runs `scraper.py`
+- `ngrok.service` – maintains the public tunnel
+Systemd keeps these units alive and restarts them on failure.
+
+The project relies on several third-party services:
+- WhatsApp Cloud API for messaging
+- SerpApi for search
+- Ngrok for HTTPS tunneling
+- Qwen (Alibaba Cloud) for language model inference
+- GitHub for source control
+
+### Environment variables
+API tokens and configuration values are stored in `.env` (e.g. `WHATSAPP_TOKEN`, `PHONE_NUMBER_ID`, `VERIFY_TOKEN`, `QWEN_API_KEY`, `SERP_API_KEY` and `LOG_RECIPIENT`). Store these secrets securely.
+
+### Operations
+- Update the code with `git pull` and restart the services with `systemctl`.
+- View logs with `journalctl -u d2place-app.service -f`.
+- Trigger a manual scrape using `systemctl start d2place-scraper.service`.
+
 ## Setup
 
 1. Create a Python 3 environment and install dependencies:
