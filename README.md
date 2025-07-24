@@ -3,6 +3,8 @@
 This repository contains a Flask application that powers a WhatsApp chatbot for **D2 Place** mall in Hong Kong. The bot answers queries about shops, dining options, events and other mall information using data scraped from the D2 Place website as well as small web searches.
 
 ## Features
+<img width="801" height="375" alt="image" src="https://github.com/user-attachments/assets/b3584f4e-aa36-4281-a7fb-6696c4c69c44" />
+
 
 - **WhatsApp integration** via the WhatsApp Cloud API.
 - Uses **Qwen** APIs for text generation and audio transcription.
