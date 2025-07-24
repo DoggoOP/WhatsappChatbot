@@ -233,7 +233,6 @@ class D2PlaceScraper:
         soup = BeautifulSoup(resp.text, "html.parser")
 
         txt = soup.get_text(" ", strip=True)
-        blank["page_text"] = re.sub(r"\s+", " ", txt)
 
         m_phone = re.search(r"\+?852[-\s]?\d{4}[-\s]?\d{4}", txt)
         if m_phone:
