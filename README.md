@@ -85,6 +85,9 @@ The JSON file contains a `manual_info` section where you can store custom notes.
 This portion of the file is preserved whenever the scraper runs, so feel free to
 edit it manually without worrying about it being overwritten.
 
+## Messaging the bot
+Feel free to message the bot on WhatsApp with the phone number +852 5600 6992.
+
 ## License
 
 This project is provided as‑is under the MIT license. See `LICENSE` for details.
