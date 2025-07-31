@@ -37,7 +37,7 @@ The project relies on several third-party services:
 - GitHub for source control
 
 ### Environment variables
-API tokens and configuration values are stored in `.env` (e.g. `WHATSAPP_TOKEN`, `PHONE_NUMBER_ID`, `VERIFY_TOKEN`, `QWEN_API_KEY`, `SERP_API_KEY` and `LOG_RECIPIENT`). Store these secrets securely.
+API tokens and configuration values are stored in `.env` (e.g. `WHATSAPP_TOKEN`, `PHONE_NUMBER_ID`, `VERIFY_TOKEN`, `QWEN_API_KEY`, `SERP_API_KEY` and `LOG_RECIPIENTS`). Store these secrets securely.
 
 ### Operations
 - Update the code with `git pull` and restart the services with `systemctl`.
@@ -56,8 +56,8 @@ API tokens and configuration values are stored in `.env` (e.g. `WHATSAPP_TOKEN`,
    - `VERIFY_TOKEN` – token used when validating the webhook URL with WhatsApp
    - `WHATSAPP_TOKEN` – WhatsApp Cloud API access token
    - `PHONE_NUMBER_ID` – your WhatsApp phone number ID
-   - `LOG_RECIPIENT` – phone number where log messages should be sent
-  - `PUBLIC_URL` – base URL of your Flask server used for serving images.
+   - `LOG_RECIPIENTS` – comma-separated WhatsApp numbers that should receive log messages
+   - `PUBLIC_URL` – base URL of your Flask server used for serving images.
     This must be a publicly reachable URL (e.g. an ngrok tunnel) so WhatsApp
     can download files from the `/Assets` path. The app exposes this route
     using `@app.route('/Assets/<path:filename>')`, serving files from the local

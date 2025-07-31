@@ -48,7 +48,14 @@ SERP_API_KEY = os.environ.get('SERP_API_KEY')
 VERIFY_TOKEN = os.environ.get('VERIFY_TOKEN')
 WHATSAPP_TOKEN = os.environ.get('WHATSAPP_TOKEN')
 PHONE_NUMBER_ID = os.environ.get('PHONE_NUMBER_ID')
-LOG_RECIPIENT = os.environ.get('LOG_RECIPIENT')
+LOG_RECIPIENTS_ENV = os.environ.get('LOG_RECIPIENTS')
+if LOG_RECIPIENTS_ENV:
+    LOG_RECIPIENTS = [n.strip() for n in LOG_RECIPIENTS_ENV.split(',') if n.strip()]
+else:
+    single = os.environ.get('LOG_RECIPIENT')
+    LOG_RECIPIENTS = [single.strip()] if single else []
+
+LOG_RECIPIENT = LOG_RECIPIENTS[0] if LOG_RECIPIENTS else None
 PUBLIC_URL = os.environ.get("PUBLIC_URL", "https://chatbot.d2place.com")
 BASE_URL = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
 # Use a fixed model so the chatbot always calls the same Qwen version
@@ -87,9 +94,10 @@ class WhatsAppLogHandler(logging.Handler):
     def emit(self, record):
         try:
             log_entry = self.format(record)
-            # Only send to WhatsApp if LOG_RECIPIENT is set and not empty
-            if LOG_RECIPIENT and "send_whatsapp_message" in globals():
-                send_whatsapp_message(LOG_RECIPIENT, f"[LOG] {log_entry}")
+            # Only send to WhatsApp if recipients are configured
+            if LOG_RECIPIENTS and "send_whatsapp_message" in globals():
+                for r in LOG_RECIPIENTS:
+                    send_whatsapp_message(r, f"[LOG] {log_entry}")
         except Exception as e:
             # Fallback to file logging if WhatsApp fails
             logging.getLogger(__name__).error(f"Failed to send log to WhatsApp: {e}")
@@ -1287,14 +1295,14 @@ def handle_audio_query(audio_bytes, caption=""):
 # 3. Logging & Log Forwarding
 #########################
 
-def forward_logs_via_whatsapp(recipient):
-    """
-    Reads the local log file 'messages.log' and sends its content to a specific WhatsApp number.
-    """
+def forward_logs_via_whatsapp(recipient=None):
+    """Send the local log file via WhatsApp."""
     try:
         with open('messages.log', 'r', encoding='utf-8') as f:
             log_content = f.read()
-        send_whatsapp_message(recipient, log_content)
+        targets = [recipient] if recipient else LOG_RECIPIENTS
+        for r in targets:
+            send_whatsapp_message(r, log_content)
     except Exception as e:
         logger.error("Error forwarding logs: %s", e)
 
@@ -1351,13 +1359,14 @@ def webhook():
         return jsonify(status="no_messages"), 200
 
     BOT_NUMBER = PHONE_NUMBER_ID
-    LOG_NUMBER = LOG_RECIPIENT
+    LOG_NUMBERS = set(LOG_RECIPIENTS)
     for m in messages:
         from_user = m.get('from', '')
         msg_type = m.get('type', '')
-        if from_user not in (BOT_NUMBER, LOG_NUMBER):
+        if from_user not in {BOT_NUMBER} | LOG_NUMBERS:
             summary = summarize_message_for_log(m)
-            send_whatsapp_message(LOG_RECIPIENT, f"📥 From {from_user} ({msg_type}): {summary}")
+            for r in LOG_RECIPIENTS:
+                send_whatsapp_message(r, f"📥 From {from_user} ({msg_type}): {summary}")
         _executor.submit(process_message, m)
 
     return jsonify(status="processing", count=len(messages)), 200
@@ -1376,8 +1385,8 @@ def process_message(msg):
     msg_type = msg.get('type', '')
 
     BOT_NUMBER = PHONE_NUMBER_ID  # your "from" WhatsApp number
-    LOG_NUMBER = LOG_RECIPIENT    # where you send logs
-    if from_user in (BOT_NUMBER, LOG_NUMBER):
+    LOG_NUMBERS = set(LOG_RECIPIENTS)    # where you send logs
+    if from_user in {BOT_NUMBER} | LOG_NUMBERS:
         return
 
     try:
@@ -1417,7 +1426,8 @@ def process_message(msg):
             bot_reply, image_url = "Sorry, I only handle text and audio messages for now.", None
 
         bot_reply = remove_contact_info(bot_reply)
-        send_whatsapp_message(LOG_RECIPIENT, f"📤 To   {from_user}: {bot_reply}")
+        for r in LOG_RECIPIENTS:
+            send_whatsapp_message(r, f"📤 To   {from_user}: {bot_reply}")
         send_whatsapp_message(from_user, bot_reply)
         if image_url:
             send_whatsapp_image(from_user, image_url)
