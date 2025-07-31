@@ -754,14 +754,38 @@ def call_qwen_api(payload, retries: int = 2):
             start = time.monotonic()
             resp = requests.post(url, headers=headers, json=payload, timeout=75)
             resp.raise_for_status()
-            logger.info("Qwen API call took %.2f seconds", time.monotonic() - start)
             result = resp.json()
+            req_id = (
+                result.get("request_id")
+                or result.get("id")
+                or resp.headers.get("X-Request-ID", "")
+            )
+            logger.info(
+                "Qwen API call took %.2f seconds [req:%s]",
+                time.monotonic() - start,
+                req_id,
+            )
             content = result["choices"][0]["message"]["content"]
             if isinstance(content, str):
                 return postprocess_text(content)
             return postprocess_text(json.dumps(content))
         except Exception as e:
-            logger.error("Qwen API error: %s", e)
+            req_id = ""
+            if isinstance(e, requests.exceptions.HTTPError) and e.response is not None:
+                try:
+                    err_json = e.response.json()
+                    req_id = err_json.get("request_id") or err_json.get("id") or e.response.headers.get("X-Request-ID", "")
+                except Exception:
+                    req_id = e.response.headers.get("X-Request-ID", "")
+                logger.error(
+                    "Qwen API error: %s [req:%s] %s | payload=%s",
+                    e.response.status_code,
+                    req_id,
+                    e.response.text,
+                    json.dumps(payload)[:200],
+                )
+            else:
+                logger.error("Qwen API error: %s", e)
             if attempt < retries:
                 time.sleep(2 ** attempt)
                 continue
