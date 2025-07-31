@@ -97,22 +97,22 @@ class WhatsAppLogHandler(logging.Handler):
             # Only send to WhatsApp if recipients are configured
             if LOG_RECIPIENTS and "send_whatsapp_message" in globals():
                 for r in LOG_RECIPIENTS:
-                    send_whatsapp_message(r, f"[LOG] {log_entry}")
+                    send_whatsapp_message(r, f"[LOG] {log_entry}", log=False)
         except Exception as e:
-            # Fallback to file logging if WhatsApp fails
-            logging.getLogger(__name__).error(f"Failed to send log to WhatsApp: {e}")
+            # Fallback to normal logging if WhatsApp fails
+            logging.getLogger(__name__).error("Failed to send log to WhatsApp: %s", e)
 
 # Configure logging to a file and WhatsApp
 logging.basicConfig(
-    filename='messages.log',
     level=logging.INFO,
     format='%(asctime)s %(levelname)s %(message)s'
 )
 logger = logging.getLogger(__name__)
 
 # Add WhatsApp log handler for WARNING and above
+
 wa_handler = WhatsAppLogHandler()
-wa_handler.setLevel(logging.WARNING)
+wa_handler.setLevel(logging.INFO)
 wa_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
 logger.addHandler(wa_handler)
 
@@ -1296,13 +1296,16 @@ def handle_audio_query(audio_bytes, caption=""):
 #########################
 
 def forward_logs_via_whatsapp(recipient=None):
-    """Send the local log file via WhatsApp."""
+    """Send the local log file via WhatsApp if it exists."""
     try:
-        with open('messages.log', 'r', encoding='utf-8') as f:
-            log_content = f.read()
+        if os.path.exists('messages.log'):
+            with open('messages.log', 'r', encoding='utf-8') as f:
+                log_content = f.read()
+        else:
+            log_content = 'No log file available.'
         targets = [recipient] if recipient else LOG_RECIPIENTS
         for r in targets:
-            send_whatsapp_message(r, log_content)
+            send_whatsapp_message(r, log_content, log=False)
     except Exception as e:
         logger.error("Error forwarding logs: %s", e)
 
@@ -1401,6 +1404,8 @@ def process_message(msg):
         else:
             inbound_text = f"<{msg_type}>"
 
+        logger.info("Received message from %s (%s): %s", from_user, msg_type, inbound_text)
+
         # Send immediate greeting/kind note to reduce perceived wait time
         lang = detect_language(inbound_text) if msg_type == 'text' else 'zh'
         note = (
@@ -1465,7 +1470,7 @@ def download_media_file(media_id):
     # otherwise, return raw bytes
     return raw_bytes, mime
 
-def send_whatsapp_message(recipient, message_text):
+def send_whatsapp_message(recipient, message_text, log=True):
     """
     Sends a text message back to the user via WhatsApp Cloud API.
     """
@@ -1479,15 +1484,22 @@ def send_whatsapp_message(recipient, message_text):
         "to": recipient,
         "text": {"body": message_text}
     }
+    if log:
+        logger.info("Sending message to %s: %s", recipient, message_text)
     try:
         start = time.monotonic()
         resp = requests.post(url, headers=headers, json=data, timeout=15)
         resp.raise_for_status()
-        logger.info("WhatsApp send response: %s (%.2fs)", resp.text, time.monotonic() - start)
+        if log:
+            logger.info(
+                "WhatsApp send response: %s (%.2fs)",
+                resp.text,
+                time.monotonic() - start,
+            )
     except Exception as e:
         logger.error("Error sending WhatsApp message: %s", e)
 
-def send_whatsapp_image(recipient, image_url, caption=""):
+def send_whatsapp_image(recipient, image_url, caption="", log=True):
     """Send an image via WhatsApp Cloud API."""
     url = f"https://graph.facebook.com/v16.0/{PHONE_NUMBER_ID}/messages"
     headers = {
@@ -1500,15 +1512,23 @@ def send_whatsapp_image(recipient, image_url, caption=""):
         "type": "image",
         "image": {"link": image_url, "caption": caption},
     }
+    if log:
+        logger.info(
+            "Sending image to %s: %s (caption=%s)",
+            recipient,
+            image_url,
+            caption,
+        )
     try:
         start = time.monotonic()
         resp = requests.post(url, headers=headers, json=data, timeout=15)
         resp.raise_for_status()
-        logger.info(
-            "WhatsApp image response: %s (%.2fs)",
-            resp.text,
-            time.monotonic() - start,
-        )
+        if log:
+            logger.info(
+                "WhatsApp image response: %s (%.2fs)",
+                resp.text,
+                time.monotonic() - start,
+            )
     except Exception as e:
         logger.error("Error sending WhatsApp image: %s", e)
 
