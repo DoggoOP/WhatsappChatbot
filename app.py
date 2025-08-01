@@ -1545,6 +1545,20 @@ def summarize_message_for_log(msg: dict) -> str:
     return f"<{msg_type}>"
 
 #########################
+# 5. API Endpoint
+#########################
+
+@app.route('/api/chat', methods=['POST'])
+def api_chat():
+    """Return chatbot response for the given message."""
+    data = request.get_json() or {}
+    text = data.get('message')
+    if not text:
+        return jsonify({'error': 'Missing message'}), 400
+    reply, image_url = handle_text_query(text)
+    return jsonify({'reply': reply, 'image_url': image_url})
+
+#########################
 # 5. Run the Flask App
 #########################
 
