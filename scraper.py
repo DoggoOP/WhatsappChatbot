@@ -899,16 +899,16 @@ class D2PlaceScraper:
             self.scrape_play()
             
             # 7) Google Maps + Normal Google search for each dining shop
-            for shop in self.data["dining"]:
-                # A) Google Maps details
-                logger.info(f"Fetching detailed Google reviews for '{shop['name']}' ...")
-                shop["google_review_data"] = self.serp_google_reviews(shop["name"])
+            # for shop in self.data["dining"]:
+            #     # A) Google Maps details
+            #     logger.info(f"Fetching detailed Google reviews for '{shop['name']}' ...")
+            #     shop["google_review_data"] = self.serp_google_reviews(shop["name"])
 
-                # B) Extra normal Google info
-                # e.g. "Thai-ger D2 Place HK menu" or just "Thai-ger D2 Place HK"
-                normal_query = f"{shop['name']} D2 Place HK menu"
-                logger.info(f"Fetching extra Google info for '{normal_query}' ...")
-                shop["extra_google_info"] = self.serpapi_extra_google_info(normal_query)
+            #     # B) Extra normal Google info
+            #     # e.g. "Thai-ger D2 Place HK menu" or just "Thai-ger D2 Place HK"
+            #     normal_query = f"{shop['name']} D2 Place HK menu"
+            #     logger.info(f"Fetching extra Google info for '{normal_query}' ...")
+            #     shop["extra_google_info"] = self.serpapi_extra_google_info(normal_query)
 
             self.save_data()
             logger.info("Full scrape completed successfully")
