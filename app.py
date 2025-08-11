@@ -1363,14 +1363,18 @@ def webhook():
 
     BOT_NUMBER = PHONE_NUMBER_ID
     LOG_NUMBERS = set(LOG_RECIPIENTS)
-    for m in messages:
-        from_user = m.get('from', '')
-        msg_type = m.get('type', '')
-        if from_user not in {BOT_NUMBER} | LOG_NUMBERS:
-            summary = summarize_message_for_log(m)
-            for r in LOG_RECIPIENTS:
-                send_whatsapp_message(r, f"📥 From {from_user} ({msg_type}): {summary}")
-        _executor.submit(process_message, m)
+    try:
+        for m in messages:
+            from_user = m.get('from', '')
+            msg_type = m.get('type', '')
+            if from_user not in {BOT_NUMBER} | LOG_NUMBERS:
+                summary = summarize_message_for_log(m)
+                for r in LOG_RECIPIENTS:
+                    send_whatsapp_message(r, f"📥 From {from_user} ({msg_type}): {summary}")
+            _executor.submit(process_message, m)
+    except Exception as e:
+        logger.error("Error sending whatsapp msg: %s", e)
+    
 
     return jsonify(status="processing", count=len(messages)), 200
 
@@ -1433,7 +1437,7 @@ def process_message(msg):
         bot_reply = remove_contact_info(bot_reply)
         for r in LOG_RECIPIENTS:
             send_whatsapp_message(r, f"📤 To   {from_user}: {bot_reply}")
-        send_whatsapp_message(from_user, bot_reply)
+        # send_whatsapp_message(from_user, bot_reply)
         if image_url:
             send_whatsapp_image(from_user, image_url)
 
