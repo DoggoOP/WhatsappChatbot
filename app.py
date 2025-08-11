@@ -13,6 +13,7 @@ import tempfile
 import hashlib
 from datetime import datetime, timedelta
 from threading import Thread, Lock
+from queue import Queue
 import functools
 from functools import lru_cache
 from concurrent.futures import ThreadPoolExecutor
@@ -72,6 +73,9 @@ THANKS = {"thanks", "thank you", "謝謝", "多謝"}
 # Fuzzy matching helper utilities
 FUZZY_THRESHOLD = 80
 
+# Queue used to send log messages to WhatsApp asynchronously
+log_queue: "Queue[str]" = Queue()
+
 def fuzzy_match(text: str, phrases: list[str] | set[str], threshold: int = FUZZY_THRESHOLD) -> bool:
     """Return True if ``text`` fuzzily matches any phrase in ``phrases``."""
     lowered = text.lower()
@@ -89,18 +93,17 @@ def fuzzy_match(text: str, phrases: list[str] | set[str], threshold: int = FUZZY
             return True
     return False
 
-# Custom WhatsApp log handler
+# Custom WhatsApp log handler that enqueues records for background sending
 class WhatsAppLogHandler(logging.Handler):
     def emit(self, record):
         try:
             log_entry = self.format(record)
-            # Only send to WhatsApp if recipients are configured
-            if LOG_RECIPIENTS and "send_whatsapp_message" in globals():
-                for r in LOG_RECIPIENTS:
-                    send_whatsapp_message(r, f"[LOG] {log_entry}", log=False)
+            if LOG_RECIPIENTS:
+                log_queue.put(log_entry)
         except Exception as e:
-            # Fallback to normal logging if WhatsApp fails
-            logging.getLogger(__name__).error("Failed to send log to WhatsApp: %s", e)
+            logging.getLogger(__name__).error(
+                "Failed to enqueue log for WhatsApp: %s", e
+            )
 
 # Configure logging to a file and WhatsApp
 logging.basicConfig(
@@ -1535,6 +1538,27 @@ def send_whatsapp_image(recipient, image_url, caption="", log=True):
             )
     except Exception as e:
         logger.error("Error sending WhatsApp image: %s", e)
+
+
+def _whatsapp_log_worker():
+    """Background thread that sends queued log messages via WhatsApp."""
+    while True:
+        entry = log_queue.get()
+        if entry is None:
+            break
+        try:
+            if LOG_RECIPIENTS and "send_whatsapp_message" in globals():
+                for r in LOG_RECIPIENTS:
+                    send_whatsapp_message(r, f"[LOG] {entry}", log=False)
+        except Exception as e:
+            logging.getLogger(__name__).error("Failed to send log to WhatsApp: %s", e)
+        finally:
+            log_queue.task_done()
+
+
+# Start background log-sending thread
+log_thread = Thread(target=_whatsapp_log_worker, daemon=True)
+log_thread.start()
 
 def summarize_message_for_log(msg: dict) -> str:
     """Return a short description of the incoming message for logging."""
