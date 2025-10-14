@@ -11,4 +11,3 @@ apscheduler
 backoff
 serpapi
 rapidfuzz
-zoneinfo
