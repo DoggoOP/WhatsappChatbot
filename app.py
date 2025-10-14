@@ -21,6 +21,7 @@ import time
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 from apscheduler.schedulers.background import BackgroundScheduler
+from zoneinfo import ZoneInfo
 
 PHONE_REGEX = re.compile(r"(?:\+?852[-\s]?)?\d{4}[-\s]?\d{4}")
 EMAIL_REGEX = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
@@ -75,6 +76,94 @@ FUZZY_THRESHOLD = 80
 
 # Queue used to send log messages to WhatsApp asynchronously
 log_queue: "Queue[str]" = Queue()
+
+HONG_KONG_TZ = ZoneInfo("Asia/Hong_Kong")
+MESSAGE_COUNT_FILE = "daily_message_counts.json"
+_message_counts_lock = Lock()
+_message_counts: dict[str, int] = {}
+
+
+def load_message_counts() -> None:
+    """Load persisted daily message counts from disk."""
+    global _message_counts
+    try:
+        with open(MESSAGE_COUNT_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        if isinstance(data, dict):
+            _message_counts = {
+                str(day): int(count)
+                for day, count in data.items()
+            }
+        else:
+            _message_counts = {}
+            logger.warning("Invalid message count payload; starting fresh")
+    except FileNotFoundError:
+        _message_counts = {}
+    except Exception as exc:
+        _message_counts = {}
+        logger.error("Failed to load message counts: %s", exc)
+
+
+def _write_message_counts_snapshot(snapshot: dict[str, int]) -> None:
+    """Persist ``snapshot`` of the daily message counts to disk atomically."""
+    try:
+        with NamedTemporaryFile("w", delete=False, encoding="utf-8") as tmp:
+            json.dump(snapshot, tmp, ensure_ascii=False, indent=2)
+            tmp.flush()
+            os.fsync(tmp.fileno())
+        os.replace(tmp.name, MESSAGE_COUNT_FILE)
+    except Exception as exc:
+        logger.error("Failed to persist message counts: %s", exc)
+
+
+def increment_message_count(timestamp: datetime | None = None) -> None:
+    """Increment the count for the day of ``timestamp`` (HK time)."""
+    ts = timestamp or datetime.now(HONG_KONG_TZ)
+    day_key = ts.astimezone(HONG_KONG_TZ).date().isoformat()
+    with _message_counts_lock:
+        _message_counts[day_key] = _message_counts.get(day_key, 0) + 1
+        snapshot = dict(_message_counts)
+    _write_message_counts_snapshot(snapshot)
+
+
+def prune_old_message_counts(retain_days: int = 30) -> None:
+    """Drop daily counts older than ``retain_days`` and persist the result."""
+    cutoff = datetime.now(HONG_KONG_TZ).date() - timedelta(days=retain_days)
+    with _message_counts_lock:
+        removed_keys = []
+        for key in list(_message_counts):
+            try:
+                key_date = datetime.fromisoformat(key).date()
+            except ValueError:
+                key_date = None
+            if key_date is None or key_date < cutoff:
+                _message_counts.pop(key, None)
+                removed_keys.append(key)
+        snapshot = dict(_message_counts)
+    if removed_keys:
+        logger.info(
+            "Pruned %d daily message count entries older than %s",
+            len(removed_keys),
+            cutoff.isoformat(),
+        )
+    _write_message_counts_snapshot(snapshot)
+
+
+def send_daily_message_summary() -> None:
+    """Send the previous day's message count to WhatsApp log recipients."""
+    now_hk = datetime.now(HONG_KONG_TZ)
+    target_day = (now_hk.date() - timedelta(days=1)).isoformat()
+    with _message_counts_lock:
+        count = _message_counts.get(target_day, 0)
+    summary = (
+        f"Daily message count for {target_day}: {count} message"
+        f"{'s' if count != 1 else ''}."
+    )
+    logger.info(summary)
+    if LOG_RECIPIENTS:
+        for recipient in LOG_RECIPIENTS:
+            send_whatsapp_message(recipient, f"\U0001F4CA {summary}")
+    prune_old_message_counts()
 
 def fuzzy_match(text: str, phrases: list[str] | set[str], threshold: int = FUZZY_THRESHOLD) -> bool:
     """Return True if ``text`` fuzzily matches any phrase in ``phrases``."""
@@ -151,6 +240,7 @@ def load_scraped_data():
 
 
 # Initial load
+load_message_counts()
 load_scraped_data()
 
 # Reload the scraped data daily at 03:00 HK time
@@ -161,6 +251,13 @@ _reload_scheduler.add_job(
     hour=3,
     minute=0,
     id="reload_scraped_data",
+)
+_reload_scheduler.add_job(
+    send_daily_message_summary,
+    trigger="cron",
+    hour=0,
+    minute=5,
+    id="daily_message_summary",
 )
 _reload_scheduler.start()
 
@@ -1398,6 +1495,8 @@ def process_message(msg):
     LOG_NUMBERS = set(LOG_RECIPIENTS)    # where you send logs
     if from_user in {BOT_NUMBER} | LOG_NUMBERS:
         return
+
+    increment_message_count()
 
     try:
         if msg_type == 'text':
