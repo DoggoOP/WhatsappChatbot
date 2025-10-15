@@ -79,8 +79,10 @@ log_queue: "Queue[str]" = Queue()
 
 HONG_KONG_TZ = ZoneInfo("Asia/Hong_Kong")
 MESSAGE_COUNT_FILE = "daily_message_counts.json"
+TURNAROUND_TOTALS_FILE = "daily_turnaround_totals.json"
 _message_counts_lock = Lock()
 _message_counts: dict[str, int] = {}
+_turnaround_totals: dict[str, float] = {}
 
 
 def load_message_counts() -> None:
@@ -116,6 +118,81 @@ def _write_message_counts_snapshot(snapshot: dict[str, int]) -> None:
         logger.error("Failed to persist message counts: %s", exc)
 
 
+def load_turnaround_totals() -> None:
+    """Load persisted daily turnaround totals from disk."""
+    global _turnaround_totals
+    try:
+        with open(TURNAROUND_TOTALS_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        if isinstance(data, dict):
+            _turnaround_totals = {
+                str(day): float(total)
+                for day, total in data.items()
+            }
+        else:
+            _turnaround_totals = {}
+            logger.warning("Invalid turnaround total payload; starting fresh")
+    except FileNotFoundError:
+        _turnaround_totals = {}
+    except Exception as exc:
+        _turnaround_totals = {}
+        logger.error("Failed to load turnaround totals: %s", exc)
+
+
+def _write_turnaround_snapshot(snapshot: dict[str, float]) -> None:
+    """Persist ``snapshot`` of the turnaround totals to disk atomically."""
+    try:
+        with NamedTemporaryFile("w", delete=False, encoding="utf-8") as tmp:
+            json.dump(snapshot, tmp, ensure_ascii=False, indent=2)
+            tmp.flush()
+            os.fsync(tmp.fileno())
+        os.replace(tmp.name, TURNAROUND_TOTALS_FILE)
+    except Exception as exc:
+        logger.error("Failed to persist turnaround totals: %s", exc)
+
+
+def record_turnaround_time(
+    duration_seconds: float,
+    timestamp: datetime | None = None,
+) -> None:
+    """Accumulate ``duration_seconds`` for the HK day of ``timestamp``."""
+
+    try:
+        duration = float(duration_seconds)
+    except (TypeError, ValueError):
+        return
+
+    if duration < 0:
+        return
+
+    ts = timestamp or datetime.now(HONG_KONG_TZ)
+    day_key = ts.astimezone(HONG_KONG_TZ).date().isoformat()
+    with _message_counts_lock:
+        _turnaround_totals[day_key] = _turnaround_totals.get(day_key, 0.0) + duration
+        snapshot = dict(_turnaround_totals)
+    _write_turnaround_snapshot(snapshot)
+
+
+def format_duration(seconds: float) -> str:
+    """Return a human-friendly representation of ``seconds``."""
+
+    try:
+        total_seconds = max(0.0, float(seconds))
+    except (TypeError, ValueError):
+        return "N/A"
+
+    minutes, sec = divmod(total_seconds, 60)
+    hours, minutes = divmod(minutes, 60)
+
+    parts: list[str] = []
+    if hours >= 1:
+        parts.append(f"{int(hours)}h")
+    if hours >= 1 or minutes >= 1:
+        parts.append(f"{int(minutes)}m")
+    parts.append(f"{sec:.1f}s")
+    return " ".join(parts)
+
+
 def increment_message_count(timestamp: datetime | None = None) -> None:
     """Increment the count for the day of ``timestamp`` (HK time)."""
     ts = timestamp or datetime.now(HONG_KONG_TZ)
@@ -131,22 +208,27 @@ def prune_old_message_counts(retain_days: int = 30) -> None:
     cutoff = datetime.now(HONG_KONG_TZ).date() - timedelta(days=retain_days)
     with _message_counts_lock:
         removed_keys = []
-        for key in list(_message_counts):
+        for key in set(_message_counts) | set(_turnaround_totals):
             try:
                 key_date = datetime.fromisoformat(key).date()
             except ValueError:
                 key_date = None
             if key_date is None or key_date < cutoff:
-                _message_counts.pop(key, None)
+                if key in _message_counts:
+                    _message_counts.pop(key, None)
+                if key in _turnaround_totals:
+                    _turnaround_totals.pop(key, None)
                 removed_keys.append(key)
-        snapshot = dict(_message_counts)
+        counts_snapshot = dict(_message_counts)
+        turnaround_snapshot = dict(_turnaround_totals)
     if removed_keys:
         logger.info(
-            "Pruned %d daily message count entries older than %s",
+            "Pruned %d daily metric entries older than %s",
             len(removed_keys),
             cutoff.isoformat(),
         )
-    _write_message_counts_snapshot(snapshot)
+    _write_message_counts_snapshot(counts_snapshot)
+    _write_turnaround_snapshot(turnaround_snapshot)
 
 
 def send_daily_message_summary() -> None:
@@ -155,9 +237,16 @@ def send_daily_message_summary() -> None:
     target_day = (now_hk.date() - timedelta(days=1)).isoformat()
     with _message_counts_lock:
         count = _message_counts.get(target_day, 0)
+        total_turnaround = _turnaround_totals.get(target_day, 0.0)
+    avg_turnaround = (
+        format_duration(total_turnaround / count)
+        if count
+        else "N/A"
+    )
     summary = (
         f"Daily message count for {target_day}: {count} message"
-        f"{'s' if count != 1 else ''}."
+        f"{'s' if count != 1 else ''}.\n"
+        f"Average turnaround time: {avg_turnaround}."
     )
     logger.info(summary)
     if LOG_RECIPIENTS:
@@ -241,6 +330,7 @@ def load_scraped_data():
 
 # Initial load
 load_message_counts()
+load_turnaround_totals()
 load_scraped_data()
 
 # Reload the scraped data daily at 03:00 HK time
@@ -1496,6 +1586,7 @@ def process_message(msg):
     if from_user in {BOT_NUMBER} | LOG_NUMBERS:
         return
 
+    start_time = time.monotonic()
     increment_message_count()
 
     try:
@@ -1545,6 +1636,8 @@ def process_message(msg):
 
     except Exception as e:
         logger.error(f"Error processing webhook: {e}")
+    finally:
+        record_turnaround_time(time.monotonic() - start_time)
 
 def download_media_file(media_id):
     """
