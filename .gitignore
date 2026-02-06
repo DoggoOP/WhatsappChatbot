@@ -25,4 +25,5 @@ wheels/
 .idea/
 *.swp
 *.swo
-
+d2place_data.json
+debug_incoming_audio.bin
