@@ -13,6 +13,7 @@ import tempfile
 import hashlib
 from datetime import datetime, timedelta
 from threading import Thread, Lock
+from queue import Queue
 import functools
 from functools import lru_cache
 from concurrent.futures import ThreadPoolExecutor
@@ -20,6 +21,7 @@ import time
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 from apscheduler.schedulers.background import BackgroundScheduler
+from zoneinfo import ZoneInfo
 
 PHONE_REGEX = re.compile(r"(?:\+?852[-\s]?)?\d{4}[-\s]?\d{4}")
 EMAIL_REGEX = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
@@ -72,6 +74,186 @@ THANKS = {"thanks", "thank you", "謝謝", "多謝"}
 # Fuzzy matching helper utilities
 FUZZY_THRESHOLD = 80
 
+# Queue used to send log messages to WhatsApp asynchronously
+log_queue: "Queue[str]" = Queue()
+
+HONG_KONG_TZ = ZoneInfo("Asia/Hong_Kong")
+MESSAGE_COUNT_FILE = "daily_message_counts.json"
+TURNAROUND_TOTALS_FILE = "daily_turnaround_totals.json"
+_message_counts_lock = Lock()
+_message_counts: dict[str, int] = {}
+_turnaround_totals: dict[str, float] = {}
+
+
+def load_message_counts() -> None:
+    """Load persisted daily message counts from disk."""
+    global _message_counts
+    try:
+        with open(MESSAGE_COUNT_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        if isinstance(data, dict):
+            _message_counts = {
+                str(day): int(count)
+                for day, count in data.items()
+            }
+        else:
+            _message_counts = {}
+            logger.warning("Invalid message count payload; starting fresh")
+    except FileNotFoundError:
+        _message_counts = {}
+    except Exception as exc:
+        _message_counts = {}
+        logger.error("Failed to load message counts: %s", exc)
+
+
+def _write_message_counts_snapshot(snapshot: dict[str, int]) -> None:
+    """Persist ``snapshot`` of the daily message counts to disk atomically."""
+    try:
+        with NamedTemporaryFile("w", delete=False, encoding="utf-8") as tmp:
+            json.dump(snapshot, tmp, ensure_ascii=False, indent=2)
+            tmp.flush()
+            os.fsync(tmp.fileno())
+        os.replace(tmp.name, MESSAGE_COUNT_FILE)
+    except Exception as exc:
+        logger.error("Failed to persist message counts: %s", exc)
+
+
+def load_turnaround_totals() -> None:
+    """Load persisted daily turnaround totals from disk."""
+    global _turnaround_totals
+    try:
+        with open(TURNAROUND_TOTALS_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        if isinstance(data, dict):
+            _turnaround_totals = {
+                str(day): float(total)
+                for day, total in data.items()
+            }
+        else:
+            _turnaround_totals = {}
+            logger.warning("Invalid turnaround total payload; starting fresh")
+    except FileNotFoundError:
+        _turnaround_totals = {}
+    except Exception as exc:
+        _turnaround_totals = {}
+        logger.error("Failed to load turnaround totals: %s", exc)
+
+
+def _write_turnaround_snapshot(snapshot: dict[str, float]) -> None:
+    """Persist ``snapshot`` of the turnaround totals to disk atomically."""
+    try:
+        with NamedTemporaryFile("w", delete=False, encoding="utf-8") as tmp:
+            json.dump(snapshot, tmp, ensure_ascii=False, indent=2)
+            tmp.flush()
+            os.fsync(tmp.fileno())
+        os.replace(tmp.name, TURNAROUND_TOTALS_FILE)
+    except Exception as exc:
+        logger.error("Failed to persist turnaround totals: %s", exc)
+
+
+def record_turnaround_time(
+    duration_seconds: float,
+    timestamp: datetime | None = None,
+) -> None:
+    """Accumulate ``duration_seconds`` for the HK day of ``timestamp``."""
+
+    try:
+        duration = float(duration_seconds)
+    except (TypeError, ValueError):
+        return
+
+    if duration < 0:
+        return
+
+    ts = timestamp or datetime.now(HONG_KONG_TZ)
+    day_key = ts.astimezone(HONG_KONG_TZ).date().isoformat()
+    with _message_counts_lock:
+        _turnaround_totals[day_key] = _turnaround_totals.get(day_key, 0.0) + duration
+        snapshot = dict(_turnaround_totals)
+    _write_turnaround_snapshot(snapshot)
+
+
+def format_duration(seconds: float) -> str:
+    """Return a human-friendly representation of ``seconds``."""
+
+    try:
+        total_seconds = max(0.0, float(seconds))
+    except (TypeError, ValueError):
+        return "N/A"
+
+    minutes, sec = divmod(total_seconds, 60)
+    hours, minutes = divmod(minutes, 60)
+
+    parts: list[str] = []
+    if hours >= 1:
+        parts.append(f"{int(hours)}h")
+    if hours >= 1 or minutes >= 1:
+        parts.append(f"{int(minutes)}m")
+    parts.append(f"{sec:.1f}s")
+    return " ".join(parts)
+
+
+def increment_message_count(timestamp: datetime | None = None) -> None:
+    """Increment the count for the day of ``timestamp`` (HK time)."""
+    ts = timestamp or datetime.now(HONG_KONG_TZ)
+    day_key = ts.astimezone(HONG_KONG_TZ).date().isoformat()
+    with _message_counts_lock:
+        _message_counts[day_key] = _message_counts.get(day_key, 0) + 1
+        snapshot = dict(_message_counts)
+    _write_message_counts_snapshot(snapshot)
+
+
+def prune_old_message_counts(retain_days: int = 30) -> None:
+    """Drop daily counts older than ``retain_days`` and persist the result."""
+    cutoff = datetime.now(HONG_KONG_TZ).date() - timedelta(days=retain_days)
+    with _message_counts_lock:
+        removed_keys = []
+        for key in set(_message_counts) | set(_turnaround_totals):
+            try:
+                key_date = datetime.fromisoformat(key).date()
+            except ValueError:
+                key_date = None
+            if key_date is None or key_date < cutoff:
+                if key in _message_counts:
+                    _message_counts.pop(key, None)
+                if key in _turnaround_totals:
+                    _turnaround_totals.pop(key, None)
+                removed_keys.append(key)
+        counts_snapshot = dict(_message_counts)
+        turnaround_snapshot = dict(_turnaround_totals)
+    if removed_keys:
+        logger.info(
+            "Pruned %d daily metric entries older than %s",
+            len(removed_keys),
+            cutoff.isoformat(),
+        )
+    _write_message_counts_snapshot(counts_snapshot)
+    _write_turnaround_snapshot(turnaround_snapshot)
+
+
+def send_daily_message_summary() -> None:
+    """Send the previous day's message count to WhatsApp log recipients."""
+    now_hk = datetime.now(HONG_KONG_TZ)
+    target_day = (now_hk.date() - timedelta(days=1)).isoformat()
+    with _message_counts_lock:
+        count = _message_counts.get(target_day, 0)
+        total_turnaround = _turnaround_totals.get(target_day, 0.0)
+    avg_turnaround = (
+        format_duration(total_turnaround / count)
+        if count
+        else "N/A"
+    )
+    summary = (
+        f"Daily message count for {target_day}: {count} message"
+        f"{'s' if count != 1 else ''}.\n"
+        f"Average turnaround time: {avg_turnaround}."
+    )
+    logger.info(summary)
+    if LOG_RECIPIENTS:
+        for recipient in LOG_RECIPIENTS:
+            send_whatsapp_message(recipient, f"\U0001F4CA {summary}")
+    prune_old_message_counts()
+
 def fuzzy_match(text: str, phrases: list[str] | set[str], threshold: int = FUZZY_THRESHOLD) -> bool:
     """Return True if ``text`` fuzzily matches any phrase in ``phrases``."""
     lowered = text.lower()
@@ -89,18 +271,17 @@ def fuzzy_match(text: str, phrases: list[str] | set[str], threshold: int = FUZZY
             return True
     return False
 
-# Custom WhatsApp log handler
+# Custom WhatsApp log handler that enqueues records for background sending
 class WhatsAppLogHandler(logging.Handler):
     def emit(self, record):
         try:
             log_entry = self.format(record)
-            # Only send to WhatsApp if recipients are configured
-            if LOG_RECIPIENTS and "send_whatsapp_message" in globals():
-                for r in LOG_RECIPIENTS:
-                    send_whatsapp_message(r, f"[LOG] {log_entry}", log=False)
+            if LOG_RECIPIENTS:
+                log_queue.put(log_entry)
         except Exception as e:
-            # Fallback to normal logging if WhatsApp fails
-            logging.getLogger(__name__).error("Failed to send log to WhatsApp: %s", e)
+            logging.getLogger(__name__).error(
+                "Failed to enqueue log for WhatsApp: %s", e
+            )
 
 # Configure logging to a file and WhatsApp
 logging.basicConfig(
@@ -148,6 +329,8 @@ def load_scraped_data():
 
 
 # Initial load
+load_message_counts()
+load_turnaround_totals()
 load_scraped_data()
 
 # Reload the scraped data daily at 03:00 HK time
@@ -158,6 +341,13 @@ _reload_scheduler.add_job(
     hour=3,
     minute=0,
     id="reload_scraped_data",
+)
+_reload_scheduler.add_job(
+    send_daily_message_summary,
+    trigger="cron",
+    hour=0,
+    minute=5,
+    id="daily_message_summary",
 )
 _reload_scheduler.start()
 
@@ -1363,14 +1553,18 @@ def webhook():
 
     BOT_NUMBER = PHONE_NUMBER_ID
     LOG_NUMBERS = set(LOG_RECIPIENTS)
-    for m in messages:
-        from_user = m.get('from', '')
-        msg_type = m.get('type', '')
-        if from_user not in {BOT_NUMBER} | LOG_NUMBERS:
-            summary = summarize_message_for_log(m)
-            for r in LOG_RECIPIENTS:
-                send_whatsapp_message(r, f"📥 From {from_user} ({msg_type}): {summary}")
-        _executor.submit(process_message, m)
+    try:
+        for m in messages:
+            from_user = m.get('from', '')
+            msg_type = m.get('type', '')
+            if from_user not in {BOT_NUMBER} | LOG_NUMBERS:
+                summary = summarize_message_for_log(m)
+                for r in LOG_RECIPIENTS:
+                    send_whatsapp_message(r, f"📥 From {from_user} ({msg_type}): {summary}")
+            _executor.submit(process_message, m)
+    except Exception as e:
+        logger.error("Error sending whatsapp msg: %s", e)
+    
 
     return jsonify(status="processing", count=len(messages)), 200
 
@@ -1391,6 +1585,9 @@ def process_message(msg):
     LOG_NUMBERS = set(LOG_RECIPIENTS)    # where you send logs
     if from_user in {BOT_NUMBER} | LOG_NUMBERS:
         return
+
+    start_time = time.monotonic()
+    increment_message_count()
 
     try:
         if msg_type == 'text':
@@ -1439,6 +1636,8 @@ def process_message(msg):
 
     except Exception as e:
         logger.error(f"Error processing webhook: {e}")
+    finally:
+        record_turnaround_time(time.monotonic() - start_time)
 
 def download_media_file(media_id):
     """
@@ -1531,6 +1730,27 @@ def send_whatsapp_image(recipient, image_url, caption="", log=True):
             )
     except Exception as e:
         logger.error("Error sending WhatsApp image: %s", e)
+
+
+def _whatsapp_log_worker():
+    """Background thread that sends queued log messages via WhatsApp."""
+    while True:
+        entry = log_queue.get()
+        if entry is None:
+            break
+        try:
+            if LOG_RECIPIENTS and "send_whatsapp_message" in globals():
+                for r in LOG_RECIPIENTS:
+                    send_whatsapp_message(r, f"[LOG] {entry}", log=False)
+        except Exception as e:
+            logging.getLogger(__name__).error("Failed to send log to WhatsApp: %s", e)
+        finally:
+            log_queue.task_done()
+
+
+# Start background log-sending thread
+log_thread = Thread(target=_whatsapp_log_worker, daemon=True)
+log_thread.start()
 
 def summarize_message_for_log(msg: dict) -> str:
     """Return a short description of the incoming message for logging."""
