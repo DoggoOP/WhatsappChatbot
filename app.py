@@ -1066,56 +1066,42 @@ def handle_text_query(user_text):
 
         User:What’s the parking rate?
         You: D2 Place offers flexible parking options tailored to your needs. See below for full details:
-        🕒 Hourly Parking（Mon to Sun, 8:00 AM – 11:00 PM）
-        Private Cars: $25/hour
-        Goods Vehicles: $40/hour
-        📅 Full Day Parking（8:00 AM – 7:00 PM）
+        🕒 Hourly Parking {use scraped details}
+        Private Cars: {use scraped details}
+        Goods Vehicles: {use scraped details}
+        📅 Full Day Parking{use scraped details}
         D2 Place TWO 4/F Carpark
-        　 Rate: $120/day
+        　 Rate: {use scraped details}
         822 Lai Chi Kok Road Carpark
-        　 Rate: $150/day
+        　 Rate: {use scraped details}
         🎁 Free Parking Offer
-        Enjoy complimentary parking when you shop at designated merchants in D2 Place ONE or TWO with same-day electronic payment:
-        Spend HK$300+ (max. 2 receipts) → 1 Hour Free Parking
-        Spend HK$500+ (max. 2 receipts) → 2 Hours Free Parking
+        E{use scraped details}
         📍 Offer applicable at:
-        D2 Place ONE
-        D2 Place TWO
-        822 Lai Chi Kok Road
+        {use scraped details}
         📝 Terms & Highlights:
-        Does not include purchases from markets, pop-up stores or mall promotions
-        Register at G/F Shroff Office (D2 Place ONE / TWO / 822 Lai Chi Kok Road)
-        Vehicles must enter and exit at the same time
-        Valid receipts must be machine-printed on the same day, with matching e-payment record
-        Only applicable to private cars and light goods vehicles
-        Receipts can be used for other promotions concurrently
+        {use scraped details}
         🔗 Learn more: https://www.d2place.com/parking or the images attached.
 
         User: 停車場優惠?
         You: D2 Place 為顧客提供多種泊車優惠，無論日間定夜晚消費，都可賺取免費泊車時數，輕鬆又方便！
         🅿️ 基本泊車優惠
         凡於 D2 PLACE ONE 或 TWO 指定商戶以電子貨幣即日消費：
-        滿 HK$300（最多2張單據）可享 1小時免費泊車
-        滿 HK$500（最多2張單據）可享 2小時免費泊車
+        滿 {use scraped details}
+        滿 {use scraped details}
         🌃 夜繽紛・平日夜泊優惠（逢星期一至五，公眾假期除外，晚上6點至11點）
-        滿 HK$100（單據需不少於$100）→ 1小時免費泊車
-        滿 HK$200（最多2張單據，單張不少於$100）→ 2小時免費泊車
-        滿 HK$300（最多3張單據，單張不少於$100）→ 3小時免費泊車
+        滿 {use scraped details}
+        滿 {use scraped details}
+        滿 {use scraped details}
         🚗 多車優惠（Multiple Vehicles）
         如有超過1輛車需享免費泊車：
-        由第二輛車起，每輛需額外消費 HK$1,000（最多2張單據）方可享 2小時免費泊車
+        {use scraped details}
         所有車輛必須同時辦理泊車優惠登記
         📍 優惠適用地點：
         D2 Place ONE
         D2 Place TWO
         荔枝角道822號停車場
         📌 重要條款簡述：
-        不包括市集、Pop-up Stores及其他推廣活動消費
-        所有車輛必須同時進出停車場
-        僅接受即日機印發票及相符電子付款證明（八達通、信用卡、支付寶、微信支付等）
-        優惠僅適用於私家車及客貨車
-        商戶及員工不適用此優惠
-        詳情及條款以 D2 PLACE 公布為準
+        {use scraped details}
         🔗 查閱完整條款：https://www.d2place.com/parking 或圖片內容
         
         User: 點去cgv
